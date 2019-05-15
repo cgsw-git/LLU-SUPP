@@ -1,0 +1,2 @@
+updateFee("LIC_010", "LIC_CONTRACTOR_GENERAL", "FINAL", 1, "Y");
+updateFee("LIC_020", "LIC_CONTRACTOR_GENERAL", "FINAL", 1, "Y");
