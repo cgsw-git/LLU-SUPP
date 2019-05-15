@@ -52,7 +52,7 @@ try {
       rowVals["Description"] = new asiTableValObj("Description","Fire Drill","N");
       rowVals["Deficiency"] = new asiTableValObj("Deficiency",x,"N");
       rowVals["Vio. Status"] = new asiTableValObj("Vio. Status",AInfo[x],"N");
-      rowVals["Inspector Comment"] = new asiTableValObj("Inspector Comment", "Test","N");
+      // rowVals["Inspector Comment"] = new asiTableValObj("Inspector Comment", " ","N");
       // rowVals["CAP Review Comment"] = new asiTableValObj("CAP Review Comment"," ","N");
       //rowVals["Repsonsible Party"] = new asiTableValObj("Responsible Party"," ","N");
       rowVals["Inspection Type"] = new asiTableValObj("Program","Fire Drill","N");
