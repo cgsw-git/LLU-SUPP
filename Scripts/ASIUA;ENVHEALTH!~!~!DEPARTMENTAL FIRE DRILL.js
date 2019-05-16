@@ -55,7 +55,8 @@ try {
       // rowVals["Inspector Comment"] = new asiTableValObj("Inspector Comment", " ","N");
       // rowVals["CAP Review Comment"] = new asiTableValObj("CAP Review Comment"," ","N");
       rowVals["Corrective Action"] = new asiTableValObj("Corrective Action"," ","N");
-      rowVals["Responsible Party"] = new asiTableValObj("Responsible Party"," ","N");
+      rowVals["Responsible Party"] = " ";
+      // rowVals["Responsible Party"] = new asiTableValObj("Responsible Party"," ","N");
       rowVals["Inspection Type"] = new asiTableValObj("Program","Fire Drill","N");
       rowVals["CAP Status"] = new asiTableValObj("CAP Status","Incomplete","N");
       // rowVals["Actual/Planned Correction Date"] = new asiTableValObj("Actual/Planned Correction Date",AInfo["Drill Date"],"N");
@@ -96,8 +97,8 @@ try {
       }
 
       logDebug("Updating ASIT");
-      // addToASITable("CAP", rowVals, parentCapId);
-      addASITable("CAP", rowVals, parentCapId);
+      addToASITable("CAP", rowVals, parentCapId);
+      //addASITable("CAP", rowVals, parentCapId);
     }
   }
   // set the parent record to "CAP Required"
