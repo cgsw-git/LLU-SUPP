@@ -19,7 +19,7 @@ var myUserId = "ADMIN";
 
 try 
 {
-	// showDebug = true;
+	showDebug = true;
   //loop through the childASIT rows and update the parent ASIT with new entries
   // aa.print("childASIT.length = " + childASIT.length)
   //if it is a fire drill, assign the task to user ENAVARRETTE
