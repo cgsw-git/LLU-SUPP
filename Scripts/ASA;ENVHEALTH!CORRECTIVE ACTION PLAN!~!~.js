@@ -76,8 +76,8 @@ try
             if (childColumnValue != "" && childColumnValue != null && parentColumnName == childColumnName && childColumnValue != parentColumnValue /*&& childRowID == parentRowID */ )
             {
               if ( childColumnName == "Corrective Action" || childColumnName == "Responsible Party" || childColumnName == "Actual/Planned Correction Date" ) {
-                aa.print("Child value and row: " + childColumnName + ": " + childColumnValue + "   RowID: " + childRowID);
-                aa.print("Parent value and row: " + parentColumnName + ": " + parentColumnValue + "   RowID: " + parentRowID);
+                logDebug("Child value and row: " + childColumnName + ": " + childColumnValue + "   RowID: " + childRowID);
+                logDebug("Parent value and row: " + parentColumnName + ": " + parentColumnValue + "   RowID: " + parentRowID);
                 setUpdateColumnValue(updateRowsMap, childRowID, childColumnName, childColumnValue);
                 rowsWithChanges.push(childRowID);
               }
@@ -87,9 +87,9 @@ try
           //update all changes at one time
           myResult = updateAppSpecificTableInfors(tableName, parentCapId, updateRowsMap);
           if (myResult.getSuccess()) {
-            aa.print("Success");
+            logDebug("Success");
           }else{
-            aa.print(myResult.getErrorMessage());
+            logDebug(myResult.getErrorMessage());
           }
           
           //create ad hoc tasks for the inspectors and set the cap status
@@ -110,7 +110,7 @@ try
                 childColumnValue = "ENAVARRETTE";
                 isFireDrill = false;
               }
-              aa.print("Adding a task for " + childColumnValue);
+              logDebug("Adding a task for " + childColumnValue);
               addAdHocTask("ADHOC_WORKFLOW", "Review CAP", null,childColumnValue,parentCapId);
             }
             if (childColumnName == "CAP Status" && arraySearch(rowsWithChanges,childRowID)) {
@@ -118,11 +118,11 @@ try
             }
           }
           myResult = updateAppSpecificTableInfors(tableName, parentCapId, updateRowsMap);
-          aa.print(myResult);
+          logDebug(myResult);
           if (myResult.getSuccess()) {
-            aa.print("Success");
+            logDebug("Success");
           }else{
-            aa.print(myResult.getErrorMessage());
+            logDebug(myResult.getErrorMessage());
           }
         }
       }
