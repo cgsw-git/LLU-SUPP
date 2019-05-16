@@ -74,6 +74,7 @@ try
               if ( childColumnName == "Corrective Action" || childColumnName == "Responsible Party" || childColumnName == "Actual/Planned Correction Date" ) {
                 logDebug("Child value and row: " + childColumnName + ": " + childColumnValue + "   RowID: " + childRowID);
                 logDebug("Parent value and row: " + parentColumnName + ": " + parentColumnValue + "   RowID: " + parentRowID);
+                logDebugObject(parentColumnValue);
                 setUpdateColumnValue(updateRowsMap, childRowID, childColumnName, childColumnValue);
                 rowsWithChanges.push(childRowID);
               }
@@ -83,7 +84,7 @@ try
           //end comparison loop
           //update all changes at one time
           
-          // testing updating after all changes are submitted
+          // testing updating after all changes are submitted to address BAppspectableValueDuplicatedException error
           // myResult = updateAppSpecificTableInfors(tableName, parentCapId, updateRowsMap);
           // if (myResult.getSuccess()) {
             // logDebug("Success");
@@ -103,8 +104,8 @@ try
             //get the row ID 
             var childRowID = childFieldObject.getRowIndex();
             
+            if (childColumnName == "Inspector ID" && (!childColumnValue || childColumnValue=="") ) {childColumnValue = "ENAVARRETTE";}
             if (childColumnName == "Inspector ID" && arraySearch(rowsWithChanges,childRowID) && !arraySearch(inspectorsWithTasks, childColumnValue)) {
-              if (!childColumnValue || childColumnValue=="") {childColumnValue = "ENAVARRETTE";}
               inspectorsWithTasks.push(childColumnValue);
               logDebug("Adding a task for " + childColumnValue);
               addAdHocTask("ADHOC_WORKFLOW", "Review CAP", null,childColumnValue,parentCapId);
@@ -117,7 +118,6 @@ try
           }
           
           myResult = updateAppSpecificTableInfors(tableName, parentCapId, updateRowsMap);
-          logDebug(myResult);
           if (myResult.getSuccess()) {
             logDebug("Success");
           }else{
