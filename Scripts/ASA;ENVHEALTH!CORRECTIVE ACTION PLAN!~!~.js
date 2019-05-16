@@ -69,10 +69,6 @@ try
             // get the row ID 
             var parentRowID = parentFieldObject.getRowIndex();
             
-            if (childColumnName == "Inspector ID" ) { var inspectorId = childColumnValue;}
-            
-            if (childColumnName == "Description" && childColumnValue == "Fire Drill") {isFireDrill = true;}
-
             if (childColumnValue != "" && childColumnValue != null && parentColumnName == childColumnName && childColumnValue != parentColumnValue /*&& childRowID == parentRowID */ )
             {
               if ( childColumnName == "Corrective Action" || childColumnName == "Responsible Party" || childColumnName == "Actual/Planned Correction Date" ) {
@@ -83,17 +79,20 @@ try
               }
             }
           }
+          
           //end comparison loop
           //update all changes at one time
-          myResult = updateAppSpecificTableInfors(tableName, parentCapId, updateRowsMap);
-          if (myResult.getSuccess()) {
-            logDebug("Success");
-          }else{
-            logDebug(myResult.getErrorMessage());
-          }
+          
+          // testing updating after all changes are submitted
+          // myResult = updateAppSpecificTableInfors(tableName, parentCapId, updateRowsMap);
+          // if (myResult.getSuccess()) {
+            // logDebug("Success");
+          // }else{
+            // logDebug(myResult.getErrorMessage());
+          // }
           
           //create ad hoc tasks for the inspectors and set the cap status
-          updateRowsMap = aa.util.newHashMap();
+          // updateRowsMap = aa.util.newHashMap();
           for (var i=0; i < childASIT.size(); i++)
           {
             var childFieldObject = childASIT.get(i); // BaseField
@@ -105,18 +104,18 @@ try
             var childRowID = childFieldObject.getRowIndex();
             
             if (childColumnName == "Inspector ID" && arraySearch(rowsWithChanges,childRowID) && !arraySearch(inspectorsWithTasks, childColumnValue)) {
+              if (!childColumnValue || childColumnValue=="") {childColumnValue = "ENAVARRETTE";}
               inspectorsWithTasks.push(childColumnValue);
-              if (isFireDrill) {
-                childColumnValue = "ENAVARRETTE";
-                isFireDrill = false;
-              }
               logDebug("Adding a task for " + childColumnValue);
               addAdHocTask("ADHOC_WORKFLOW", "Review CAP", null,childColumnValue,parentCapId);
             }
+            
+            // if the current column is "CAP Status" and current row is found in array rowsWithChanges, set the status to ""Pending"
             if (childColumnName == "CAP Status" && arraySearch(rowsWithChanges,childRowID)) {
               setUpdateColumnValue(updateRowsMap, childRowID, childColumnName, "Pending");
             }
           }
+          
           myResult = updateAppSpecificTableInfors(tableName, parentCapId, updateRowsMap);
           logDebug(myResult);
           if (myResult.getSuccess()) {
