@@ -117,7 +117,7 @@ try
             }
           }
           
-          myResult = updateAppSpecificTable(tableName, parentCapId, updateRowsMap);
+          myResult = updateAppSpecificTableInfors(tableName, parentCapId, updateRowsMap);
           if (myResult.getSuccess()) {
             logDebug("Success");
           }else{

@@ -1462,7 +1462,7 @@ function setUpdateColumnValue(updateRowsMap/** Map<rowID, Map<columnName, column
 /**
 * update ASIT rows data. updateRowsMap format: Map<rowID, Map<columnName, columnValue>>
 **/
-function updateAppSpecificTable(tableName, capIDModel, updateRowsMap/** Map<rowID, Map<columnName, columnValue>> **/)
+function updateAppSpecificTableInfors(tableName, capIDModel, updateRowsMap/** Map<rowID, Map<columnName, columnValue>> **/)
 {
 	if (updateRowsMap == null || updateRowsMap.isEmpty())
 	{
