@@ -59,7 +59,7 @@ try {
       // rowVals["Responsible Party"] = new asiTableValObj("Responsible Party"," ","N");
       rowVals["Inspection Type"] = new asiTableValObj("Program","Fire Drill","N");
       rowVals["CAP Status"] = new asiTableValObj("CAP Status","Incomplete","N");
-      // rowVals["Actual/Planned Correction Date"] = new asiTableValObj("Actual/Planned Correction Date",AInfo["Drill Date"],"N");
+      rowVals["Actual/Planned Correction Date"] = new asiTableValObj("Actual/Planned Correction Date","01/01/2000","N");
       var addrResult = aa.address.getAddressByCapId(parentCapId);
       if (addrResult) {
         var addrArray = new Array();
