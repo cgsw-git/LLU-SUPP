@@ -199,7 +199,7 @@ function mySendInspectionActivityReport(){
 
 function myRunReport4Email(itemCap,reportName,conObj,rParams,eParams,emailTemplate,module,mailFrom) {
 	//If email address available for contact type then email the report, otherwise return false;
-
+// return false;
 	var reportSent = false;
 
 	if (conObj) {
