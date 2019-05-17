@@ -74,7 +74,7 @@ try
               if ( childColumnName == "Corrective Action" || childColumnName == "Responsible Party" || childColumnName == "Actual/Planned Correction Date" ) {
                 logDebug("Child value and row: " + childColumnName + ": " + childColumnValue + "   RowID: " + childRowID);
                 logDebug("Parent value and row: " + parentColumnName + ": " + parentColumnValue + "   RowID: " + parentRowID);
-                logDebugObject(parentFieldObject);
+                // logDebugObject(parentFieldObject);
                 setUpdateColumnValue(updateRowsMap, childRowID, childColumnName, childColumnValue);
                 rowsWithChanges.push(childRowID);
               }

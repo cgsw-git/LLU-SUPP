@@ -54,8 +54,8 @@ try {
       rowVals["Vio. Status"] = new asiTableValObj("Vio. Status",AInfo[x],"N");
       // rowVals["Inspector Comment"] = new asiTableValObj("Inspector Comment", " ","N");
       // rowVals["CAP Review Comment"] = new asiTableValObj("CAP Review Comment"," ","N");
-      rowVals["Corrective Action"] = new asiTableValObj("Corrective Action"," ","N");
-      rowVals["Responsible Party"] = " ";
+      rowVals["Corrective Action"] = new asiTableValObj("Corrective Action","Enter corrective action","N");
+      rowVals["Responsible Party"] = "Enter reponsible party";
       // rowVals["Responsible Party"] = new asiTableValObj("Responsible Party"," ","N");
       rowVals["Inspection Type"] = new asiTableValObj("Program","Fire Drill","N");
       rowVals["CAP Status"] = new asiTableValObj("CAP Status","Incomplete","N");
