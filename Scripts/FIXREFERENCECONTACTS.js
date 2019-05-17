@@ -360,9 +360,9 @@ function mainProcess() {
       logDebug("Adding Observer as reference contact")
       referenceContactNumber = myAddReferenceContactByName("Observer", null, "Observer");
       (referenceContactNumber) ? logDebug("successfully added reference contact observer") : logDebug("unable to add reference contact observer")
-      isObserver = false;
     }else{
       logDebug("Reference contact Observer already exists");
+      isObserver = false;
     }
     capCount++;
   }  // department loop
