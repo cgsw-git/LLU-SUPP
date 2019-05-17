@@ -126,6 +126,7 @@ function mainProcess() {
   var errorsSettingAsPrimary = 0;
   var errorsRemovingTransactional = 0;
   var isObserver = false;
+  var observersAdded = 0;
   emptyCt.setGroup("Planning");
   emptyCt.setType(null);
   emptyCt.setSubType(null);
@@ -159,8 +160,8 @@ function mainProcess() {
     
     //exit or continue loop
     // if (capIDString != "FA0000041") continue;
-    if (thisApp < 400) continue;
-    if (thisApp == 500) break;
+    // if (thisApp < 400) continue;
+    if (thisApp == 400) break;
     
     aa.print("************ START *****************");
     aa.print("capId:" + capId.getCustomID());
@@ -360,6 +361,7 @@ function mainProcess() {
       logDebug("Adding Observer as reference contact")
       referenceContactNumber = myAddReferenceContactByName("Observer", null, "Observer");
       (referenceContactNumber) ? logDebug("successfully added reference contact observer") : logDebug("unable to add reference contact observer")
+      if(referenceContactNumber) {observersAdded++; }
     }else{
       logDebug("Reference contact Observer already exists");
       isObserver = false;
