@@ -35,7 +35,7 @@ links the reference contact to the public user
 */
 
 emailText = "";
-maxSeconds = 4.5 * 60; // number of seconds allowed for batch processing, usually < 5*60
+maxSeconds = 10 * 60; // number of seconds allowed for batch processing, usually < 5*60
 message = "";
 br = "<br>";
 var debug = ""; // Debug String
@@ -125,8 +125,6 @@ function mainProcess() {
   var publicUsersDisabled = 0;
   var errorsSettingAsPrimary = 0;
   var errorsRemovingTransactional = 0;
-  var isObserver = false;
-  var observersAdded = 0;
   emptyCt.setGroup("Planning");
   emptyCt.setType(null);
   emptyCt.setSubType(null);
@@ -160,8 +158,8 @@ function mainProcess() {
     
     //exit or continue loop
     // if (capIDString != "FA0000041") continue;
-    // if (thisApp < 400) continue;
-    if (thisApp == 400) break;
+    if (thisApp < 800) continue;
+    if (thisApp == 1200) break;
     
     aa.print("************ START *****************");
     aa.print("capId:" + capId.getCustomID());
@@ -176,7 +174,7 @@ function mainProcess() {
     if (capContactResult.getSuccess()) capContactArray = capContactResult.getOutput();
 
     // var capContactArray = getContactArray(capId);
-    if (capContactArray.length > 0 ) 
+    if (capContactArray.length > 0 && thisCapModel.getCapStatus() ) 
     {
       aa.print("Department: " + capIDString + " has " + capContactArray.length + " contacts");
       
@@ -196,7 +194,6 @@ function mainProcess() {
         var thisContact = con.getCapContactModel();
         var searchLN = thisContact.getLastName();
         var searchFN = thisContact.getFirstName();
-        if (searchFN == "Observer") isObserver = true ;
         var searchFullN = searchFN + " " + searchLN;
         var refSeqNumber = thisContact.getRefContactNumber();
         var contactSeqNumber = thisContact.getContactSeqNumber();
@@ -356,15 +353,6 @@ function mainProcess() {
       }  //contact loop
     } else { // if (capContactResult.getSuccess())
       logDebug("No contacts on record " + capId.getCustomID());
-    }
-    if (!isObserver) {
-      logDebug("Adding Observer as reference contact")
-      referenceContactNumber = myAddReferenceContactByName("Observer", null, "Observer");
-      (referenceContactNumber) ? logDebug("successfully added reference contact observer") : logDebug("unable to add reference contact observer")
-      if(referenceContactNumber) {observersAdded++; }
-    }else{
-      logDebug("Reference contact Observer already exists");
-      isObserver = false;
     }
     capCount++;
   }  // department loop
@@ -671,3 +659,21 @@ function myAddReferenceContactByName(vFirst, vMiddle, vLast)
 		}
 }
 
+/*
+ function enablePublicUser(userModel) {
+  // from REGISTRATIONSUBMITAFTER
+		// var serviceProviderCode = publicUser.getServProvCode();
+		// var userModel = aa.publicUser.getUserModel().getOutput();
+		// var userName = "PUBLICUSER" + publicUser.getUserSeqNum();
+		
+		// userModel.setServProvCode(serviceProviderCode);
+		// userModel.setUserName(userName);
+		// Get current public user AA account.
+		var dbUserModel = aa.publicUser.getPublicUserAAAccount(userModel).getOutput();
+		
+		dbUserModel.setStatus("ENABLE");
+		// update current public user AA account.
+		aa.publicUser.updatePublicUserAAAccount(dbUserModel);		
+ } 
+ 
+ */
