@@ -748,9 +748,7 @@ function copyPeople(srcCapId, targetCapId)
     if (targetPeopleModel != null)
     {
       //3.3.1 Copy information from source to target.
-      aa.people.copyCapContactModel(sourcePeopleModel.getCapContactModel(), 
-
-      targetPeopleModel.getCapContactModel());
+      aa.people.copyCapContactModel(sourcePeopleModel.getCapContactModel(), targetPeopleModel.getCapContactModel());
       //3.3.2 Edit People with source People information. 
       aa.people.editCapContactWithAttribute(targetPeopleModel.getCapContactModel());
     }
