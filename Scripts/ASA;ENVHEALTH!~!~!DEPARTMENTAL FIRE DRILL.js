@@ -104,11 +104,46 @@ try {
   if (outOfCompliance) {
     updateAppStatus("CAP Required","Updated by EMSE Script",parentCapId);
   }
-	
-}
-catch (err) {
+  
+  // send email notification to contacts
+  // Provide the ACA URl - This should be set in INCLUDES_CUSTOM_GLOBALS
+  var acaURL = "aca.accela.com/LLU"
+  // Provide the Agency Reply Email - This should be set in INCLUDES_CUSTOM_GLOBALS
+  var agencyReplyEmail = "noreply@accela.com"
+  // Provide the contact types to send this notification
+  var contactTypesArray = new Array("Primary");
+  contactTypesArray[0] = "Frontline Leadership";
+  contactTypesArray[1] = "Contact";
+  // Provide the Notification Template to use
+  var notificationTemplate = "FIRE DRILL CONDUCTED";
+  // Get an array of Contact Objects using Master Scripts 3.0
+  var contactObjArray = getContactObjs(capId,contactTypesArray);
+
+
+  for (iCon in contactObjArray) 
+  {
+    var tContactObj = contactObjArray[iCon];
+    logDebug("ContactName: " + tContactObj.people.getFirstName() + " " + tContactObj.people.getLastName());
+    if (!matches(tContactObj.people.getEmail(),null,undefined,"")) 
+    { 
+      // logDebug("Contact Email: " + tContactObj.people.getEmail());
+      var eParams = aa.util.newHashtable();
+      addParameter(eParams, "$$recordTypeAlias$$", cap.getCapType().getAlias());
+      // addParameter(eParams, "$$recordTypeAlias$$", "Department");
+      myGetRecordParams4Notification(eParams,capId);
+      myGetACARecordParam4Notification(eParams,acaURL,capId);
+      // logDebug(capId);
+      tContactObj.getEmailTemplateParams(eParams);
+      // not needed getWorkflowParams4Notification(eParams); 
+      // not needed getInspectionResultParams4Notification(eParams);
+      getPrimaryAddressLineParam4Notification(eParams,capId);
+      // Call sendNotification if you are not using a report
+      sendNotification(agencyReplyEmail,tContactObj.people.getEmail(),"",notificationTemplate ,eParams,null);
+    }
+  }
+} catch (err) {
 	logDebug("A JavaScript Error occured: " + err.message);
-	}
+}
 // end user code
 // aa.env.setValue("ScriptReturnCode", "1"); 	
 // aa.env.setValue("ScriptReturnMessage", debug)
