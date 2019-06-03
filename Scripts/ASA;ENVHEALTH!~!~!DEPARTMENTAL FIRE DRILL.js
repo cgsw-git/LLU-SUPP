@@ -138,13 +138,15 @@ try {
       var eParams = aa.util.newHashtable();
       addParameter(eParams, "$$recordTypeAlias$$", cap.getCapType().getAlias());
       // addParameter(eParams, "$$recordTypeAlias$$", "Department");
-      myGetRecordParams4Notification(eParams,capId);
-      myGetACARecordParam4Notification(eParams,acaURL,capId);
+      // myGetRecordParams4Notification(eParams,capId);
+      getRecordParams4Notification(eParams);
+      // myGetACARecordParam4Notification(eParams,acaURL,capId);
+      getACARecordParam4Notification(eParams,acaURL);
       // logDebug(capId);
       tContactObj.getEmailTemplateParams(eParams);
       // not needed getWorkflowParams4Notification(eParams); 
       // not needed getInspectionResultParams4Notification(eParams);
-      getPrimaryAddressLineParam4Notification(eParams,capId);
+      getPrimaryAddressLineParam4Notification(eParams);
       // Call sendNotification if you are not using a report
       sendNotification(agencyReplyEmail,tContactObj.people.getEmail(),"",notificationTemplate ,eParams,null);
     }
