@@ -10,7 +10,7 @@ This event script:
 */
 
 
- // var myCapId = "DF0000031";
+ // var myCapId = "DF0000032";
  // var myUserId = "ADMIN";
 
 /* ASA  */  //var eventName = "ApplicationSubmitAfter";
@@ -121,9 +121,9 @@ try {
   var agencyReplyEmail = "noreply@accela.com"
   // Provide the contact types to send this notification
   var contactTypesArray = new Array("Primary");
-  contactTypesArray[0] = "Frontline Leadership";
-  contactTypesArray[1] = "Contact";
-  contactTypesArray[2] = "Executive Leadership";
+  contactTypesArray[1] = "Frontline Leadership";
+  contactTypesArray[2] = "Contact";
+  contactTypesArray[3] = "Executive Leadership";
   // Provide the Notification Template to use
   var notificationTemplate = "LLU FIRE DRILL NOTIFICATION";
   // Get an array of Contact Objects using Master Scripts 3.0
