@@ -12,6 +12,7 @@
 |	Ifchanges are made, please add notes above.
 /------------------------------------------------------------------------------------------------------*/
 feeEstimate=false;
+acaURL = "aca.supp.accela.com/LLU"
 if(vEventName.equals("FeeEstimateAfter4ACA")) 
 	feeEstimate=true;
 debugLevel = 2;
