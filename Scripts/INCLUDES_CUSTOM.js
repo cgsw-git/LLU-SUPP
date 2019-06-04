@@ -1252,9 +1252,9 @@ function getRecordParams4Notification(params) {
 	addParameter(params, "$$workDesc$$", workDescGet(capId));
 	addParameter(params, "$$balanceDue$$", "$" + parseFloat(balanceDue).toFixed(2));
 	addParameter(params, "$$capTypeAlias$$", aa.cap.getCap(capId).getOutput().getCapType().getAlias());
-	// if (wfComment != null) {
-		// addParameter(params, "$$wfComment$$", wfComment);
-	// }
+	if (wfComment != null) {
+		addParameter(params, "$$wfComment$$", wfComment);
+	}
 	return params;
 }
 

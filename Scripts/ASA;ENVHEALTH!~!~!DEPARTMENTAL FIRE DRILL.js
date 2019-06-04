@@ -31,7 +31,6 @@ This event script:
 
 try {
 	showDebug = true;
-  var wfComment;
   var outOfCompliance = false;
   var parentCapId = getParentByCapId(capId);
   var parentCap = aa.cap.getCap(parentCapId).getOutput();
