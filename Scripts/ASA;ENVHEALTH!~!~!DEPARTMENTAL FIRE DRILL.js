@@ -10,20 +10,20 @@ This event script:
 */
 
 
- var myCapId = "DF0000031";
- var myUserId = "ADMIN";
+ // var myCapId = "DF0000031";
+ // var myUserId = "ADMIN";
 
-/* ASA  */  var eventName = "ApplicationSubmitAfter";
+/* ASA  */  //var eventName = "ApplicationSubmitAfter";
 /* WTUA */  //var eventName = "WorkflowTaskUpdateAfter";  wfTask = "Application Submittal";	  wfStatus = "Admin Approved";  wfDateMMDDYYYY = "01/27/2015";
 /* IRSA */  //var eventName = "InspectionResultSubmitAfter" ; inspResult = "Failed"; inspResultComment = "Comment";  inspType = "Roofing"
 /* ISA  */  //var eventName = "InspectionScheduleAfter" ; inspType = "Roofing"
 /* PRA  */  //var eventName = "PaymentReceiveAfter";  
 
-var useProductScript = false;  // set to true to use the "productized" master scripts (events->master scripts), false to use scripts from (events->scripts)
-var runEvent = false; // set to true to simulate the event and run all std choices/scripts for the record type.  
+// var useProductScript = false;  // set to true to use the "productized" master scripts (events->master scripts), false to use scripts from (events->scripts)
+// var runEvent = true; // set to true to simulate the event and run all std choices/scripts for the record type.  
 
 /* master script code don't touch */ 
-aa.env.setValue("EventName",eventName); var vEventName = eventName;  var controlString = eventName;  var tmpID = aa.cap.getCapID(myCapId).getOutput(); if(tmpID != null){aa.env.setValue("PermitId1",tmpID.getID1()); 	aa.env.setValue("PermitId2",tmpID.getID2()); 	aa.env.setValue("PermitId3",tmpID.getID3());} aa.env.setValue("CurrentUserID",myUserId); var preExecute = "PreExecuteForAfterEvents";var documentOnly = false;var SCRIPT_VERSION = 3.0;var useSA = false;var SA = null;var SAScript = null;var bzr = aa.bizDomain.getBizDomainByValue("MULTI_SERVICE_SETTINGS","SUPER_AGENCY_FOR_EMSE"); if (bzr.getSuccess() && bzr.getOutput().getAuditStatus() != "I") { 	useSA = true; 		SA = bzr.getOutput().getDescription();	bzr = aa.bizDomain.getBizDomainByValue("MULTI_SERVICE_SETTINGS","SUPER_AGENCY_INCLUDE_SCRIPT"); 	if (bzr.getSuccess()) { SAScript = bzr.getOutput().getDescription(); }	}if (SA) {	eval(getScriptText("INCLUDES_ACCELA_FUNCTIONS",SA,useProductScript));	eval(getScriptText("INCLUDES_ACCELA_GLOBALS",SA,useProductScript));	/* force for script test*/ showDebug = true; eval(getScriptText(SAScript,SA,useProductScript));	}else {	eval(getScriptText("INCLUDES_ACCELA_FUNCTIONS",null,useProductScript));	eval(getScriptText("INCLUDES_ACCELA_GLOBALS",null,useProductScript));	}	eval(getScriptText("INCLUDES_CUSTOM",null,useProductScript));if (documentOnly) {	doStandardChoiceActions2(controlString,false,0);	aa.env.setValue("ScriptReturnCode", "0");	aa.env.setValue("ScriptReturnMessage", "Documentation Successful.  No actions executed.");	aa.abortScript();	}var prefix = lookup("EMSE_VARIABLE_BRANCH_PREFIX",vEventName);var controlFlagStdChoice = "EMSE_EXECUTE_OPTIONS";var doStdChoices = true;  var doScripts = false;var bzr = aa.bizDomain.getBizDomain(controlFlagStdChoice ).getOutput().size() > 0;if (bzr) {	var bvr1 = aa.bizDomain.getBizDomainByValue(controlFlagStdChoice ,"STD_CHOICE");	doStdChoices = bvr1.getSuccess() && bvr1.getOutput().getAuditStatus() != "I";	var bvr1 = aa.bizDomain.getBizDomainByValue(controlFlagStdChoice ,"SCRIPT");	doScripts = bvr1.getSuccess() && bvr1.getOutput().getAuditStatus() != "I";	}	function getScriptText(vScriptName, servProvCode, useProductScripts) {	if (!servProvCode)  servProvCode = aa.getServiceProviderCode();	vScriptName = vScriptName.toUpperCase();	var emseBiz = aa.proxyInvoker.newInstance("com.accela.aa.emse.emse.EMSEBusiness").getOutput();	try {		if (useProductScripts) {			var emseScript = emseBiz.getMasterScript(aa.getServiceProviderCode(), vScriptName);		} else {			var emseScript = emseBiz.getScriptByPK(aa.getServiceProviderCode(), vScriptName, "ADMIN");		}		return emseScript.getScriptText() + "";	} catch (err) {		return "";	}}logGlobals(AInfo); if (runEvent && typeof(doStandardChoiceActions) == "function" && doStdChoices) try {doStandardChoiceActions(controlString,true,0); } catch (err) { logDebug(err.message) } if (runEvent && typeof(doScriptActions) == "function" && doScripts) doScriptActions(); var z = debug.replace(/<BR>/g,"\r");  aa.print(z); 
+// aa.env.setValue("EventName",eventName); var vEventName = eventName;  var controlString = eventName;  var tmpID = aa.cap.getCapID(myCapId).getOutput(); if(tmpID != null){aa.env.setValue("PermitId1",tmpID.getID1()); 	aa.env.setValue("PermitId2",tmpID.getID2()); 	aa.env.setValue("PermitId3",tmpID.getID3());} aa.env.setValue("CurrentUserID",myUserId); var preExecute = "PreExecuteForAfterEvents";var documentOnly = false;var SCRIPT_VERSION = 3.0;var useSA = false;var SA = null;var SAScript = null;var bzr = aa.bizDomain.getBizDomainByValue("MULTI_SERVICE_SETTINGS","SUPER_AGENCY_FOR_EMSE"); if (bzr.getSuccess() && bzr.getOutput().getAuditStatus() != "I") { 	useSA = true; 		SA = bzr.getOutput().getDescription();	bzr = aa.bizDomain.getBizDomainByValue("MULTI_SERVICE_SETTINGS","SUPER_AGENCY_INCLUDE_SCRIPT"); 	if (bzr.getSuccess()) { SAScript = bzr.getOutput().getDescription(); }	}if (SA) {	eval(getScriptText("INCLUDES_ACCELA_FUNCTIONS",SA,useProductScript));	eval(getScriptText("INCLUDES_ACCELA_GLOBALS",SA,useProductScript));	/* force for script test*/ showDebug = true; eval(getScriptText(SAScript,SA,useProductScript));	}else {	eval(getScriptText("INCLUDES_ACCELA_FUNCTIONS",null,useProductScript));	eval(getScriptText("INCLUDES_ACCELA_GLOBALS",null,useProductScript));	}	eval(getScriptText("INCLUDES_CUSTOM",null,useProductScript));if (documentOnly) {	doStandardChoiceActions2(controlString,false,0);	aa.env.setValue("ScriptReturnCode", "0");	aa.env.setValue("ScriptReturnMessage", "Documentation Successful.  No actions executed.");	aa.abortScript();	}var prefix = lookup("EMSE_VARIABLE_BRANCH_PREFIX",vEventName);var controlFlagStdChoice = "EMSE_EXECUTE_OPTIONS";var doStdChoices = true;  var doScripts = false;var bzr = aa.bizDomain.getBizDomain(controlFlagStdChoice ).getOutput().size() > 0;if (bzr) {	var bvr1 = aa.bizDomain.getBizDomainByValue(controlFlagStdChoice ,"STD_CHOICE");	doStdChoices = bvr1.getSuccess() && bvr1.getOutput().getAuditStatus() != "I";	var bvr1 = aa.bizDomain.getBizDomainByValue(controlFlagStdChoice ,"SCRIPT");	doScripts = bvr1.getSuccess() && bvr1.getOutput().getAuditStatus() != "I";	}	function getScriptText(vScriptName, servProvCode, useProductScripts) {	if (!servProvCode)  servProvCode = aa.getServiceProviderCode();	vScriptName = vScriptName.toUpperCase();	var emseBiz = aa.proxyInvoker.newInstance("com.accela.aa.emse.emse.EMSEBusiness").getOutput();	try {		if (useProductScripts) {			var emseScript = emseBiz.getMasterScript(aa.getServiceProviderCode(), vScriptName);		} else {			var emseScript = emseBiz.getScriptByPK(aa.getServiceProviderCode(), vScriptName, "ADMIN");		}		return emseScript.getScriptText() + "";	} catch (err) {		return "";	}}logGlobals(AInfo); if (runEvent && typeof(doStandardChoiceActions) == "function" && doStdChoices) try {doStandardChoiceActions(controlString,true,0); } catch (err) { logDebug(err.message) } if (runEvent && typeof(doScriptActions) == "function" && doScripts) doScriptActions(); var z = debug.replace(/<BR>/g,"\r");  aa.print(z); 
 
 //
 // User code goes here
@@ -116,13 +116,14 @@ try {
   
   // send email notification to contacts
   // Provide the ACA URl - This should be set in INCLUDES_CUSTOM_GLOBALS
-  var acaURL = "aca.accela.com/LLU"
+  // var acaURL = "aca.supp.accela.com/LLU"
   // Provide the Agency Reply Email - This should be set in INCLUDES_CUSTOM_GLOBALS
   var agencyReplyEmail = "noreply@accela.com"
   // Provide the contact types to send this notification
   var contactTypesArray = new Array("Primary");
   contactTypesArray[0] = "Frontline Leadership";
-  // contactTypesArray[1] = "Contact";
+  contactTypesArray[1] = "Contact";
+  contactTypesArray[2] = "Executive Leadership";
   // Provide the Notification Template to use
   var notificationTemplate = "LLU FIRE DRILL NOTIFICATION";
   // Get an array of Contact Objects using Master Scripts 3.0
@@ -138,6 +139,7 @@ try {
       // logDebug("Contact Email: " + tContactObj.people.getEmail());
       var eParams = aa.util.newHashtable();
       addParameter(eParams, "$$recordTypeAlias$$", cap.getCapType().getAlias());
+      addParameter(eParams, "$$acaUrl$$", acaURL);
       // addParameter(eParams, "$$recordTypeAlias$$", "Department");
       // myGetRecordParams4Notification(eParams,capId);
       getRecordParams4Notification(eParams);
@@ -157,8 +159,8 @@ try {
 	logDebug("A JavaScript Error occured: " + err.message);
 }
 // end user code
-aa.env.setValue("ScriptReturnCode", "1"); 	
-aa.env.setValue("ScriptReturnMessage", debug)
+// aa.env.setValue("ScriptReturnCode", "1"); 	
+// aa.env.setValue("ScriptReturnMessage", debug)
 
 /*------------------------------------------------------------------------------------------------------/
 | <===========Functions (used by copy)
@@ -1223,157 +1225,8 @@ function getCapDetailByID(capId)
   return capDetailScriptModel;
 }
 
-function myRunReport4Email(itemCap,reportName,conObj,rParams,eParams,emailTemplate,module,mailFrom) {
-	//If email address available for contact type then email the report, otherwise return false;
-// return false;
-	var reportSent = false;
 
-	if (conObj) {
-		if (!matches(conObj.people.getEmail(),null,undefined,"")) {
-			//Send the report via email
-			var rFile;
-			rFile = generateReport(itemCap,reportName,module,rParams);
-	
-			if (rFile) {
-				var rFiles = new Array();
-				rFiles.push(rFile);
-				sendNotification(mailFrom,conObj.people.getEmail(),"",emailTemplate,eParams,rFiles,itemCap);
-				return true;
-			}
-		} else {
-			reportSent = false;
-		}
-	} else {
-		reportSent = false;
-	}
 
-	if (!reportSent) {
-		return false;
-	}
-}
- 
- function myGetRecordParams4Notification(params) {
-
-	itemCapId = (arguments.length == 2) ? arguments[1] : capId;
-	// pass in a hashtable and it will add the additional parameters to the table
-  // logDebug("capId = " + capId);
-  // logDebug("itemCapId = " + itemCapId);
-
-	var itemCapIDString = itemCapId.getCustomID();
-	var itemCap = aa.cap.getCap(itemCapId).getOutput();
-	var itemCapName = itemCap.getSpecialText();
-	var itemCapStatus = itemCap.getCapStatus();
-	var itemFileDate = itemCap.getFileDate();
-	var itemCapTypeAlias = itemCap.getCapType().getAlias();
-	var itemHouseCount;
-	var itemFeesInvoicedTotal;
-	var itemBalanceDue;
-	
-  var itemCapDetailObjResult = aa.cap.getCapDetail(itemCapId);	
-  logDebug("itemCapDetailObjResult = " + itemCapDetailObjResult.getSuccess() );
- 	if (itemCapDetailObjResult.getSuccess())
-	{
-		itemCapDetail = itemCapDetailObjResult.getOutput();
-		itemHouseCount = itemCapDetail.getHouseCount();
-		itemFeesInvoicedTotal = itemCapDetail.getTotalFee();
-		itemBalanceDue = itemCapDetail.getBalance();
-	}
-	
- 	var workDesc = workDescGet(itemCapId);
-
-	addParameter(params, "$$altID$$", itemCapIDString);
-  // logDebug("$$altID$$ = " + itemCapIDString);
-  
-	addParameter(params, "$$capName$$", itemCapName);
-  // logDebug("$$capName$$ = " +itemCapName );
-	
-	addParameter(params, "$$recordTypeAlias$$", itemCapTypeAlias);
-  // logDebug("$$recordTypeAlias$$ = " + itemCapTypeAlias);
-
-	addParameter(params, "$$capStatus$$", itemCapStatus);
-  // logDebug("$$capStatus$$ = " + itemCapStatus);
-
-	addParameter(params, "$$fileDate$$", itemFileDate);
-  // logDebug("$$fileDate$$ = " + itemFileDate);
-
-	addParameter(params, "$$balanceDue$$", "$" + parseFloat(itemBalanceDue).toFixed(2));
-  // logDebug("$$balanceDue$$ = $" + parseFloat(itemBalanceDue).toFixed(2))
-	
-	addParameter(params, "$$workDesc$$", (workDesc) ? workDesc : "");
-  // logDebug("$$workDesc$$ = " + (workDesc) ? workDesc : "" )
-
-	return params;
-
-  }
-
-  function logDebugObject(myObject) {
-/*
-usage - logDebugObject(object)
-
-author - Michael Zachry
-created - 10/10/2018
-
-updates
-10/11/2018 - initial version
-
-*/
-  //list the methods
-  try {
-    logDebug("object is is a " + myObject.getClass());
-    logDebug("object has the following methods:");
-    for (x in myObject) {
-      if (typeof(myObject[x]) == "function" ) {
-        logDebug("  " + x);
-      }
-    }
-
-    //list the properties and values    
-    logDebug("object has the following properties and values:");
-    for (x in myObject) {
-      if (typeof(myObject[x]) != "function" ) {
-        logDebug("  " + x + " = " + myObject[x]);
-      }
-    }
-  } catch (err) {
-    logDebug("A JavaScript Error occured: " + err.message);
-  }
-}
-
-function arraySearch(arr,val) {
-  for (var i=0; i<arr.length; i++) {
-    if (arr[i] == val) return true;
-  }
-  return false;
-}
-
-function myGetACARecordParam4Notification(params,acaUrl,itemCap) {
-
-	// itemCap = (arguments.length == 3) ? arguments[2] : capId;
-
-	addParameter(params, "$$acaRecordUrl$$", myGetACARecordURL(acaUrl,itemCap));
-
-	return params;	
-
-}
-
-function myGetACARecordURL(acaUrl,itemCap) {
-	// itemCap = (arguments.length == 2) ? arguments[1] : capId;
-	var enableCustomWrapper = lookup("ACA_CONFIGS","ENABLE_CUSTOMIZATION_PER_PAGE");
-	var acaRecordUrl = "";
-	var id1 = itemCap.ID1;
- 	var id2 = itemCap.ID2;
- 	var id3 = itemCap.ID3;
- 	var itemCapModel = aa.cap.getCap(itemCap).getOutput().getCapModel();
-
-   	acaRecordUrl = acaUrl + "/urlrouting.ashx?type=1000";   
-	acaRecordUrl += "&Module=" + itemCapModel.getModuleName();
-	acaRecordUrl += "&capID1=" + id1 + "&capID2=" + id2 + "&capID3=" + id3;
-	acaRecordUrl += "&agencyCode=" + aa.getServiceProviderCode();
-	if(matches(enableCustomWrapper,"Yes","YES")) acaRecordUrl += "&FromACA=Y";
-
-   	return acaRecordUrl;
-
-} 
  
 
 
