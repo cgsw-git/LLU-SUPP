@@ -77,7 +77,7 @@ function copy()
 
 		// copyParcel(parentCapId, targetCapId);
       
-		// copyPeople(parentCapId, targetCapId);
+		copyPeople(parentCapId, targetCapId);
       
 		// copyOwner(parentCapId, targetCapId);
       
