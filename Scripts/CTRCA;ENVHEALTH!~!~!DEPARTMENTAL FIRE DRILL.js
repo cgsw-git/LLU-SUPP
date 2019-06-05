@@ -112,15 +112,6 @@ try {
     updateAppStatus("CAP Required","Updated by EMSE Script",parentCapId);
   }
 
-	if(aa.env.getValue("CapId") != ""){
-		sca = String(aa.env.getValue("CapId")).split("-");
-		capId = aa.cap.getCapID(sca[0],sca[1],sca[2]).getOutput();
-	}else if(aa.env.getValue("CapID") != ""){
-		sca = String(aa.env.getValue("CapID")).split("-");
-		capId = aa.cap.getCapID(sca[0],sca[1],sca[2]).getOutput();
-	}  
-  
-  
   // send email notification to contacts
   // Provide the ACA URl - This should be set in INCLUDES_CUSTOM_GLOBALS
   // var acaURL = "aca.supp.accela.com/LLU"
