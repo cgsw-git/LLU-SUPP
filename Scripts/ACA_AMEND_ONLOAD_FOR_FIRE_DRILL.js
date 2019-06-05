@@ -73,7 +73,7 @@ function copy()
       
 		// copyLicenseProfessional(parentCapId, targetCapId);
       
-		// copyAddress(parentCapId, targetCapId);
+		copyAddress(parentCapId, targetCapId);
 
 		// copyParcel(parentCapId, targetCapId);
       
