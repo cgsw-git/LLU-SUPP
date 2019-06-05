@@ -7,7 +7,7 @@
 | Client  : Loma Linda University Hospital
 | Action# : N/A
 |
-| Notes   : This is used to copy CAP detail and people information from the parent Department record.
+| Notes   : This is used to copy information from the parent Department record.
 |
 /------------------------------------------------------------------------------------------------------*/
 
@@ -36,6 +36,9 @@ function copy()
 {
     //----------------------------------------
     var capModel = aa.env.getValue("CapModel");
+    if (capModel == NULL) {
+      var capModel = aa.cap.getCap(capId).getOutput();
+    }
 		
     targetCapId = capModel.getCapID();
    
@@ -70,7 +73,7 @@ function copy()
       
 		// copyLicenseProfessional(parentCapId, targetCapId);
       
-		// copyAddress(parentCapId, targetCapId);
+		copyAddress(parentCapId, targetCapId);
 
 		// copyParcel(parentCapId, targetCapId);
       
