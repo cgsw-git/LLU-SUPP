@@ -1258,13 +1258,14 @@ function getRecordParams4Notification(params) {
 	return params;
 }
 
-function getACARecordParam4Notification(params,acaUrl) {
+/* function getACARecordParam4Notification(params,acaUrl) {
 	// pass in a hashtable and it will add the additional parameters to the table
 
 	addParameter(params, "$$acaRecordUrl$$", getACARecordURL(acaUrl));
 	
 	return params;	
 }
+*/
 
 function getACADeepLinkParam4Notification(params,acaUrl,pAppType,pAppTypeAlias,module) {
 	// pass in a hashtable and it will add the additional parameters to the table
@@ -1369,7 +1370,7 @@ function getACADocumentDownloadUrl(acaUrl,documentModel) {
 }
 
 
-function getACARecordURL(acaUrl) {
+/* function getACARecordURL(acaUrl) {
 	
 	var acaRecordUrl = "";
 	var id1 = capId.ID1;
@@ -1383,6 +1384,7 @@ function getACARecordURL(acaUrl) {
 
    	return acaRecordUrl;
 }
+*/
 
 function getDeepLinkUrl(acaUrl, appType, module) {
 	var acaDeepLinkUrl = "";
