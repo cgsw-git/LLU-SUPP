@@ -85,7 +85,7 @@ function copy()
       
 		// copyAdditionalInfo(parentCapId, targetCapId);
       
-		// copyCapDetailInfo(parentCapId, targetCapId);
+		copyCapDetailInfo(parentCapId, targetCapId);
       
 		// copyCapWorkDesInfo(parentCapId, targetCapId);
 	  
