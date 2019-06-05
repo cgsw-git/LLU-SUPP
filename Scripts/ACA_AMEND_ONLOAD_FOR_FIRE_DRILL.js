@@ -73,11 +73,11 @@ function copy()
       
 		// copyLicenseProfessional(parentCapId, targetCapId);
       
-		copyAddress(parentCapId, targetCapId);
+		// copyAddress(parentCapId, targetCapId);
 
 		// copyParcel(parentCapId, targetCapId);
       
-		copyPeople(parentCapId, targetCapId);
+		// copyPeople(parentCapId, targetCapId);
       
 		// copyOwner(parentCapId, targetCapId);
       
@@ -85,7 +85,7 @@ function copy()
       
 		// copyAdditionalInfo(parentCapId, targetCapId);
       
-		copyCapDetailInfo(parentCapId, targetCapId);
+		// copyCapDetailInfo(parentCapId, targetCapId);
       
 		// copyCapWorkDesInfo(parentCapId, targetCapId);
 	  
