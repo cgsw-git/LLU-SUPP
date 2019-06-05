@@ -10,7 +10,7 @@ This event script:
 */
 
 
- // var myCapId = "DF0000032";
+ // var myCapId = "DF0000041";
  // var myUserId = "ADMIN";
 
 /* ASA  */  //var eventName = "ApplicationSubmitAfter";
@@ -112,6 +112,14 @@ try {
     updateAppStatus("CAP Required","Updated by EMSE Script",parentCapId);
   }
 
+	if(aa.env.getValue("CapId") != ""){
+		sca = String(aa.env.getValue("CapId")).split("-");
+		capId = aa.cap.getCapID(sca[0],sca[1],sca[2]).getOutput();
+	}else if(aa.env.getValue("CapID") != ""){
+		sca = String(aa.env.getValue("CapID")).split("-");
+		capId = aa.cap.getCapID(sca[0],sca[1],sca[2]).getOutput();
+	}  
+  
   
   // send email notification to contacts
   // Provide the ACA URl - This should be set in INCLUDES_CUSTOM_GLOBALS
@@ -151,6 +159,7 @@ try {
       getPrimaryAddressLineParam4Notification(eParams);
       // Call sendNotification if you are not using a report
       logDebug(capId);
+      logDebug(getACARecordURL(acaURL));
       sendNotification(agencyReplyEmail,tContactObj.people.getEmail(),"",notificationTemplate ,eParams,null);
     }
   }
