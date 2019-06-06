@@ -18,7 +18,7 @@ This event script:
 /* IRSA */  //var eventName = "InspectionResultSubmitAfter" ; inspResult = "Failed"; inspResultComment = "Comment";  inspType = "Roofing"
 /* ISA  */  //var eventName = "InspectionScheduleAfter" ; inspType = "Roofing"
 /* PRA  */  //var eventName = "PaymentReceiveAfter";  
-/* CTRSA */ //var eventName = "ConvertToRealCAPAfter";
+/* CRCA */  //var eventName = "ConvertToRealCAPAfter";
 
 // var useProductScript = false;  // set to true to use the "productized" master scripts (events->master scripts), false to use scripts from (events->scripts)
 // var runEvent = true; // set to true to simulate the event and run all std choices/scripts for the record type.  
