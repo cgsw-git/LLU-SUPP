@@ -11,7 +11,7 @@ This event script:
 
 
  // var myCapId = "DF0000043";
- var myUserId = "ADMIN";
+ // var myUserId = "ADMIN";
 
 /* ASA  */  //var eventName = "ApplicationSubmitAfter";
 /* WTUA */  //var eventName = "WorkflowTaskUpdateAfter";  wfTask = "Application Submittal";	  wfStatus = "Admin Approved";  wfDateMMDDYYYY = "01/27/2015";
@@ -40,11 +40,12 @@ try {
   // logDebug(parentCap.specialText);
   // editAppName(parentCap.specialText, capId)
   // logDebug(cap.specialText);
-
-  var sca2 = new Array(aa.env.getValue("PermitId1"));
-  sca2[1] = aa.env.getValue("PermitId2");
-  sca2[2] = aa.env.getValue("PermitId3");
-  capId = aa.cap.getCapID(sca2[0],sca2[1],sca2[2]).getOutput();
+  
+  // aa.env.setValue("CurrentUserID",myUserId);
+  // var sca2 = new Array(aa.env.getValue("PermitId1"));
+  // sca2[1] = aa.env.getValue("PermitId2");
+  // sca2[2] = aa.env.getValue("PermitId3");
+  // capId = aa.cap.getCapID(sca2[0],sca2[1],sca2[2]).getOutput();
   
 /*
   // read through the ASI fields looking for value of "Out of Compliance" 
