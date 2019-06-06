@@ -41,7 +41,7 @@ try {
   // editAppName(parentCap.specialText, capId)
   // logDebug(cap.specialText);
 
-  if(capId == null){
+  // if(capId == null){
     if(aa.env.getValue("CapId") != ""){
       sca = String(aa.env.getValue("CapId")).split("-");
       capId = aa.cap.getCapID(sca[0],sca[1],sca[2]).getOutput();
@@ -49,7 +49,7 @@ try {
       sca = String(aa.env.getValue("CapID")).split("-");
       capId = aa.cap.getCapID(sca[0],sca[1],sca[2]).getOutput();
     }
-  }  
+  // }  
   
 /*
   // read through the ASI fields looking for value of "Out of Compliance" 
