@@ -62,7 +62,7 @@ var prefix = lookup("EMSE_VARIABLE_BRANCH_PREFIX",vEventName);
 
 var controlFlagStdChoice = "EMSE_EXECUTE_OPTIONS";
 var doStdChoices = true;  // compatibility default
-var doScripts = true;
+var doScripts = false;
 var bzr = aa.bizDomain.getBizDomain(controlFlagStdChoice ).getOutput().size() > 0;
 if (bzr) {
 	var bvr1 = aa.bizDomain.getBizDomainByValue(controlFlagStdChoice ,"STD_CHOICE");
