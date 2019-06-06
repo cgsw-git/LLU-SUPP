@@ -41,15 +41,10 @@ try {
   // editAppName(parentCap.specialText, capId)
   // logDebug(cap.specialText);
 
-  // if(capId == null){
-    if(aa.env.getValue("CapId") != ""){
-      sca = String(aa.env.getValue("CapId")).split("-");
-      capId = aa.cap.getCapID(sca[0],sca[1],sca[2]).getOutput();
-    }else if(aa.env.getValue("CapID") != ""){
-      sca = String(aa.env.getValue("CapID")).split("-");
-      capId = aa.cap.getCapID(sca[0],sca[1],sca[2]).getOutput();
-    }
-  // }  
+  var sca2 = new Array(aa.env.getValue("PermitId1"));
+  sca2[1] = aa.env.getValue("PermitId2");
+  sca2[2] = aa.env.getValue("PermitId3");
+  capId = aa.cap.getCapID(sca2[0],sca2[1],sca2[2]).getOutput();
   
 /*
   // read through the ASI fields looking for value of "Out of Compliance" 
