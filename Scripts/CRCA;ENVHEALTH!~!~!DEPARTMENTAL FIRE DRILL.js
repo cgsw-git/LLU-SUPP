@@ -36,9 +36,9 @@ try {
   var parentCapId = getParentByCapId(capId);
   var parentCap = aa.cap.getCap(parentCapId).getOutput();
   // logDebug("calling myCopy");
-  // var myResult = copy();
+  var myResult = copy();
   // logDebug(parentCap.specialText);
-  // editAppName(parentCap.specialText, capId)
+  editAppName(parentCap.specialText, capId)
   // logDebug(cap.specialText);
 
 
