@@ -36,12 +36,12 @@ try {
   var parentCapId = getParentByCapId(capId);
   var parentCap = aa.cap.getCap(parentCapId).getOutput();
   // logDebug("calling myCopy");
-  // var myResult = copy();
+  var myResult = copy();
   // logDebug(parentCap.specialText);
-  // editAppName(parentCap.specialText, capId)
+  editAppName(parentCap.specialText, capId)
   // logDebug(cap.specialText);
 
-/*
+
   // read through the ASI fields looking for value of "Out of Compliance" 
   for (var x in AInfo) {
     
@@ -112,7 +112,7 @@ try {
   if (outOfCompliance) {
     updateAppStatus("CAP Required","Updated by EMSE Script",parentCapId);
   }
-*/
+/*
   // send email notification to contacts
   // Provide the ACA URl - This should be set in INCLUDES_CUSTOM_GLOBALS
   // var acaURL = "aca.supp.accela.com/LLU"
@@ -155,6 +155,7 @@ try {
       sendNotification(agencyReplyEmail,tContactObj.people.getEmail(),"",notificationTemplate ,eParams,null);
     }
   }
+*/
 } catch (err) {
 	logDebug("A JavaScript Error occured: " + err.message);
 }
