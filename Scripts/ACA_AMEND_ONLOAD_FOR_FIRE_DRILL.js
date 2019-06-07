@@ -24,7 +24,7 @@ if (currentUserID.indexOf("PUBLICUSER") == 0) { currentUserID = "ADMIN" ; public
 var capModelInited = aa.env.getValue("CAP_MODEL_INITED");
 if (capModelInited != "TRUE")
 {
-    copy();
+    //copy();
 }
 
 /*------------------------------------------------------------------------------------------------------/
