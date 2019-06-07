@@ -46,6 +46,7 @@ function copy()
 
     if(typeof(targetCapId) == "undefined" || targetCapId == null)
     {
+      aa.print(something); //remove when done testing
       errorMessage+="targetCapId is null.";
       errorCode=-1;
       end();
@@ -55,10 +56,11 @@ function copy()
 	//var parentCapId = capModel.getParentCapID();
     var parentCapId = getParent(targetCapId);
 	
-	aa.debug("Debug","Parent:" + parentCapId);
+    aa.debug("Debug","Parent:" + parentCapId);
 
     if(typeof(parentCapId) == "undefined" || parentCapId == null)
     {
+      aa.print(something); //remove when done testing
       errorMessage+="Parent is null.";
       errorCode=-1;
       end();
@@ -77,7 +79,7 @@ function copy()
 
 		// copyParcel(parentCapId, targetCapId);
       
-		// copyPeople(parentCapId, targetCapId);
+		copyPeople(parentCapId, targetCapId);
       
 		// copyOwner(parentCapId, targetCapId);
       
@@ -89,15 +91,18 @@ function copy()
       
 		// copyCapWorkDesInfo(parentCapId, targetCapId);
 	  
-		var amendCapModel = aa.cap.getCapViewBySingle4ACA(targetCapId);
-      		amendCapModel.getCapType().setSpecInfoCode(capModel.getCapType().getSpecInfoCode()); 
+		// var amendCapModel = aa.cap.getCapViewBySingle4ACA(targetCapId);
+    // amendCapModel.getCapType().setSpecInfoCode(capModel.getCapType().getSpecInfoCode()); 
 
-		aa.env.setValue("CapModel", amendCapModel);
+		// aa.env.setValue("CapModel", amendCapModel);
       
-		aa.env.setValue("CAP_MODEL_INITED", "TRUE");       
+		// aa.env.setValue("CAP_MODEL_INITED", "TRUE");       
+    aa.env.setValue("CapModel",parentCapId) ;
     }
     catch(e)
     { 
+    aa.print(something); //remove when done testing
+    
 		logError("Error: "+e); 
 		end();
     }
