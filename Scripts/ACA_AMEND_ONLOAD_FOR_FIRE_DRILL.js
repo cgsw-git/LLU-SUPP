@@ -72,8 +72,8 @@ function getScriptText(vScriptName, servProvCode, useProductScripts) {
 }
 
 
-var cap = aa.env.getValue("CapModel");
-var parentId = cap.getOutput().getParentCapID();
+// var cap = aa.env.getValue("CapModel");
+// var parentId = cap.getOutput().getParentCapID();
 
 // page flow custom code begin
 
