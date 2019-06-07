@@ -134,7 +134,8 @@ function copy()
       var capModel = aa.cap.getCap(capId).getOutput();
     }
 		
-    targetCapId = capModel.getCapID();
+    // targetCapId = capModel.getCapID();
+    targetCapId = cap.getCapID();
    
     aa.debug("Debug:","TargetCapId:" + targetCapId);
 
@@ -146,8 +147,8 @@ function copy()
       return;
     }
 	
-    var parentCapId = capModel.getParentCapID();
-    // var parentCapId = getParent(targetCapId);
+    // var parentCapId = capModel.getParentCapID();
+    var parentCapId = getParent(targetCapId);
 	
     aa.debug("Debug","Parent:" + parentCapId);
 
@@ -192,9 +193,9 @@ function copy()
     }
     catch(e)
     { 
-    
-		logError("Error: "+e); 
-		end();
+    	handleError(err, "Page Flow Script");
+      // logError("Error: "+e); 
+      // end();
     }
 }
 function copyCapWorkDesInfo(srcCapId, targetCapId)
@@ -854,12 +855,7 @@ function copyPeople(srcCapId, targetCapId)
     else
     {
       //3.4.1 Create new people.
-      if (targetPeople == null || targetPeople.length == 0) {
-        aa.people.createCapContactWithAttribute(sourcePeopleModel.getCapContactModel());
-      //3.4.2 Copy all contacts
-      }else{
-        copyContacts(sourceCapId, targetCapId);
-        break;
+      aa.people.createCapContactWithAttribute(sourcePeopleModel.getCapContactModel());
       }
     }
   }
