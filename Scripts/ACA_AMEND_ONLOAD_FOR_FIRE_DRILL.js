@@ -140,21 +140,19 @@ function copy()
 
     if(typeof(targetCapId) == "undefined" || targetCapId == null)
     {
-      aa.print(something); //remove when done testing
       errorMessage+="targetCapId is null.";
       errorCode=-1;
       end();
       return;
     }
 	
-	//var parentCapId = capModel.getParentCapID();
-    var parentCapId = getParent(targetCapId);
+    var parentCapId = capModel.getParentCapID();
+    // var parentCapId = getParent(targetCapId);
 	
     aa.debug("Debug","Parent:" + parentCapId);
 
     if(typeof(parentCapId) == "undefined" || parentCapId == null)
     {
-      aa.print(something); //remove when done testing
       errorMessage+="Parent is null.";
       errorCode=-1;
       end();
@@ -169,7 +167,7 @@ function copy()
       
 		// copyLicenseProfessional(parentCapId, targetCapId);
       
-		// copyAddress(parentCapId, targetCapId);
+		copyAddress(parentCapId, targetCapId);
 
 		// copyParcel(parentCapId, targetCapId);
       
@@ -181,7 +179,7 @@ function copy()
       
 		// copyAdditionalInfo(parentCapId, targetCapId);
       
-		// copyCapDetailInfo(parentCapId, targetCapId);
+		copyCapDetailInfo(parentCapId, targetCapId);
       
 		// copyCapWorkDesInfo(parentCapId, targetCapId);
 	  
@@ -194,7 +192,6 @@ function copy()
     }
     catch(e)
     { 
-    aa.print(something); //remove when done testing
     
 		logError("Error: "+e); 
 		end();
