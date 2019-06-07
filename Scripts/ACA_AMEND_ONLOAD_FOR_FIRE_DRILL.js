@@ -24,7 +24,7 @@ if (currentUserID.indexOf("PUBLICUSER") == 0) { currentUserID = "ADMIN" ; public
 var capModelInited = aa.env.getValue("CAP_MODEL_INITED");
 if (capModelInited != "TRUE")
 {
-    //copy();
+    copy();
 }
 
 /*------------------------------------------------------------------------------------------------------/
@@ -36,7 +36,7 @@ function copy()
 {
     //----------------------------------------
     var capModel = aa.env.getValue("CapModel");
-    if (capModel == NULL) {
+    if (typeof(capModel) == "undefined" || capModel == null) {
       var capModel = aa.cap.getCap(capId).getOutput();
     }
 		
@@ -44,7 +44,7 @@ function copy()
    
     aa.debug("Debug:","TargetCapId:" + targetCapId);
 
-    if(targetCapId==null)
+    if(typeof(targetCapId) == "undefined" || targetCapId == null)
     {
       errorMessage+="targetCapId is null.";
       errorCode=-1;
@@ -57,7 +57,7 @@ function copy()
 	
 	aa.debug("Debug","Parent:" + parentCapId);
 
-    if(parentCapId==null)
+    if(typeof(parentCapId) == "undefined" || parentCapId == null)
     {
       errorMessage+="Parent is null.";
       errorCode=-1;
@@ -73,11 +73,11 @@ function copy()
       
 		// copyLicenseProfessional(parentCapId, targetCapId);
       
-		copyAddress(parentCapId, targetCapId);
+		// copyAddress(parentCapId, targetCapId);
 
 		// copyParcel(parentCapId, targetCapId);
       
-		copyPeople(parentCapId, targetCapId);
+		// copyPeople(parentCapId, targetCapId);
       
 		// copyOwner(parentCapId, targetCapId);
       
@@ -85,7 +85,7 @@ function copy()
       
 		// copyAdditionalInfo(parentCapId, targetCapId);
       
-		copyCapDetailInfo(parentCapId, targetCapId);
+		// copyCapDetailInfo(parentCapId, targetCapId);
       
 		// copyCapWorkDesInfo(parentCapId, targetCapId);
 	  
