@@ -854,7 +854,13 @@ function copyPeople(srcCapId, targetCapId)
     else
     {
       //3.4.1 Create new people.
-      aa.people.createCapContactWithAttribute(sourcePeopleModel.getCapContactModel());
+      if (targetPeople == null || targetPeople.length == 0) {
+        aa.people.createCapContactWithAttribute(sourcePeopleModel.getCapContactModel());
+      //3.4.2 Copy all contacts
+      }else{
+        copyContacts(sourceCapId, targetCapId);
+        break;
+      }
     }
   }
 }
