@@ -129,13 +129,8 @@ if (debug.indexOf("**ERROR") > 0) {
 function copy()
 {
     //----------------------------------------
-    var capModel = aa.env.getValue("CapModel");
-    if (typeof(capModel) == "undefined" || capModel == null) {
-      var capModel = aa.cap.getCap(capId).getOutput();
-    }
 		
-    // targetCapId = capModel.getCapID();
-    targetCapId = cap.getCapID();
+    targetCapId = capId;
    
     aa.debug("Debug:","TargetCapId:" + targetCapId);
 
@@ -148,7 +143,7 @@ function copy()
     }
 	
     // var parentCapId = capModel.getParentCapID();
-    var parentCapId = getParent(targetCapId);
+    // var parentCapId = getParent(targetCapId);
 	
     aa.debug("Debug","Parent:" + parentCapId);
 
@@ -168,11 +163,12 @@ function copy()
       
 		// copyLicenseProfessional(parentCapId, targetCapId);
       
-		copyAddress(parentCapId, targetCapId);
+		copyAddresses(parentCapId, targetCapId);
 
 		// copyParcel(parentCapId, targetCapId);
       
-		copyPeople(parentCapId, targetCapId);
+		// copyPeople(parentCapId, targetCapId);
+    copyContacts(parentCapId, targetCapId);
       
 		// copyOwner(parentCapId, targetCapId);
       
@@ -180,7 +176,7 @@ function copy()
       
 		// copyAdditionalInfo(parentCapId, targetCapId);
       
-		copyCapDetailInfo(parentCapId, targetCapId);
+		//copyCapDetailInfo(parentCapId, targetCapId);
       
 		// copyCapWorkDesInfo(parentCapId, targetCapId);
 	  
