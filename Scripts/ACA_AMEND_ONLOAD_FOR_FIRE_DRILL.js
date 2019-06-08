@@ -130,6 +130,7 @@ function copy()
 {
     //----------------------------------------
 		
+    capModel = cap;
     targetCapId = capId;
    
     aa.debug("Debug:","TargetCapId:" + targetCapId);
