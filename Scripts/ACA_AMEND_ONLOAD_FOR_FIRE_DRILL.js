@@ -168,7 +168,7 @@ function copy()
       
 		// copyPeople(parentCapId, targetCapId);
     myResult = copyContacts(parentCapId, targetCapId);
-    if (!myResult) {debug = "**ERROR ** copyContacts failed")
+    if (!myResult) {debug = "**ERROR ** copyContacts failed";}
       
 		// copyOwner(parentCapId, targetCapId);
       
