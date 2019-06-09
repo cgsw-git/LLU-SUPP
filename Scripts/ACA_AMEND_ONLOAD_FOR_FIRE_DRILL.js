@@ -72,8 +72,8 @@ function getScriptText(vScriptName, servProvCode, useProductScripts) {
 }
 
 
-// var cap = aa.env.getValue("CapModel");
-// var parentId = cap.getOutput().getParentCapID();
+var capModel = aa.env.getValue("CapModel");
+var parentId = cap.getOutput().getParentCapID();
 
 // page flow custom code begin
 
@@ -88,11 +88,11 @@ try {
   if (currentUserID.indexOf("PUBLICUSER") == 0) { currentUserID = "ADMIN" ; publicUser = true }  // ignore public users
 
   //execute
-  var capModelInited = aa.env.getValue("CAP_MODEL_INITED");
-  if (capModelInited != "TRUE")
-  {
+  // var capModelInited = aa.env.getValue("CAP_MODEL_INITED");
+  // if (capModelInited != "TRUE")
+  // {
       copy();
-  }
+  // }
 
 } catch (err) {
 	handleError(err, "Page Flow Script");
@@ -130,8 +130,8 @@ function copy()
 {
     //----------------------------------------
 		
-    capModel = cap;
-    targetCapId = capId;
+    // capModel = cap;
+    targetCapId = capModel.getCapID;
    
     aa.debug("Debug:","TargetCapId:" + targetCapId);
 
@@ -182,11 +182,11 @@ function copy()
 		// copyCapWorkDesInfo(parentCapId, targetCapId);
 	  
 		var amendCapModel = aa.cap.getCapViewBySingle4ACA(targetCapId);
-    amendCapModel.getCapType().setSpecInfoCode(capModel.getCapType().getSpecInfoCode()); 
+    // amendCapModel.getCapType().setSpecInfoCode(capModel.getCapType().getSpecInfoCode()); 
 
 		aa.env.setValue("CapModel", amendCapModel);
       
-		aa.env.setValue("CAP_MODEL_INITED", "TRUE");       
+		// aa.env.setValue("CAP_MODEL_INITED", "TRUE");       
     }
     catch(e)
     { 
@@ -853,7 +853,6 @@ function copyPeople(srcCapId, targetCapId)
     {
       //3.4.1 Create new people.
       aa.people.createCapContactWithAttribute(sourcePeopleModel.getCapContactModel());
-      }
     }
   }
 }
