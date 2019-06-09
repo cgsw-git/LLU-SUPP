@@ -72,17 +72,15 @@ function getScriptText(vScriptName, servProvCode, useProductScripts) {
 }
 
 
-var capModel = aa.env.getValue("CapModel");
-var parentId = cap.getOutput().getParentCapID();
 
 // page flow custom code begin
 
 try {
 
-  var br = "<BR>";
-   
+  var capModel = aa.env.getValue("CapModel");
+  var parentId = capModel.getOutput().getParentCapID();
+
   var errorMessage = "";
-   
   var errorCode = "0";
   var currentUserID = aa.env.getValue("CurrentUserID");
   if (currentUserID.indexOf("PUBLICUSER") == 0) { currentUserID = "ADMIN" ; publicUser = true }  // ignore public users
@@ -131,7 +129,7 @@ function copy()
     //----------------------------------------
 		
     // capModel = cap;
-    targetCapId = capModel.getCapID;
+    targetCapId = capModel.getCapID();
    
     aa.debug("Debug:","TargetCapId:" + targetCapId);
 
