@@ -78,7 +78,7 @@ function getScriptText(vScriptName, servProvCode, useProductScripts) {
 try {
 
   var capModel = aa.env.getValue("CapModel");
-  var parentId = capModel.getOutput().getParentCapID();
+  var parentCapId = capModel.getParentCapID();
 
   var errorMessage = "";
   var errorCode = "0";
@@ -167,7 +167,8 @@ function copy()
 		// copyParcel(parentCapId, targetCapId);
       
 		// copyPeople(parentCapId, targetCapId);
-    copyContacts(parentCapId, targetCapId);
+    myResult = copyContacts(parentCapId, targetCapId);
+    if (!myResult) {debug = "**ERROR ** copyContacts failed")
       
 		// copyOwner(parentCapId, targetCapId);
       
