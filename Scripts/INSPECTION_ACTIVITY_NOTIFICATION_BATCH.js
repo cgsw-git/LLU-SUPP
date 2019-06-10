@@ -1,4 +1,5 @@
 
+
 	/*------------------------------------------------------------------------------------------------------/
 	| Program: inspectionActivityNotificationBatch.js  Trigger: Batch
 	| Client: LLU
@@ -88,53 +89,79 @@
   var duplicateDepartments = 0;
   var emailsSent = 0;
   var numberOfInspections = 0;
-  var facilityNotificationList = [];
   showDebug = true;
   var wfComment; // to accomodate customization that was done to getRecordParams4Notification() in INCLUDES_CUSTOM
   logDebug("Start of Job");
   
-  var begDate = aa.util.formatDate(aa.util.dateDiff(aa.util.now(),"day",-7),"yyyy-MM-dd");
-  var endDate = aa.util.formatDate(aa.util.dateDiff(aa.util.now(),"day",-1),"yyyy-MM-dd");
-  
-  var inspectionBusinessObjects = aa.inspection.getInspections(begDate, endDate);
-  var inspections = inspectionBusinessObjects.getOutput();
-  // logDebug(inspections.length);
+  // get the department records
+  var myResult = aa.cap.getByAppType("EnvHealth","Department",null,null);
+  if (myResult.getSuccess()) {
+    var departments = myResult.getOutput();
 
-  for (var i in inspections){
-    numberOfInspections++;
-    var inspectionStatus = inspections[i].getInspectionStatus();
-    var capId = inspections[i].getCapID()
-    var myResult = aa.cap.getCap(capId);
-    var cap = myResult.getOutput();
-    var altId = cap.getCapModel().getAltID()
-    // skip cancelled and scheduled inspections
-    if (inspectionStatus == "Failed to Meet Standards" || inspectionStatus == "Met Standards") {
-      processedInspections++;
-      // add department to the list
-      if ( !arraySearch(facilityNotificationList, altId)) {
-        // send the notification
-        if (altId == "FA0000868") {
-          logDebug(capId);
-          mySendInspectionActivityReport();
-          emailsSent++;
+    // set the date parameters (assumes this is run the day after the observered time period)
+    // var begDate = aa.util.formatDate(aa.util.dateDiff(aa.util.now(),"day",-7),"yyyy-MM-dd");
+    var begDate = aa.util.dateDiff(aa.util.now(),"day",-7);
+    // var endDate = aa.util.formatDate(aa.util.dateDiff(aa.util.now(),"day",-1),"yyyy-MM-dd");
+    var endDate = aa.util.dateDiff(aa.util.now(),"day",-1);
+     
+    // loop through all the departments
+    for (var d in departments ) {
+      capId = departments[d].getCapID();
+      var myResult = aa.cap.getCap(capId);
+      var cap = myResult.getOutput();
+      var altId = cap.getCapModel().getAltID()
+    
+      // logDebug(inspections.length);
+      if (altId == "FA0000868") {
+
+        // get the inspections for the department
+        myResult = aa.inspection.getInspections(capId);
+        var inspections = myResult.getOutput();
+        numberOfInspections+= inspections.length;
+
+        // loop through the inspections
+        for (var i in inspections ) {
+          var inspectionStatus = inspections[i].getInspectionStatus();
+          
+          var inspectedDate = inspections[i].getInspectionDate();
+          if (inspectedDate != null) {
+            // convert inspectedDate from dateString type to date type
+            var inspObj = inspections[i];
+            var inspectedDateString = inspObj.getInspectionDate().getMonth() + "/" + inspObj.getInspectionDate().getDayOfMonth() + "/" + inspObj.getInspectionDate().getYear();
+            inspectedDate = aa.util.parseDate(inspectedDateString);
+            // logDebugObject(inspections[i]);
+            // logDebug("inspected Date: " + aa.util.formatDate(inspectedDate,"yyyy-MM-dd"));
+            // logDebugObject(inspectedDate);
+            // logDebug("beg Date: " + aa.util.formatDate(begDate,"yyyy-MM-dd"));
+            // logDebugObject(begDate);
+            // break;
+            // logDebug("inspected date: " + aa.util.formatDate(inspectedDate,"yyyy-MM-dd")) ; 
+            // logDebug("      beg date: " + aa.util.formatDate(begDate,"yyyy-MM-dd")) ;
+          }
+          
+          // skip cancelled and scheduled inspections and inspections not withing date range
+          if (inspectedDate != null && (inspectionStatus == "Failed to Meet Standards" || inspectionStatus == "Met Standards") && inspectedDate >= begDate && inspectedDate <= endDate ) {
+
+            processedInspections++;
+
+            // send the notification
+            logDebug(altId);
+            mySendInspectionActivityReport();
+            break;
+          }
         }
-        
-        // log the facility
-        facilityNotificationList.push(altId);
-      }else{
-        duplicateDepartments++;
       }
-    }else{
-      skippedInspections++;
     }
+  }else{
+    logDebug("no departments")
   }
-  
-  
+
+  skippedInspections = numberOfInspections-processedInspections;
   logDebug("End of Job: Elapsed Time : " + elapsed() + " Seconds");
   logDebug("Number of Inspections : " + numberOfInspections);
   logDebug("Inspections processed:" + processedInspections);
-  logDebug("Inspections skipped: " + skippedInspections);
-  logDebug("Duplicate departments: " + duplicateDepartments);
+  // logDebug("Inspections skipped: " + skippedInspections);
+  // logDebug("Duplicate departments: " + duplicateDepartments);
   logDebug("Emails sent " + emailsSent);
 
 
@@ -147,7 +174,7 @@ function mySendInspectionActivityReport(){
   
 
   // Provide the ACA URl - This should be set in INCLUDES_CUSTOM_GLOBALS
-  var acaURL = "aca.accela.com/LLU"
+  //var acaURL = "aca.accela.com/LLU"
   // Provide the Agency Reply Email - This should be set in INCLUDES_CUSTOM_GLOBALS
   var agencyReplyEmail = "noreply@accela.com"
   // Provide the contact types to send this notification
@@ -174,13 +201,13 @@ function mySendInspectionActivityReport(){
     var tContactObj = contactObjArray[iCon];
     logDebug("ContactName: " + tContactObj.people.getFirstName() + " " + tContactObj.people.getLastName());
     if (!matches(tContactObj.people.getEmail(),null,undefined,"")) {
-      emailsSent = ++emailsSent;
+      emailsSent++;
       // logDebug("Contact Email: " + tContactObj.people.getEmail());
       var eParams = aa.util.newHashtable();
       addParameter(eParams, "$$recordTypeAlias$$", cap.getCapType().getAlias());
       // addParameter(eParams, "$$recordTypeAlias$$", "Department");
       myGetRecordParams4Notification(eParams,capId);
-      myGetACARecordParam4Notification(eParams,acaURL,capId);
+      getACARecordParam4Notification(eParams,acaURL,capId);
       // logDebug(capId);
       tContactObj.getEmailTemplateParams(eParams);
       // not needed getWorkflowParams4Notification(eParams); 
@@ -188,7 +215,7 @@ function mySendInspectionActivityReport(){
       getPrimaryAddressLineParam4Notification(eParams,capId);
       if(!matches(reportName,null,undefined,"")){
         // Call runReport4Email to generate the report and send the email
-        myRunReport4Email(capId,reportName,tContactObj,rptParams,eParams,notificationTemplate,cap.getCapModel().getModuleName(),agencyReplyEmail);	
+        runReport4Email(capId,reportName,tContactObj,rptParams,eParams,notificationTemplate,cap.getCapModel().getModuleName(),agencyReplyEmail);	
       }else{
         // Call sendNotification if you are not using a report
         sendNotification(agencyReplyEmail,tContactObj.people.getEmail(),"",notificationTemplate ,eParams,null);
@@ -197,34 +224,6 @@ function mySendInspectionActivityReport(){
   }
 }
 
-function myRunReport4Email(itemCap,reportName,conObj,rParams,eParams,emailTemplate,module,mailFrom) {
-	//If email address available for contact type then email the report, otherwise return false;
-// return false;
-	var reportSent = false;
-
-	if (conObj) {
-		if (!matches(conObj.people.getEmail(),null,undefined,"")) {
-			//Send the report via email
-			var rFile;
-			rFile = generateReport(itemCap,reportName,module,rParams);
-	
-			if (rFile) {
-				var rFiles = new Array();
-				rFiles.push(rFile);
-				sendNotification(mailFrom,conObj.people.getEmail(),"",emailTemplate,eParams,rFiles,itemCap);
-				return true;
-			}
-		} else {
-			reportSent = false;
-		}
-	} else {
-		reportSent = false;
-	}
-
-	if (!reportSent) {
-		return false;
-	}
-}
  
  function myGetRecordParams4Notification(params) {
 
@@ -313,12 +312,6 @@ updates
   }
 }
 
-function arraySearch(arr,val) {
-  for (var i=0; i<arr.length; i++) {
-    if (arr[i] == val) return true;
-  }
-  return false;
-}
 
 function myGetACARecordParam4Notification(params,acaUrl,itemCap) {
 
