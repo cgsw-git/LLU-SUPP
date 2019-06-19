@@ -101,8 +101,10 @@
     // set the date parameters (assumes this is run the day after the observered time period)
     // var begDate = aa.util.formatDate(aa.util.dateDiff(aa.util.now(),"day",-7),"yyyy-MM-dd");
     var begDate = aa.util.dateDiff(aa.util.now(),"day",-7);
+    logDebug("beginning Date: " + aa.util.formatDate(begDate,"yyyy-MM-dd"));
     // var endDate = aa.util.formatDate(aa.util.dateDiff(aa.util.now(),"day",-1),"yyyy-MM-dd");
     var endDate = aa.util.dateDiff(aa.util.now(),"day",-1);
+    logDebug("ending Date: " + aa.util.formatDate(endDate,"yyyy-MM-dd"));
      
     // loop through all the departments
     for (var d in departments ) {
@@ -130,7 +132,7 @@
             var inspectedDateString = inspObj.getInspectionDate().getMonth() + "/" + inspObj.getInspectionDate().getDayOfMonth() + "/" + inspObj.getInspectionDate().getYear();
             inspectedDate = aa.util.parseDate(inspectedDateString);
             // logDebugObject(inspections[i]);
-            // logDebug("inspected Date: " + aa.util.formatDate(inspectedDate,"yyyy-MM-dd"));
+            // logDebug("inspected Date: " + aa.util.formatDate(inspectedDate,"yyyy-MM-dd") + "  inspection status: " + inspectionStatus);
             // logDebugObject(inspectedDate);
             // logDebug("beg Date: " + aa.util.formatDate(begDate,"yyyy-MM-dd"));
             // logDebugObject(begDate);
@@ -140,7 +142,7 @@
           }
           
           // skip cancelled and scheduled inspections and inspections not withing date range
-          if (inspectedDate != null && (inspectionStatus == "Failed to Meet Standards" || inspectionStatus == "Met Standards") && inspectedDate >= begDate && inspectedDate <= endDate ) {
+          if (inspectedDate != null && (inspectionStatus == "Failed to Meet Standards" || inspectionStatus == "Met Standards") && inspectedDate.getTime() >= begDate.getTime() && inspectedDate.getTime() <= endDate.getTime()  ) {
 
             processedInspections++;
 
@@ -179,17 +181,19 @@ function mySendInspectionActivityReport(){
   var agencyReplyEmail = "noreply@accela.com"
   // Provide the contact types to send this notification
   var contactTypesArray = new Array("Primary");
-  contactTypesArray[0] = "Frontline Leadership";
+  contactTypesArray[1] = "Executive Leadership";
+  contactTypesArray[2] = "Frontline Leadership";
+  contactTypesArray[3] = "Contact";
   // Provide the Notification Template to use
   var notificationTemplate = "LLU WEEKLY INSPECTION ACTIVITY EMAIL";
   // Provide the name of the report from Report Manager
-  var reportName = "CAP Weekly Activity";
+  var reportName = "Weekly Inspection Activity";
   // Get an array of Contact Objects using Master Scripts 3.0
   var contactObjArray = getContactObjs(capId,contactTypesArray);
   // Set the report parameters. For Ad Hoc use p1Value, p2Value etc.
   var rptParams = aa.util.newHashMap();
   //rptParams.put("serviceProviderCode",servProvCode);
-  rptParams.put("departmentID", capId.getCustomID());
+  rptParams.put("record_ID", capId.getCustomID());
 
   if(!matches(reportName,null,undefined,"")){
   // Call runReportAttach to attach the report to Documents Tab
