@@ -11,7 +11,7 @@
 |
 | Notes   : This script is intended to run nightly and update the Corrective Action Plan (CAP) ASIT on the Department record type.
 |           Future improvement would be to select only failed guidesheet items but was not able to successfully implement that function.
-|           mike zachry, Civic Good Software
+|           mike zachry, Civic Good Software 
 /------------------------------------------------------------------------------------------------------*/
 /*------------------------------------------------------------------------------------------------------/
 | START Configurable Parameters
