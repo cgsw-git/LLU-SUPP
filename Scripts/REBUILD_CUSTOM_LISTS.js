@@ -178,9 +178,13 @@ if (getResult.getSuccess()) {
       customId = capId.getCustomID();
       //// logDebug(capId  + " " + customId + " " + capName);
       
-      // if (customId != "FA0000868") {continue ;}
-      if ( list[i].getCapStatus() != "CAP Required" ) { continue; }
-      logDebug("record id: " + customId );
+      // if (customId != "FA0000868") {
+      if ( list[i].getCapStatus() != "CAP Required" ) { 
+        // logDebug("skipping; " + customId);
+        continue; 
+      }else{
+        logDebug("processing record id: " + customId );
+      }
 
       // logDebug("remove the custom list");
       removeASITable("CAP", capId);
