@@ -180,6 +180,7 @@ if (getResult.getSuccess()) {
       
       // if (customId != "FA0000868") {continue ;}
       if ( list[i].getCapStatus() != "CAP Required" ) { continue; }
+      logDebug("record id: " + customId );
 
       // logDebug("remove the custom list");
       removeASITable("CAP", capId);
