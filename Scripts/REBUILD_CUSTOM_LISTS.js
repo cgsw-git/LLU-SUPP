@@ -178,6 +178,7 @@ if (getResult.getSuccess()) {
       customId = capId.getCustomID();
       //// logDebug(capId  + " " + customId + " " + capName);
       
+      // if (customId != "FA0000868") {continue ;}
       if ( list[i].getCapStatus() != "CAP Required" ) { continue; }
 
       // logDebug("remove the custom list");
@@ -339,7 +340,7 @@ rowVals["Vio. Status"] = new asiTableValObj("Vio. Status",gsi.status,"N");
 rowVals["Inspector Comment"] = new asiTableValObj("Inspector Comment", gsi.info["Inspector Comment"],"N");
 rowVals["CAP Review Comment"] = new asiTableValObj("CAP Review Comment"," ","N");
 rowVals["Corrective Action"] = new asiTableValObj("Corrective Action","Enter corrective action ","N");
-rowVals["Repsonsible Party"] = new asiTableValObj("Responsible Party","Enter responsible party ","N");
+rowVals["Responsible Party"] = new asiTableValObj("Responsible Party","Enter responsible party ","N");
 rowVals["Actual/Planned Correction Date"] = new asiTableValObj("Actual/Planned Correction Date","01/01/2000","N");
 rowVals["Inspection Type"] = new asiTableValObj("Program",inspType,"N");
 rowVals["CAP Status"] = new asiTableValObj("CAP Status","Incomplete","N");
