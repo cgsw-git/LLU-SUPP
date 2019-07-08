@@ -1,4 +1,4 @@
-// var myCapId = "CA0000010";
+// var myCapId = "CA0000013";
 var myUserId = "ADMIN";
 
 /* ASA  */  //var eventName = "ApplicationSubmitAfter";
@@ -20,111 +20,56 @@ var myUserId = "ADMIN";
 try 
 {
 	showDebug = true;
-  //loop through the childASIT rows and update the parent ASIT with new entries
-  // aa.print("childASIT.length = " + childASIT.length)
-  //if it is a fire drill, assign the task to user ENAVARRETTE
-  parentCapId = getParentByCapId(capId);
+  // loop through the childASIT rows and update the parent ASIT with new entries
+  // this script fires when submitting a Corrective Action Plan record as an amendment to
+  // the Department record and it is expected the parent and child CAP custom lists have 
+  // the same number of rows
 
   var tableName = "CAP";
-  var isFireDrill = false;
   var updateRowsMap = aa.util.newHashMap(); // Map<rowID, Map<columnName, columnValue>>
+  var inspectorsWithTasks = [];
+  var appStatus = "Active";
 
-  var myResult = aa.appSpecificTableScript.getAppSpecificTableModel(capId, tableName);
-  if (myResult.getSuccess()) 
-  {
-    childAppSpecificTableScriptModel = myResult.getOutput();
-    childAppSpecificTableModel = childAppSpecificTableScriptModel.getAppSpecificTableModel();
-    var childASIT = childAppSpecificTableModel.getTableFields(); // List<BaseField>
-    if (childASIT != null && childASIT.size() > 0)
-    {
-      var myResult = aa.appSpecificTableScript.getAppSpecificTableModel(parentCapId, tableName);
-      if (myResult.getSuccess()) 
-      {
-        parentAppSpecificTableScriptModel = myResult.getOutput();
-        parentAppSpecificTableModel = parentAppSpecificTableScriptModel.getAppSpecificTableModel();
-        var parentASIT = parentAppSpecificTableModel.getTableFields(); // List<BaseField>
-        if (parentASIT != null && parentASIT.size() > 0)
-        {
-          // var fieldsToUpdate = "Corrective Action, Responsible Party, Actual/Planned Correction Date";
-          var childFieldObject = childASIT.get(0);
-          var rowTracker = childFieldObject.getRowIndex();
-          var addTask = false;
-          var inspectorsWithTasks = [];
-          var rowsWithChanges = [];
-          for (var i=0; i < childASIT.size(); i++) // child and parent tables should be exactly the same so only one row counter is needed
-          {
-            var childFieldObject = childASIT.get(i); // BaseField
-            //get the column name.
-            var childColumnName = childFieldObject.getFieldLabel();
-            //get the value of column
-            var childColumnValue = childFieldObject.getInputValue();
-            //get the row ID 
-            var childRowID = childFieldObject.getRowIndex();
-
-            var parentFieldObject = parentASIT.get(i); // BaseField
-            //get the column name.
-            var parentColumnName = parentFieldObject.getFieldLabel();
-            //get the value of column
-            var parentColumnValue = parentFieldObject.getInputValue();
-            // get the row ID 
-            var parentRowID = parentFieldObject.getRowIndex();
-            
-            if (childColumnValue != "" && childColumnValue != null && parentColumnName == childColumnName && childColumnValue != parentColumnValue /*&& childRowID == parentRowID */ )
-            {
-              if ( childColumnName == "Corrective Action" || childColumnName == "Responsible Party" || childColumnName == "Actual/Planned Correction Date" ) {
-                logDebug("Child value and row: " + childColumnName + ": " + childColumnValue + "   RowID: " + childRowID);
-                logDebug("Parent value and row: " + parentColumnName + ": " + parentColumnValue + "   RowID: " + parentRowID);
-                // logDebugObject(parentFieldObject);
-                setUpdateColumnValue(updateRowsMap, childRowID, childColumnName, childColumnValue);
-                rowsWithChanges.push(childRowID);
-              }
-            }
-          }
-          
-          //end comparison loop
-          //update all changes at one time
-          
-          // testing updating after all changes are submitted to address BAppspectableValueDuplicatedException error
-          // myResult = updateAppSpecificTableInfors(tableName, parentCapId, updateRowsMap);
-          // if (myResult.getSuccess()) {
-            // logDebug("Success");
-          // }else{
-            // logDebug(myResult.getErrorMessage());
-          // }
-          
-          //create ad hoc tasks for the inspectors and set the cap status
-          // updateRowsMap = aa.util.newHashMap();
-          for (var i=0; i < childASIT.size(); i++)
-          {
-            var childFieldObject = childASIT.get(i); // BaseField
-            //get the column name.
-            var childColumnName = childFieldObject.getFieldLabel();
-            //get the value of column
-            var childColumnValue = childFieldObject.getInputValue();
-            //get the row ID 
-            var childRowID = childFieldObject.getRowIndex();
-            
-            if (childColumnName == "Inspector ID" && (!childColumnValue || childColumnValue=="") ) {childColumnValue = "ENAVARRETTE";}
-            if (childColumnName == "Inspector ID" && arraySearch(rowsWithChanges,childRowID) && !arraySearch(inspectorsWithTasks, childColumnValue)) {
-              inspectorsWithTasks.push(childColumnValue);
-              logDebug("Adding a task for " + childColumnValue);
-              addAdHocTask("ADHOC_WORKFLOW", "Review CAP", null,childColumnValue,parentCapId);
-            }
-            
-            // if the current column is "CAP Status" and current row is found in array rowsWithChanges, set the status to ""Pending"
-            if (childColumnName == "CAP Status" && arraySearch(rowsWithChanges,childRowID)) {
-              setUpdateColumnValue(updateRowsMap, childRowID, childColumnName, "Pending");
-            }
-          }
-          
-          myResult = updateAppSpecificTableInfors(tableName, parentCapId, updateRowsMap);
-          if (myResult.getSuccess()) {
-            logDebug("Success");
-          }else{
-            logDebug(myResult.getErrorMessage());
-          }
-        }
+  childTable = loadASITable(tableName, capId);
+  parentTable = loadASITable(tableName,parentCapId);
+  
+  logDebug("loop through the rows");
+  for (var c in childTable) {
+    cRow = childTable[c];
+    pRow = parentTable[c];
+      
+    if ( cRow["Corrective Action"].fieldValue != pRow["Corrective Action"].fieldValue
+      || cRow["Responsible Party"].fieldValue != pRow["Responsible Party"].fieldValue
+      || aa.util.formatDate(aa.util.parseDate(cRow["Actual/Planned Correction Date"].fieldValue),"MM-dd-yyyy") != aa.util.formatDate(aa.util.parseDate(pRow["Actual/Planned Correction Date"].fieldValue),"MM-dd-yyyy")
+      ) {
+      logDebug("push fields to update");
+      setUpdateColumnValue(updateRowsMap, c, "Corrective Action", cRow["Corrective Action"].fieldValue );
+      setUpdateColumnValue(updateRowsMap, c, "Responsible Party", cRow["Responsible Party"].fieldValue );
+      setUpdateColumnValue(updateRowsMap, c, "Actual/Planned Correction Date", cRow["Actual/Planned Correction Date"].fieldValue );
+      setUpdateColumnValue(updateRowsMap, c, "CAP Status", "Pending" );
+      
+      // check if insepector has been assigned a task and assign an ad=hoc task if one hasn't been assigned
+      if (!arraySearch(inspectorsWithTasks,cRow["Inspector ID"].fieldValue)) {
+        addAdHocTask("ADHOC_WORKFLOW", "Review CAP", null,cRow["Inspector ID"].fieldValue,parentCapId);
+        logDebug("add inspector to list");
+        inspectorsWithTasks.push(cRow["Inspector ID"].fieldValue);
       }
+    }else{
+      logDebug("no differences");
+      if (cRow["CAP Status"].fieldValue == "Incomplete" || cRow["CAP Status"].fieldValue == "Denied") {
+        logDebug("set parent status to CAP Required");
+        appStatus = "CAP Required"
+      }
+    } 
+  }
+  updateAppStatus(appStatus,"Updated by EMSE Script",parentCapId);
+  logDebug("updateRowsMap is empty: " + updateRowsMap.empty);
+  if (!updateRowsMap.empty) {
+    myResult = updateAppSpecificTableInfors(tableName, parentCapId, updateRowsMap);
+    if (myResult.getSuccess()) {
+      logDebug("Success");
+    }else{
+      logDebug(myResult.getErrorMessage());
     }
   }
 }
@@ -143,3 +88,35 @@ function arraySearch(arr,val) {
   return false;
 }
 
+function logDebugObject(myObject) {
+/*
+usage - logDebugObject(object)
+
+author - Michael Zachry
+created - 10/10/2018
+
+updates
+10/11/2018 - initial version
+
+*/
+  //list the methods
+  try {
+    logDebug("object is is a " + myObject.getClass());
+    logDebug("object has the following methods:");
+    for (x in myObject) {
+      if (typeof(myObject[x]) == "function" ) {
+        logDebug("  " + x);
+      }
+    }
+
+    //list the properties and values    
+    logDebug("object has the following properties and values:");
+    for (x in myObject) {
+      if (typeof(myObject[x]) != "function" ) {
+        logDebug("  " + x + " = " + myObject[x]);
+      }
+    }
+  } catch (err) {
+    logDebug("A JavaScript Error occured: " + err.message);
+  }
+}
