@@ -48,6 +48,7 @@ try {
       rowVals = new Array();
       rowVals["Inspection Date"] = new asiTableValObj("Inspection Date",AInfo["Drill Date"],"N");
       rowVals["Inspected By"] = new asiTableValObj("Inspected By",AInfo["Person Observing"],"N");
+      rowVals["Inspector ID"] = new asiTableValObj("Inspector ID","ENAVARRETTE","N");
 
       parentCap = aa.cap.getCap(parentCapId).getOutput();
       rowVals["Department"] = new asiTableValObj("Department",parentCap.specialText,"N");
