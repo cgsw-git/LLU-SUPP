@@ -49,7 +49,6 @@ try {
       rowVals["Inspection Date"] = new asiTableValObj("Inspection Date",AInfo["Drill Date"],"N");
       rowVals["Inspected By"] = new asiTableValObj("Inspected By",AInfo["Person Observing"],"N");
       rowVals["Inspector ID"] = new asiTableValObj("Inspector ID","ENAVARRETTE","N");
-
       parentCap = aa.cap.getCap(parentCapId).getOutput();
       rowVals["Department"] = new asiTableValObj("Department",parentCap.specialText,"N");
       rowVals["Department ID #"] = new asiTableValObj("Department ID #",parentCapId.customID,"N");
@@ -119,7 +118,7 @@ try {
   var contactTypesArray = new Array("Primary");
   contactTypesArray[1] = "Frontline Leadership";
   contactTypesArray[2] = "Contact";
-  contactTypesArray[3] = "Executive Leadership";
+  // contactTypesArray[3] = "Executive Leadership";
   // Provide the Notification Template to use
   var notificationTemplate = "LLU FIRE DRILL NOTIFICATION";
   // Get an array of Contact Objects using Master Scripts 3.0

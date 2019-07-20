@@ -114,7 +114,7 @@
       var altId = cap.getCapModel().getAltID()
     
       // logDebug(inspections.length);
-      if (altId == "FA0000868") {
+      // if (altId == "FA0000868") {
 
         // get the inspections for the department
         myResult = aa.inspection.getInspections(capId);
@@ -152,7 +152,7 @@
             break;
           }
         }
-      }
+      // }
     }
   }else{
     logDebug("no departments")
@@ -181,9 +181,8 @@ function mySendInspectionActivityReport(){
   var agencyReplyEmail = "noreply@accela.com"
   // Provide the contact types to send this notification
   var contactTypesArray = new Array("Primary");
-  contactTypesArray[1] = "Executive Leadership";
-  contactTypesArray[2] = "Frontline Leadership";
-  contactTypesArray[3] = "Contact";
+  contactTypesArray[1] = "Frontline Leadership";
+  contactTypesArray[2] = "Contact";
   // Provide the Notification Template to use
   var notificationTemplate = "LLU WEEKLY INSPECTION ACTIVITY EMAIL";
   // Provide the name of the report from Report Manager
