@@ -1,5 +1,5 @@
-// var myCapId = "CA0000013";
-var myUserId = "ADMIN";
+// var myCapId = "CA0000018";
+// var myUserId = "ADMIN";
 
 /* ASA  */  //var eventName = "ApplicationSubmitAfter";
 /* WTUA */  //var eventName = "WorkflowTaskUpdateAfter";  wfTask = "Application Submittal";	  wfStatus = "Admin Approved";  wfDateMMDDYYYY = "01/27/2015";
@@ -40,7 +40,10 @@ try
       
     if ( cRow["Corrective Action"].fieldValue != pRow["Corrective Action"].fieldValue
       || cRow["Responsible Party"].fieldValue != pRow["Responsible Party"].fieldValue
-      || aa.util.formatDate(aa.util.parseDate(cRow["Actual/Planned Correction Date"].fieldValue),"MM-dd-yyyy") != aa.util.formatDate(aa.util.parseDate(pRow["Actual/Planned Correction Date"].fieldValue),"MM-dd-yyyy")
+      || (cRow["Actual/Planned Correction Date"].fieldValue != null && pRow["Actual/Planned Correction Date"].fieldValue != null
+        && aa.util.formatDate(aa.util.parseDate(cRow["Actual/Planned Correction Date"].fieldValue),"MM-dd-yyyy") != aa.util.formatDate(aa.util.parseDate(pRow["Actual/Planned Correction Date"].fieldValue),"MM-dd-yyyy")
+        ) 
+      || cRow["Actual/Planned Correction Date"].fieldValue != null && pRow["Actual/Planned Correction Date"].fieldValue == null
       ) {
       logDebug("push fields to update");
       setUpdateColumnValue(updateRowsMap, c, "Corrective Action", cRow["Corrective Action"].fieldValue );
