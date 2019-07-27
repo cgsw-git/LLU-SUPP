@@ -1,4 +1,4 @@
-// var myCapId = "CA0000018";
+// var myCapId = "CA0000020";
 // var myUserId = "ADMIN";
 
 /* ASA  */  //var eventName = "ApplicationSubmitAfter";
@@ -37,13 +37,13 @@ try
   for (var c in childTable) {
     cRow = childTable[c];
     pRow = parentTable[c];
-      
+
     if ( cRow["Corrective Action"].fieldValue != pRow["Corrective Action"].fieldValue
       || cRow["Responsible Party"].fieldValue != pRow["Responsible Party"].fieldValue
-      || (cRow["Actual/Planned Correction Date"].fieldValue != null && pRow["Actual/Planned Correction Date"].fieldValue != null
-        && aa.util.formatDate(aa.util.parseDate(cRow["Actual/Planned Correction Date"].fieldValue),"MM-dd-yyyy") != aa.util.formatDate(aa.util.parseDate(pRow["Actual/Planned Correction Date"].fieldValue),"MM-dd-yyyy")
-        ) 
-      || cRow["Actual/Planned Correction Date"].fieldValue != null && pRow["Actual/Planned Correction Date"].fieldValue == null
+      // || ((cRow["Actual/Planned Correction Date"].fieldValue != null && pRow["Actual/Planned Correction Date"].fieldValue != null)
+        // && aa.util.formatDate(aa.util.parseDate(cRow["Actual/Planned Correction Date"].fieldValue),"MM-dd-yyyy") != aa.util.formatDate(aa.util.parseDate(pRow["Actual/Planned Correction Date"].fieldValue),"MM-dd-yyyy")
+        // ) 
+      || cRow["Actual/Planned Correction Date"].fieldValue != pRow["Actual/Planned Correction Date"].fieldValue
       ) {
       logDebug("push fields to update");
       setUpdateColumnValue(updateRowsMap, c, "Corrective Action", cRow["Corrective Action"].fieldValue );
