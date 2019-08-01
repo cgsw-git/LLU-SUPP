@@ -10,8 +10,8 @@ This event script:
 */
 
 
- // var myCapId = "DF0000066";
- //var myUserId = "ADMIN";
+ // var myCapId = "DF0000035";
+ // var myUserId = "ADMIN";
 
 /* ASA   */  //var eventName = "ApplicationSubmitAfter";
 /* WTUA  */  //var eventName = "WorkflowTaskUpdateAfter";  wfTask = "Application Submittal";	  wfStatus = "Admin Approved";  wfDateMMDDYYYY = "01/27/2015";
@@ -103,8 +103,17 @@ try {
 
       logDebug("Updating ASIT");
       // addToASITable("CAP", rowVals, parentCapId);
-      options = [{capId: parentCapId}];
-      addAsiTableRow("CAP", rowVals, options)
+      if (!rowVals.empty) {
+        options = {capId: parentCapId};
+        myResult = addAsiTableRow("CAP", rowVals, options)
+        if (myResult.getSuccess()) {
+          logDebug("Success adding row");
+        }else{
+          logDebug("Error adding row: " + myResult.getErrorMessage());
+        }
+      }else{
+        logDebug("nothing to push");
+      }
     }
   }
   // set the parent record to "CAP Required"
