@@ -11,7 +11,7 @@ This event script:
 
 
  // var myCapId = "DF0000066";
- // var myUserId = "ADMIN";
+var myUserId = "ADMIN";
 
 /* ASA  */  //var eventName = "ApplicationSubmitAfter";
 /* WTUA */  //var eventName = "WorkflowTaskUpdateAfter";  wfTask = "Application Submittal";	  wfStatus = "Admin Approved";  wfDateMMDDYYYY = "01/27/2015";
