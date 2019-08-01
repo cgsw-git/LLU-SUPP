@@ -299,27 +299,23 @@ function generateCAPViolationsASITRow(capId,inspId,gsi) {
 //logDebugObject(inspObj);
 
 inspDate = inspObj.getInspectionDate().getMonth() + "/" + inspObj.getInspectionDate().getDayOfMonth() + "/" + inspObj.getInspectionDate().getYear();
-rowVals["Inspection Date"] = new asiTableValObj("Inspection Date",inspDate,"N");
+rowVals.push({colName: 'Inspection Date', colValue: inspDate});
 
 // add the inspector information
 var thisInspector = inspObj.getInspector(); //returns SysUserModel
 if ( typeof(thisInspector) != "undefined" ) {
-  rowVals["Inspected By"] = new asiTableValObj("Inspected By",thisInspector.getFullName(),"N");
-  rowVals["Inspector ID"] = new asiTableValObj("Inspector ID",thisInspector.getUserID(),"N");
+  rowVals.push({colName: 'Inspected By', colValue: thisInspector.getFullName()});
+  rowVals.push({colName: 'Inspector ID', colValue: thisInspector.getUserID()});
 }
-rowVals["Department"] = new asiTableValObj("Department",capName,"N");
+rowVals.push({colName: 'Department', colValue: capName});
 var vFA = capId.getCustomID();
-rowVals["Department ID #"] = new asiTableValObj("Department ID #",vFA,"N");
-rowVals["Description"] = new asiTableValObj("Description",gsi.text,"N");
-rowVals["Deficiency"] = new asiTableValObj("Deficiency",gsi.comment,"N");
-rowVals["Vio. Status"] = new asiTableValObj("Vio. Status",gsi.status,"N");
-rowVals["Inspector Comment"] = new asiTableValObj("Inspector Comment", gsi.info["Inspector Comment"],"N");
-rowVals["CAP Review Comment"] = new asiTableValObj("CAP Review Comment"," ","N");
-rowVals["Corrective Action"] = new asiTableValObj("Corrective Action","Enter corrective action","N");
-rowVals["Responsible Party"] = new asiTableValObj("Responsible Party","Enter responsible party","N");
-rowVals["Actual/Planned Correction Date"] = new asiTableValObj("Actual/Planned Correction Date","01/01/2000","N");
-rowVals["Inspection Type"] = new asiTableValObj("Program",inspType,"N");
-rowVals["CAP Status"] = new asiTableValObj("CAP Status","Incomplete","N");
+rowVals.push({colName: 'Department ID #', colValue: vFA});
+rowVals.push({colName: 'Description', colValue: gsi.text});
+rowVals.push({colName: 'Deficiency', colValue: gsi.comment});
+rowVals.push({colName: 'Vio. Status', colValue: gsi.status});
+rowVals.push({colName: 'Inspector Comment', colValue: gsi.info["Inspector Comment"]});
+rowVals.push({colName: 'Inspection Type', colValue: inspType});
+rowVals.push({colName: 'CAP Status', colValue: "Incomplete"});
 var addrResult = aa.address.getAddressByCapId(capId);
 if (addrResult) {
   var addrArray = new Array();
@@ -351,13 +347,14 @@ if (addrResult && unitNbr != null) {
 }
 
 if (vAddress) {
-  rowVals["Address"] = new asiTableValObj("Address", vAddress,"N");
-} else {
-  rowVals["Address"] = new asiTableValObj("Address", "","N");
+  rowVals.push({colName: 'Address', colValue: vAddress});
 }
 
 logDebug("Updating ASIT");
-addToASITable("CAP", rowVals);
+options = [
+{capId: capId}
+];
+addAsiTableRow("CAP", rowVals, options)
 logDebug("Updating Item Was Processed checkbox");
 myUpdateGuidesheetASIField(inspId, gsi.gsType,gsi.text,"CKLST_CMNT","ADDITIONAL VIOLATION INFO", "Item Was Processed","CHECKED",capId);
 }
