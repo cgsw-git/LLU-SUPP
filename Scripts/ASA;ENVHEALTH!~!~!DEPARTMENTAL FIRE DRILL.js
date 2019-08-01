@@ -46,23 +46,27 @@ try {
       
       // add row to Corrective Action Plan ASIT on parent
       rowVals = new Array();
-      rowVals["Inspection Date"] = new asiTableValObj("Inspection Date",AInfo["Drill Date"],"N");
-      rowVals["Inspected By"] = new asiTableValObj("Inspected By",AInfo["Person Observing"],"N");
-      rowVals["Inspector ID"] = new asiTableValObj("Inspector ID","ENAVARRETTE","N");
+      // rowVals["Inspection Date"] = new asiTableValObj("Inspection Date",AInfo["Drill Date"],"N");
+      rowVals.push({colName: 'Inspection Date', colValue: AInfo["Drill Date"]});
+      // rowVals["Inspected By"] = new asiTableValObj("Inspected By",AInfo["Person Observing"],"N");
+      rowVals.push({colName: 'Inspected By', colValue: AInfo["Person Observing"]});
+      // rowVals["Inspector ID"] = new asiTableValObj("Inspector ID","ENAVARRETTE","N");
+      rowVals.push({colName: 'Inspector ID', colValue: "ENAVARRETTE"});
       parentCap = aa.cap.getCap(parentCapId).getOutput();
-      rowVals["Department"] = new asiTableValObj("Department",parentCap.specialText,"N");
-      rowVals["Department ID #"] = new asiTableValObj("Department ID #",parentCapId.customID,"N");
-      rowVals["Description"] = new asiTableValObj("Description","Fire Drill","N");
-      rowVals["Deficiency"] = new asiTableValObj("Deficiency",x,"N");
-      rowVals["Vio. Status"] = new asiTableValObj("Vio. Status",AInfo[x],"N");
-      // rowVals["Inspector Comment"] = new asiTableValObj("Inspector Comment", " ","N");
-      // rowVals["CAP Review Comment"] = new asiTableValObj("CAP Review Comment"," ","N");
-      rowVals["Corrective Action"] = new asiTableValObj("Corrective Action","Enter corrective action","N");
-      rowVals["Responsible Party"] = "Enter reponsible party";
-      // rowVals["Responsible Party"] = new asiTableValObj("Responsible Party"," ","N");
-      rowVals["Inspection Type"] = new asiTableValObj("Program","Fire Drill","N");
-      rowVals["CAP Status"] = new asiTableValObj("CAP Status","Incomplete","N");
-      rowVals["Actual/Planned Correction Date"] = new asiTableValObj("Actual/Planned Correction Date","01/01/2000","N");
+      // rowVals["Department"] = new asiTableValObj("Department",parentCap.specialText,"N");
+      rowVals.push({colName: 'Department', colValue: parentCap.specialText});
+      // rowVals["Department ID #"] = new asiTableValObj("Department ID #",parentCapId.customID,"N");
+      rowVals.push({colName: 'Department ID #', colValue: parentCapId.customID});
+      // rowVals["Description"] = new asiTableValObj("Description","Fire Drill","N");
+      rowVals.push({colName: 'Description', colValue: "Fire Drill"});
+      // rowVals["Deficiency"] = new asiTableValObj("Deficiency",x,"N");
+      rowVals.push({colName: 'Deficiency', colValue: x});
+      // rowVals["Vio. Status"] = new asiTableValObj("Vio. Status",AInfo[x],"N");
+      rowVals.push({colName: 'Vio. Status', colValue: AInfo[x]});
+      // rowVals["Inspection Type"] = new asiTableValObj("Program","Fire Drill","N");
+      rowVals.push({colName: 'Inspection Type', colValue: "Fire Drill"});
+      // rowVals["CAP Status"] = new asiTableValObj("CAP Status","Incomplete","N");
+      rowVals.push({colName: 'CAP Status', colValue: "Incomplete"});
       var addrResult = aa.address.getAddressByCapId(parentCapId);
       if (addrResult) {
         var addrArray = new Array();
@@ -94,13 +98,13 @@ try {
       }
 
       if (vAddress) {
-        rowVals["Address"] = new asiTableValObj("Address", vAddress,"N");
-      } else {
-        rowVals["Address"] = new asiTableValObj("Address", "","N");
+        rowVals.push({colName: 'Address', colValue: vAddress});
       }
 
       logDebug("Updating ASIT");
-      addToASITable("CAP", rowVals, parentCapId);
+      // addToASITable("CAP", rowVals, parentCapId);
+      options = [{capId: capId}];
+      addAsiTableRow("CAP", rowVals, options)
     }
   }
   // set the parent record to "CAP Required"
