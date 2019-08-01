@@ -11,14 +11,14 @@ This event script:
 
 
  // var myCapId = "DF0000066";
-var myUserId = "ADMIN";
+ //var myUserId = "ADMIN";
 
-/* ASA  */  //var eventName = "ApplicationSubmitAfter";
-/* WTUA */  //var eventName = "WorkflowTaskUpdateAfter";  wfTask = "Application Submittal";	  wfStatus = "Admin Approved";  wfDateMMDDYYYY = "01/27/2015";
-/* IRSA */  //var eventName = "InspectionResultSubmitAfter" ; inspResult = "Failed"; inspResultComment = "Comment";  inspType = "Roofing"
-/* ISA  */  //var eventName = "InspectionScheduleAfter" ; inspType = "Roofing"
-/* PRA  */  //var eventName = "PaymentReceiveAfter";  
-/* CTRCA */ // var eventName = "ConvertToRealCAPAfter";
+/* ASA   */  //var eventName = "ApplicationSubmitAfter";
+/* WTUA  */  //var eventName = "WorkflowTaskUpdateAfter";  wfTask = "Application Submittal";	  wfStatus = "Admin Approved";  wfDateMMDDYYYY = "01/27/2015";
+/* IRSA  */  //var eventName = "InspectionResultSubmitAfter" ; inspResult = "Failed"; inspResultComment = "Comment";  inspType = "Roofing"
+/* ISA   */  //var eventName = "InspectionScheduleAfter" ; inspType = "Roofing"
+/* PRA   */  //var eventName = "PaymentReceiveAfter";  
+/* CTRCA */  //var eventName = "ConvertToRealCAPAfter";
 
 // var useProductScript = false;  // set to true to use the "productized" master scripts (events->master scripts), false to use scripts from (events->scripts)
 // var runEvent = true; // set to true to simulate the event and run all std choices/scripts for the record type.  
@@ -103,7 +103,7 @@ try {
 
       logDebug("Updating ASIT");
       // addToASITable("CAP", rowVals, parentCapId);
-      options = [{capId: capId}];
+      options = [{capId: parentCapId}];
       addAsiTableRow("CAP", rowVals, options)
     }
   }
