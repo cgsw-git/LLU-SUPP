@@ -1,4 +1,4 @@
-// var myCapId = "CA0000020";
+// var myCapId = "CA0000023";
 // var myUserId = "ADMIN";
 
 /* ASA  */  //var eventName = "ApplicationSubmitAfter";
@@ -37,7 +37,7 @@ try
   for (var c in childTable) {
     cRow = childTable[c];
     pRow = parentTable[c];
-
+    
     if ( cRow["Corrective Action"].fieldValue != pRow["Corrective Action"].fieldValue
       || cRow["Responsible Party"].fieldValue != pRow["Responsible Party"].fieldValue
       // || ((cRow["Actual/Planned Correction Date"].fieldValue != null && pRow["Actual/Planned Correction Date"].fieldValue != null)
@@ -46,6 +46,7 @@ try
       || cRow["Actual/Planned Correction Date"].fieldValue != pRow["Actual/Planned Correction Date"].fieldValue
       ) {
       logDebug("push fields to update");
+      var updateRowsMap = aa.util.newHashMap(); // Map<rowID, Map<columnName, columnValue>>
       setUpdateColumnValue(updateRowsMap, c, "Corrective Action", cRow["Corrective Action"].fieldValue );
       setUpdateColumnValue(updateRowsMap, c, "Responsible Party", cRow["Responsible Party"].fieldValue );
       setUpdateColumnValue(updateRowsMap, c, "Actual/Planned Correction Date", cRow["Actual/Planned Correction Date"].fieldValue );
@@ -57,6 +58,14 @@ try
         logDebug("add inspector to list");
         inspectorsWithTasks.push(cRow["Inspector ID"].fieldValue);
       }
+      if (!updateRowsMap.empty) {
+        myResult = updateAppSpecificTableInfors(tableName, parentCapId, updateRowsMap);
+        if (myResult.getSuccess()) {
+          logDebug("Success");
+        }else{
+          logDebug(myResult.getErrorMessage());
+        }
+      }
     }else{
       logDebug("no differences");
       if (cRow["CAP Status"].fieldValue == "Incomplete" || cRow["CAP Status"].fieldValue == "Denied") {
@@ -66,15 +75,15 @@ try
     } 
   }
   updateAppStatus(appStatus,"Updated by EMSE Script",parentCapId);
-  logDebug("updateRowsMap is empty: " + updateRowsMap.empty);
-  if (!updateRowsMap.empty) {
-    myResult = updateAppSpecificTableInfors(tableName, parentCapId, updateRowsMap);
-    if (myResult.getSuccess()) {
-      logDebug("Success");
-    }else{
-      logDebug(myResult.getErrorMessage());
-    }
-  }
+  // logDebug("updateRowsMap is empty: " + updateRowsMap.empty);
+  // if (!updateRowsMap.empty) {
+    // myResult = updateAppSpecificTableInfors(tableName, parentCapId, updateRowsMap);
+    // if (myResult.getSuccess()) {
+      // logDebug("Success");
+    // }else{
+      // logDebug(myResult.getErrorMessage());
+    // }
+  // }
 }
 catch (err) {
 	logDebug("A JavaScript Error occured: " + err.message);
