@@ -40,9 +40,6 @@ try
     
     if ( cRow["Corrective Action"].fieldValue != pRow["Corrective Action"].fieldValue
       || cRow["Responsible Party"].fieldValue != pRow["Responsible Party"].fieldValue
-      // || ((cRow["Actual/Planned Correction Date"].fieldValue != null && pRow["Actual/Planned Correction Date"].fieldValue != null)
-        // && aa.util.formatDate(aa.util.parseDate(cRow["Actual/Planned Correction Date"].fieldValue),"MM-dd-yyyy") != aa.util.formatDate(aa.util.parseDate(pRow["Actual/Planned Correction Date"].fieldValue),"MM-dd-yyyy")
-        // ) 
       || cRow["Actual/Planned Correction Date"].fieldValue != pRow["Actual/Planned Correction Date"].fieldValue
       ) {
       logDebug("push fields to update");
