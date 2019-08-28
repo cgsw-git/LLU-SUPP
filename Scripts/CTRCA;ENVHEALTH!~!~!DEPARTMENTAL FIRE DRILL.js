@@ -126,7 +126,7 @@ try {
   // Provide the ACA URl - This should be set in INCLUDES_CUSTOM_GLOBALS
   // var acaURL = "aca.supp.accela.com/LLU"
   // Provide the Agency Reply Email - This should be set in INCLUDES_CUSTOM_GLOBALS
-  var agencyReplyEmail = "noreply@accela.com"
+  //var agencyReplyEmail = "noreply@accela.com"
   // Provide the contact types to send this notification
   var contactTypesArray = new Array("Primary");
   contactTypesArray[1] = "Frontline Leadership";
