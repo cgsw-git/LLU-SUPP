@@ -16,6 +16,7 @@
 	emailText = "";
 	message = "";
 	br = "<br>";
+  logDebug("Debug = " + debug);
 	// debug = "";
   // showDebug = true;
   // logDebug = true;
@@ -105,7 +106,7 @@
         capIDString = capId.getCustomID();
         logDebug("sending report for " + capId.getCustomID());
         if (!debug) {
-          sendOutstandingCAPItemsReport();
+          //sendOutstandingCAPItemsReport();
         }
       } else {
         skippedDepartments = ++skippedDepartments;
