@@ -145,7 +145,7 @@ try {
   var contactObjArray = getContactObjs(capId,contactTypesArray);
 
   var rptParams = aa.util.newHashMap();
-  rptParams.put("recordIDText", capId.getCustomID());
+  rptParams.put("recordID", capId.getCustomID());
   logDebug("report recordID: " + capId.getCustomID() );
 
   if(!matches(reportName,null,undefined,"")){
