@@ -12,7 +12,7 @@ This event script:
 */
 
 
- // var myCapId = "DF0000035";
+ // var myCapId = "DF0000038";
  // var myUserId = "ADMIN";
 
 /* ASA   */  //var eventName = "ApplicationSubmitAfter";
@@ -140,12 +140,13 @@ try {
   // establish the template parameter hashtable
   var eParams = aa.util.newHashtable();
   // Provide the name of the report from Report Manager
-  var reportName = "5012 Fire Drill Observation";
+  var reportName = "Fire Drill Observation";
   // Get an array of Contact Objects using Master Scripts 3.0
   var contactObjArray = getContactObjs(capId,contactTypesArray);
 
   var rptParams = aa.util.newHashMap();
   rptParams.put("recordID", capId.getCustomID());
+  logDebug("report recordID: " + capId.getCustomID() );
 
   if(!matches(reportName,null,undefined,"")){
     // Call runReportAttach to attach the report to parent record Documents Tab
