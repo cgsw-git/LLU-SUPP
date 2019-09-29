@@ -139,7 +139,7 @@ try {
   // establish the template parameter hashtable
   var eParams = aa.util.newHashtable();
   // Provide the name of the report from Report Manager
-  var reportName = "Fire Drill Observation";
+  var reportName = "5012 Fire Drill Observation";
   // Get an array of Contact Objects using Master Scripts 3.0
   var contactObjArray = getContactObjs(capId,contactTypesArray);
 
