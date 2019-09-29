@@ -35,6 +35,7 @@ This event script:
 try {
 	showDebug = true;
   var outOfCompliance = false;
+  copyContacts(parentCapId,capId);
   copyAddresses(parentCapId,capId);
   editAppName(aa.cap.getCap(parentCapId).getOutput().specialText, capId)
 	var parentCapIDString = parentCapId.getCustomID();
