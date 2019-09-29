@@ -145,7 +145,7 @@ try {
 
   var rptParams = aa.util.newHashMap();
   rptParams.put("recordID", capId.getCustomID());
-  rptParams.put("recordIDText", capId.getCustomID());
+  // rptParams.put("recordIDText", capId.getCustomID());
   logDebug("report recordID parameter: " + capId.getCustomID() );
 
   if(!matches(reportName,null,undefined,"")){
