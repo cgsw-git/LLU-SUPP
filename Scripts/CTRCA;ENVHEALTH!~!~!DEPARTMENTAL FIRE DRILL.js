@@ -33,165 +33,167 @@ This event script:
 //
 
 try {
-	showDebug = true;
-  var outOfCompliance = false;
-  copyContacts(parentCapId,capId);
-  copyAddresses(parentCapId,capId);
-  editAppName(aa.cap.getCap(parentCapId).getOutput().specialText, capId)
-	var parentCapIDString = parentCapId.getCustomID();
-  
-  // read through the ASI fields looking for value of "Out of Compliance" 
-  for (var x in AInfo) {
+  if(publicuser) {
+    showDebug = true;
+    var outOfCompliance = false;
+    copyContacts(parentCapId,capId);
+    copyAddresses(parentCapId,capId);
+    editAppName(aa.cap.getCap(parentCapId).getOutput().specialText, capId)
+    var parentCapIDString = parentCapId.getCustomID();
     
-    // if out of compliance
-    if (AInfo[x] == "Out of Compliance") {
-      outOfCompliance = true;
+    // read through the ASI fields looking for value of "Out of Compliance" 
+    for (var x in AInfo) {
       
-      // add row to Corrective Action Plan ASIT on parent
-      rowVals = new Array();
-      // rowVals["Inspection Date"] = new asiTableValObj("Inspection Date",AInfo["Drill Date"],"N");
-      rowVals.push({colName: 'Inspection Date', colValue: AInfo["Drill Date"]});
-      // rowVals["Inspected By"] = new asiTableValObj("Inspected By",AInfo["Person Observing"],"N");
-      rowVals.push({colName: 'Inspected By', colValue: AInfo["Person Observing"]});
-      // rowVals["Inspector ID"] = new asiTableValObj("Inspector ID","ENAVARRETTE","N");
-      rowVals.push({colName: 'Inspector ID', colValue: "ENAVARRETTE"});
-      parentCap = aa.cap.getCap(parentCapId).getOutput();
-      // rowVals["Department"] = new asiTableValObj("Department",parentCap.specialText,"N");
-      rowVals.push({colName: 'Department', colValue: parentCap.specialText});
-      // rowVals["Department ID #"] = new asiTableValObj("Department ID #",parentCapId.customID,"N");
-      rowVals.push({colName: 'Department ID #', colValue: parentCapId.customID});
-      // rowVals["Description"] = new asiTableValObj("Description","Fire Drill","N");
-      rowVals.push({colName: 'Description', colValue: "Fire Drill"});
-      // rowVals["Deficiency"] = new asiTableValObj("Deficiency",x,"N");
-      rowVals.push({colName: 'Deficiency', colValue: x});
-      // rowVals["Vio. Status"] = new asiTableValObj("Vio. Status",AInfo[x],"N");
-      rowVals.push({colName: 'Vio. Status', colValue: AInfo[x]});
-      // rowVals["Inspection Type"] = new asiTableValObj("Program","Fire Drill","N");
-      rowVals.push({colName: 'Inspection Type', colValue: "Fire Drill"});
-      // rowVals["CAP Status"] = new asiTableValObj("CAP Status","Incomplete","N");
-      rowVals.push({colName: 'CAP Status', colValue: "Incomplete"});
-      var addrResult = aa.address.getAddressByCapId(parentCapId);
-      if (addrResult) {
-        var addrArray = new Array();
-        var addrArray = addrResult.getOutput();
-        var streetName = addrArray[0].getStreetName();
-        var hseNum = addrArray[0].getHouseNumberStart();
-        var streetSuffix = addrArray[0].getStreetSuffix();
-        var streetDir = addrArray[0].getStreetDirection();
-        var unitType = addrArray[0].getUnitType();
-        var unitNbr = addrArray[0].getUnitStart();
-      }
-
-      if (addrResult && streetDir != null) {
-        var vAddress = hseNum + " "  + streetDir  + " "   + streetName;
-      } else {
-        var vAddress = hseNum + " "   + streetName;
-      }
-
-      if (addrResult && streetSuffix != null) {
-        vAddress = vAddress + " " + streetSuffix;
-      }
-
-      if (addrResult && unitType != null) {
-        vAddress = vAddress + " " + unitType;
-      }
-
-      if (addrResult && unitNbr != null) {
-        vAddress = vAddress + " " + unitNbr;
-      }
-
-      if (vAddress) {
-        rowVals.push({colName: 'Address', colValue: vAddress});
-      }
-
-      logDebug("Updating ASIT");
-      // addToASITable("CAP", rowVals, parentCapId);
-      if (!rowVals.empty) {
-        options = {capId: parentCapId};
-        myResult = addAsiTableRow("CAP", rowVals, options)
-        if (myResult.getSuccess()) {
-          logDebug("Success adding row");
-        }else{
-          logDebug("Error adding row: " + myResult.getErrorMessage());
+      // if out of compliance
+      if (AInfo[x] == "Out of Compliance") {
+        outOfCompliance = true;
+        
+        // add row to Corrective Action Plan ASIT on parent
+        rowVals = new Array();
+        // rowVals["Inspection Date"] = new asiTableValObj("Inspection Date",AInfo["Drill Date"],"N");
+        rowVals.push({colName: 'Inspection Date', colValue: AInfo["Drill Date"]});
+        // rowVals["Inspected By"] = new asiTableValObj("Inspected By",AInfo["Person Observing"],"N");
+        rowVals.push({colName: 'Inspected By', colValue: AInfo["Person Observing"]});
+        // rowVals["Inspector ID"] = new asiTableValObj("Inspector ID","ENAVARRETTE","N");
+        rowVals.push({colName: 'Inspector ID', colValue: "ENAVARRETTE"});
+        parentCap = aa.cap.getCap(parentCapId).getOutput();
+        // rowVals["Department"] = new asiTableValObj("Department",parentCap.specialText,"N");
+        rowVals.push({colName: 'Department', colValue: parentCap.specialText});
+        // rowVals["Department ID #"] = new asiTableValObj("Department ID #",parentCapId.customID,"N");
+        rowVals.push({colName: 'Department ID #', colValue: parentCapId.customID});
+        // rowVals["Description"] = new asiTableValObj("Description","Fire Drill","N");
+        rowVals.push({colName: 'Description', colValue: "Fire Drill"});
+        // rowVals["Deficiency"] = new asiTableValObj("Deficiency",x,"N");
+        rowVals.push({colName: 'Deficiency', colValue: x});
+        // rowVals["Vio. Status"] = new asiTableValObj("Vio. Status",AInfo[x],"N");
+        rowVals.push({colName: 'Vio. Status', colValue: AInfo[x]});
+        // rowVals["Inspection Type"] = new asiTableValObj("Program","Fire Drill","N");
+        rowVals.push({colName: 'Inspection Type', colValue: "Fire Drill"});
+        // rowVals["CAP Status"] = new asiTableValObj("CAP Status","Incomplete","N");
+        rowVals.push({colName: 'CAP Status', colValue: "Incomplete"});
+        var addrResult = aa.address.getAddressByCapId(parentCapId);
+        if (addrResult) {
+          var addrArray = new Array();
+          var addrArray = addrResult.getOutput();
+          var streetName = addrArray[0].getStreetName();
+          var hseNum = addrArray[0].getHouseNumberStart();
+          var streetSuffix = addrArray[0].getStreetSuffix();
+          var streetDir = addrArray[0].getStreetDirection();
+          var unitType = addrArray[0].getUnitType();
+          var unitNbr = addrArray[0].getUnitStart();
         }
-      }else{
-        logDebug("nothing to push");
+
+        if (addrResult && streetDir != null) {
+          var vAddress = hseNum + " "  + streetDir  + " "   + streetName;
+        } else {
+          var vAddress = hseNum + " "   + streetName;
+        }
+
+        if (addrResult && streetSuffix != null) {
+          vAddress = vAddress + " " + streetSuffix;
+        }
+
+        if (addrResult && unitType != null) {
+          vAddress = vAddress + " " + unitType;
+        }
+
+        if (addrResult && unitNbr != null) {
+          vAddress = vAddress + " " + unitNbr;
+        }
+
+        if (vAddress) {
+          rowVals.push({colName: 'Address', colValue: vAddress});
+        }
+
+        logDebug("Updating ASIT");
+        // addToASITable("CAP", rowVals, parentCapId);
+        if (!rowVals.empty) {
+          options = {capId: parentCapId};
+          myResult = addAsiTableRow("CAP", rowVals, options)
+          if (myResult.getSuccess()) {
+            logDebug("Success adding row");
+          }else{
+            logDebug("Error adding row: " + myResult.getErrorMessage());
+          }
+        }else{
+          logDebug("nothing to push");
+        }
       }
     }
-  }
-  // set the parent record to "CAP Required"
-  if (outOfCompliance) {
-    updateAppStatus("CAP Required","Updated by EMSE Script",parentCapId);
-  }
-  
-  // send email notification to contacts
-  // Provide the ACA URl - This should be set in INCLUDES_CUSTOM_GLOBALS
-  // var acaURL = "aca.supp.accela.com/LLU"
-  // Provide the Agency Reply Email - This should be set in INCLUDES_CUSTOM_GLOBALS
-  //var agencyReplyEmail = "noreply@accela.com"
-  // Provide the contact types to send this notification
-  var contactTypesArray = new Array("Primary"); 
-  contactTypesArray[1] = "Frontline Leadership";
-  contactTypesArray[2] = "Contact";
-  // contactTypesArray[3] = "Executive Leadership";
-  // Provide the Notification Template to use
-  var notificationTemplate = "LLU FIRE DRILL NOTIFICATION";
-  // establish the template parameter hashtable
-  var eParams = aa.util.newHashtable();
-  // Provide the name of the report from Report Manager
-  var reportName = "5012 Fire Drill Observation";
-  // Get an array of Contact Objects using Master Scripts 3.0
-  var contactObjArray = getContactObjs(capId,contactTypesArray);
+    // set the parent record to "CAP Required"
+    if (outOfCompliance) {
+      updateAppStatus("CAP Required","Updated by EMSE Script",parentCapId);
+    }
+    
+    // send email notification to contacts
+    // Provide the ACA URl - This should be set in INCLUDES_CUSTOM_GLOBALS
+    // var acaURL = "aca.supp.accela.com/LLU"
+    // Provide the Agency Reply Email - This should be set in INCLUDES_CUSTOM_GLOBALS
+    //var agencyReplyEmail = "noreply@accela.com"
+    // Provide the contact types to send this notification
+    var contactTypesArray = new Array("Primary"); 
+    contactTypesArray[1] = "Frontline Leadership";
+    contactTypesArray[2] = "Contact";
+    // contactTypesArray[3] = "Executive Leadership";
+    // Provide the Notification Template to use
+    var notificationTemplate = "LLU FIRE DRILL NOTIFICATION";
+    // establish the template parameter hashtable
+    var eParams = aa.util.newHashtable();
+    // Provide the name of the report from Report Manager
+    var reportName = "5012 Fire Drill Observation";
+    // Get an array of Contact Objects using Master Scripts 3.0
+    var contactObjArray = getContactObjs(capId,contactTypesArray);
 
-  var rptParams = aa.util.newHashMap();
-  rptParams.put("recordID", capId.getCustomID());
-  // rptParams.put("recordIDText", capId.getCustomID());
-  logDebug("report recordID parameter: " + capId.getCustomID() );
+    var rptParams = aa.util.newHashMap();
+    rptParams.put("recordID", capId.getCustomID());
+    // rptParams.put("recordIDText", capId.getCustomID());
+    logDebug("report recordID parameter: " + capId.getCustomID() );
 
-  if(!matches(reportName,null,undefined,"")){
-    // Call runReportAttach to attach the report to parent record Documents Tab
-    var attachToRecord = parentCapId;
-    logDebug("attach report to record: " + attachToRecord);
-    var myResults = myRunReportAttach(attachToRecord,reportName,rptParams);
-    logDebug("Run report attach results: " + myResults.getSuccess());
-    if (myResults.getSuccess()) {
-      var reportResults = myResults.getOutput();
-      // logDebugObject(reportResults);
-      var reportName = reportResults.name;
-      logDebug("reportName: " + reportName);
-      // var reportName = "5012FireDrillObservation_20190925_161330.pdf";
-      reportModel = getRecordModelByDocumentName(attachToRecord, reportName)
-      if (reportModel) {
-        var eParams = getACADocDownloadParam4Notification(eParams,acaURL,reportModel);
-        logDebug("getRecordModelByDocumentName reportURL: " + getACADocumentDownloadUrl(acaURL,reportModel));
-      }else{
-        logDebug("error getting report model");
+    if(!matches(reportName,null,undefined,"")){
+      // Call runReportAttach to attach the report to parent record Documents Tab
+      var attachToRecord = parentCapId;
+      logDebug("attach report to record: " + attachToRecord);
+      var myResults = myRunReportAttach(attachToRecord,reportName,rptParams);
+      logDebug("Run report attach results: " + myResults.getSuccess());
+      if (myResults.getSuccess()) {
+        var reportResults = myResults.getOutput();
+        // logDebugObject(reportResults);
+        var reportName = reportResults.name;
+        logDebug("reportName: " + reportName);
+        // var reportName = "5012FireDrillObservation_20190925_161330.pdf";
+        reportModel = getRecordModelByDocumentName(attachToRecord, reportName)
+        if (reportModel) {
+          var eParams = getACADocDownloadParam4Notification(eParams,acaURL,reportModel);
+          logDebug("getRecordModelByDocumentName reportURL: " + getACADocumentDownloadUrl(acaURL,reportModel));
+        }else{
+          logDebug("error getting report model");
+        }
       }
     }
-  }
 
-  for (iCon in contactObjArray) 
-  {
-    reportName = "";
-    var tContactObj = contactObjArray[iCon];
-    logDebug("ContactName: " + tContactObj.people.getFirstName() + " " + tContactObj.people.getLastName());
-    if (!matches(tContactObj.people.getEmail(),null,undefined,"")) 
-    { 
-      // logDebug("Contact Email: " + tContactObj.people.getEmail());
-      addParameter(eParams, "$$acaUrl$$", acaURL);
-      getRecordParams4Notification(eParams);
-      getACARecordParam4Notification(eParams,acaURL);
-      addParameter(eParams, "$$parentAltID$$", parentCapIDString);
-      tContactObj.getEmailTemplateParams(eParams);
-      getPrimaryAddressLineParam4Notification(eParams);
-      // logDebug(capId);
-      // logDebug(getACARecordURL(acaURL));
-      if(!matches(reportName,null,undefined,"")){
-        // Call runReport4Email to generate the report and send the email
-        runReport4Email(capId,reportName,tContactObj,rptParams,eParams,notificationTemplate,cap.getCapModel().getModuleName(),agencyReplyEmail);	
-      }else{
-        // Call sendNotification if you are not using a report
-        sendNotification(agencyReplyEmail,tContactObj.people.getEmail(),"",notificationTemplate ,eParams,null);
+    for (iCon in contactObjArray) 
+    {
+      reportName = "";
+      var tContactObj = contactObjArray[iCon];
+      logDebug("ContactName: " + tContactObj.people.getFirstName() + " " + tContactObj.people.getLastName());
+      if (!matches(tContactObj.people.getEmail(),null,undefined,"")) 
+      { 
+        // logDebug("Contact Email: " + tContactObj.people.getEmail());
+        addParameter(eParams, "$$acaUrl$$", acaURL);
+        getRecordParams4Notification(eParams);
+        getACARecordParam4Notification(eParams,acaURL);
+        addParameter(eParams, "$$parentAltID$$", parentCapIDString);
+        tContactObj.getEmailTemplateParams(eParams);
+        getPrimaryAddressLineParam4Notification(eParams);
+        // logDebug(capId);
+        // logDebug(getACARecordURL(acaURL));
+        if(!matches(reportName,null,undefined,"")){
+          // Call runReport4Email to generate the report and send the email
+          runReport4Email(capId,reportName,tContactObj,rptParams,eParams,notificationTemplate,cap.getCapModel().getModuleName(),agencyReplyEmail);	
+        }else{
+          // Call sendNotification if you are not using a report
+          sendNotification(agencyReplyEmail,tContactObj.people.getEmail(),"",notificationTemplate ,eParams,null);
+        }
       }
     }
   }
