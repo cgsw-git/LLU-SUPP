@@ -8,11 +8,13 @@ This event script:
 3) attaches a copy of the report to the parent record
 4) sends an email notice with link to the report
 
+5/19/2020 - corrected publicuser variable to publicUser
+
 
 */
 
 
- // var myCapId = "DF0000038";
+ // var myCapId = "DF0000056";
  // var myUserId = "ADMIN";
 
 /* ASA   */  //var eventName = "ApplicationSubmitAfter";
@@ -33,7 +35,7 @@ This event script:
 //
 
 try {
-  if(publicuser) {
+  if(publicUser) {
     showDebug = true;
     var outOfCompliance = false;
     copyContacts(parentCapId,capId);
