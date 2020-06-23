@@ -18,8 +18,8 @@
 	message = "";
 	br = "<br>";
 	debug = "";
-  showDebug = true;
-  logDebug = true;
+	// showDebug = true;
+	// logDebug = true;
 	/*------------------------------------------------------------------------------------------------------/
 	| BEGIN Includes
 	/------------------------------------------------------------------------------------------------------*/
@@ -89,7 +89,7 @@
   var duplicateDepartments = 0;
   var emailsSent = 0;
   var numberOfInspections = 0;
-  showDebug = true;
+  // showDebug = true;
   var wfComment; // to accomodate customization that was done to getRecordParams4Notification() in INCLUDES_CUSTOM
   logDebug("Start of Job");
   
@@ -148,7 +148,7 @@
 
             // send the notification
             logDebug(altId);
-            mySendInspectionActivityReport();
+            // mySendInspectionActivityReport();
             break;
           }
         }
