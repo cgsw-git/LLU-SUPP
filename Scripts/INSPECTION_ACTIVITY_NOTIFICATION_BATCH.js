@@ -80,7 +80,7 @@
 	|
 	/-----------------------------------------------------------------------------------------------------*/
 
-	var systemUserObj = aa.person.getUser("ADMIN").getOutput();
+  var systemUserObj = aa.person.getUser("ADMIN").getOutput();
   var currentUserID = "ADMIN";
   var startDate = new Date();
   var startTime = startDate.getTime();			// Start timer
@@ -101,10 +101,10 @@
     // set the date parameters (assumes this is run the day after the observered time period)
     // var begDate = aa.util.formatDate(aa.util.dateDiff(aa.util.now(),"day",-7),"yyyy-MM-dd");
     var begDate = aa.util.dateDiff(aa.util.now(),"day",-7);
-    logDebug("beginning Date: " + aa.util.formatDate(begDate,"yyyy-MM-dd"));
+    // logDebug("beginning Date: " + aa.util.formatDate(begDate,"yyyy-MM-dd"));
     // var endDate = aa.util.formatDate(aa.util.dateDiff(aa.util.now(),"day",-1),"yyyy-MM-dd");
     var endDate = aa.util.dateDiff(aa.util.now(),"day",-1);
-    logDebug("ending Date: " + aa.util.formatDate(endDate,"yyyy-MM-dd"));
+    // logDebug("ending Date: " + aa.util.formatDate(endDate,"yyyy-MM-dd"));
      
     // loop through all the departments
     for (var d in departments ) {
@@ -147,7 +147,7 @@
             processedInspections++;
 
             // send the notification
-            logDebug(altId);
+            // logDebug(altId);
             // mySendInspectionActivityReport();
             break;
           }
@@ -202,7 +202,7 @@ function mySendInspectionActivityReport(){
 
   for (iCon in contactObjArray) {
     var tContactObj = contactObjArray[iCon];
-    logDebug("ContactName: " + tContactObj.people.getFirstName() + " " + tContactObj.people.getLastName());
+    // logDebug("ContactName: " + tContactObj.people.getFirstName() + " " + tContactObj.people.getLastName());
     if (!matches(tContactObj.people.getEmail(),null,undefined,"")) {
       emailsSent++;
       // logDebug("Contact Email: " + tContactObj.people.getEmail());
@@ -246,7 +246,7 @@ function mySendInspectionActivityReport(){
 	var itemBalanceDue;
 	
   var itemCapDetailObjResult = aa.cap.getCapDetail(itemCapId);	
-  logDebug("itemCapDetailObjResult = " + itemCapDetailObjResult.getSuccess() );
+  // logDebug("itemCapDetailObjResult = " + itemCapDetailObjResult.getSuccess() );
  	if (itemCapDetailObjResult.getSuccess())
 	{
 		itemCapDetail = itemCapDetailObjResult.getOutput();

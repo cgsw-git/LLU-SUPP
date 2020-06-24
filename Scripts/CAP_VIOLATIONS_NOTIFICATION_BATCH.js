@@ -63,7 +63,6 @@
 	| Start: BATCH PARAMETERS
 	|
 	/------------------------------------------------------------------------------------------------------*/
-	var sendEmail = getParam("sendEmail");
 
 	/*----------------------------------------------------------------------------------------------------/
 	|
@@ -79,7 +78,7 @@
 	|
 	/-----------------------------------------------------------------------------------------------------*/
 
-	var systemUserObj = aa.person.getUser("ADMIN").getOutput();
+  var systemUserObj = aa.person.getUser("ADMIN").getOutput();
   var currentUserID = "ADMIN";
   var startDate = new Date();
   var startTime = startDate.getTime();			// Start timer
@@ -90,7 +89,6 @@
   showDebug = true;
   var wfComment; // to accomodate customization that was done to getRecordParams4Notification() in INCLUDES_CUSTOM
   logDebug("Start of Job");
-  logDebug("sendEmail = " + sendEmail);
   
   //loop through Department records with status of CAP required
   var getResult = aa.cap.getByAppType("EnvHealth","Department", null, null);
@@ -104,10 +102,8 @@
         cap = list[i];
         capId = list[i].getCapID();
         capIDString = capId.getCustomID();
-        if (sendEmail == "Yes") {
-			//sendOutstandingCAPItemsReport();
-			logDebug("sending report for " + capId.getCustomID());
-			break;
+		//sendOutstandingCAPItemsReport();
+		//logDebug("sending report for " + capId.getCustomID());
         }
       } else {
         skippedDepartments = ++skippedDepartments;
