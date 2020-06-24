@@ -98,16 +98,16 @@
     var list = getResult.getOutput();
     // logDebug("Success! Records Equals = " + list.length) ;
     for (var i in list) {
-		break;
       processedDepartments = list.length;
       if (list[i].getCapStatus() == "CAP Required" ) {
         emailedDepartments = ++emailedDepartments;
         cap = list[i];
         capId = list[i].getCapID();
         capIDString = capId.getCustomID();
-        if (sendEmail == true) {
+        if (sendEmail == "Yes") {
 			//sendOutstandingCAPItemsReport();
 			logDebug("sending report for " + capId.getCustomID());
+			break;
         }
       } else {
         skippedDepartments = ++skippedDepartments;
