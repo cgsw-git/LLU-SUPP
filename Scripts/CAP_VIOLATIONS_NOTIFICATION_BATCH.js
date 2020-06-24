@@ -95,7 +95,7 @@
   var getResult = aa.cap.getByAppType("EnvHealth","Department", null, null);
   if (getResult.getSuccess()) {
     var list = getResult.getOutput();
-    logDebug("Success! Records Equals = " + list.length) ;
+    // logDebug("Success! Records Equals = " + list.length) ;
     for (var i in list) {
       processedDepartments = list.length;
       if (list[i].getCapStatus() == "CAP Required" ) {
@@ -103,9 +103,9 @@
         cap = list[i];
         capId = list[i].getCapID();
         capIDString = capId.getCustomID();
-        logDebug("sending report for " + capId.getCustomID());
-        if (!debug) {
-          //sendOutstandingCAPItemsReport();
+        // logDebug("sending report for " + capId.getCustomID());
+        if (sendEmail) {
+			sendOutstandingCAPItemsReport();
         }
       } else {
         skippedDepartments = ++skippedDepartments;
