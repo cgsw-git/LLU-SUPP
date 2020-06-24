@@ -90,6 +90,7 @@
   showDebug = true;
   var wfComment; // to accomodate customization that was done to getRecordParams4Notification() in INCLUDES_CUSTOM
   logDebug("Start of Job");
+  logDebug("sendEmail = " + sendEmail);
   
   //loop through Department records with status of CAP required
   var getResult = aa.cap.getByAppType("EnvHealth","Department", null, null);
@@ -97,6 +98,7 @@
     var list = getResult.getOutput();
     // logDebug("Success! Records Equals = " + list.length) ;
     for (var i in list) {
+		break;
       processedDepartments = list.length;
       if (list[i].getCapStatus() == "CAP Required" ) {
         emailedDepartments = ++emailedDepartments;
