@@ -103,9 +103,9 @@
         cap = list[i];
         capId = list[i].getCapID();
         capIDString = capId.getCustomID();
-        // logDebug("sending report for " + capId.getCustomID());
-        if (sendEmail) {
-			sendOutstandingCAPItemsReport();
+        if (sendEmail == true) {
+			//sendOutstandingCAPItemsReport();
+			logDebug("sending report for " + capId.getCustomID());
         }
       } else {
         skippedDepartments = ++skippedDepartments;
