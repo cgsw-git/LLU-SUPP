@@ -102,8 +102,8 @@
         cap = list[i];
         capId = list[i].getCapID();
         capIDString = capId.getCustomID();
-		//sendOutstandingCAPItemsReport();
-		//logDebug("sending report for " + capId.getCustomID());
+		sendOutstandingCAPItemsReport();
+		logDebug("sending report for " + capId.getCustomID());
       } else {
         skippedDepartments = ++skippedDepartments;
       }
@@ -191,7 +191,7 @@ function sendOutstandingCAPItemsReport(){
 	var itemBalanceDue;
 	
   var itemCapDetailObjResult = aa.cap.getCapDetail(itemCapId);	
-  logDebug("itemCapDetailObjResult = " + itemCapDetailObjResult.getSuccess() );
+  // logDebug("itemCapDetailObjResult = " + itemCapDetailObjResult.getSuccess() );
  	if (itemCapDetailObjResult.getSuccess())
 	{
 		itemCapDetail = itemCapDetailObjResult.getOutput();
