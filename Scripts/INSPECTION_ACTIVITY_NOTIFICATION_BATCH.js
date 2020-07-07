@@ -147,8 +147,9 @@
             processedInspections++;
 
             // send the notification
-            // logDebug(altId);
-            // mySendInspectionActivityReport();
+            logDebug("Sending notification(s) for: " + altId);
+            mySendInspectionActivityReport();
+			// break after an inspection meets the criterion because the report lists all inspections within the time period.
             break;
           }
         }
@@ -202,7 +203,7 @@ function mySendInspectionActivityReport(){
 
   for (iCon in contactObjArray) {
     var tContactObj = contactObjArray[iCon];
-    // logDebug("ContactName: " + tContactObj.people.getFirstName() + " " + tContactObj.people.getLastName());
+    logDebug("ContactName: " + tContactObj.people.getFirstName() + " " + tContactObj.people.getLastName());
     if (!matches(tContactObj.people.getEmail(),null,undefined,"")) {
       emailsSent++;
       // logDebug("Contact Email: " + tContactObj.people.getEmail());
