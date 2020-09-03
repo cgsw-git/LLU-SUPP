@@ -8,6 +8,7 @@ This event script:
 3) attaches a copy of the report to the parent record
 4) sends an email notice with link to the report
 
+9/3/2020 - Mike Zachry - Disable logging deficiencies to the CAP ASIT per Erik Navaette see Trello card https://trello.com/c/ff2sRp5d
 5/19/2020 - corrected publicuser variable to publicUser
 
 
@@ -42,7 +43,8 @@ try {
     copyAddresses(parentCapId,capId);
     editAppName(aa.cap.getCap(parentCapId).getOutput().specialText, capId)
     var parentCapIDString = parentCapId.getCustomID();
-    
+
+/* Disable creating CAP entries per Erik Navaette. See Trello card https://trello.com/c/ff2sRp5d   
     // read through the ASI fields looking for value of "Out of Compliance" 
     for (var x in AInfo) {
       
@@ -126,7 +128,7 @@ try {
     if (outOfCompliance) {
       updateAppStatus("CAP Required","Updated by EMSE Script",parentCapId);
     }
-    
+*/    
     // send email notification to contacts
     // Provide the ACA URl - This should be set in INCLUDES_CUSTOM_GLOBALS
     // var acaURL = "aca.supp.accela.com/LLU"
