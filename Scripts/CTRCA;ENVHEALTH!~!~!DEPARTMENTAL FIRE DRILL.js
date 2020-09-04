@@ -8,6 +8,7 @@ This event script:
 3) attaches a copy of the report to the parent record
 4) sends an email notice with link to the report
 
+9/4/2020 - Mike Zachry - Corrected issues related to the report not being attached as a document on the DF record
 9/3/2020 - Mike Zachry - Disable logging deficiencies to the CAP ASIT per Erik Navaette see Trello card https://trello.com/c/ff2sRp5d
 5/19/2020 - corrected publicuser variable to publicUser
 
@@ -15,8 +16,8 @@ This event script:
 */
 
 
- // var myCapId = "DF0000056";
- // var myUserId = "ADMIN";
+// var myCapId = "DF0000064";
+// var myUserId = "ADMIN";
 
 /* ASA   */  //var eventName = "ApplicationSubmitAfter";
 /* WTUA  */  //var eventName = "WorkflowTaskUpdateAfter";  wfTask = "Application Submittal";	  wfStatus = "Admin Approved";  wfDateMMDDYYYY = "01/27/2015";
@@ -155,7 +156,8 @@ try {
 
     if(!matches(reportName,null,undefined,"")){
       // Call runReportAttach to attach the report to parent record Documents Tab
-      var attachToRecord = parentCapId;
+      // var attachToRecord = parentCapId;
+      var attachToRecord = capId;
       logDebug("attach report to record: " + attachToRecord);
       var myResults = myRunReportAttach(attachToRecord,reportName,rptParams);
       logDebug("Run report attach results: " + myResults.getSuccess());
@@ -166,6 +168,7 @@ try {
         logDebug("reportName: " + reportName);
         // var reportName = "5012FireDrillObservation_20190925_161330.pdf";
         reportModel = getRecordModelByDocumentName(attachToRecord, reportName)
+		// logDebugObject(reportModel)
         if (reportModel) {
           var eParams = getACADocDownloadParam4Notification(eParams,acaURL,reportModel);
           logDebug("getRecordModelByDocumentName reportURL: " + getACADocumentDownloadUrl(acaURL,reportModel));
@@ -267,9 +270,9 @@ function myRunReportAttach(itemCapId,aaReportName)
 	if(permit.getOutput().booleanValue()) 
 		{ 
 			var reportResult = aa.reportManager.getReportResult(report);
-      // logDebugObject(report);
-      // logDebugObject(reportResult);
-      // logDebugObject(reportResult.getOutput());
+			// logDebugObject(report);
+			// logDebugObject(reportResult);
+			// logDebugObject(reportResult.getOutput());
 			if(reportResult){
 				logDebug("Report " + aaReportName + " has been run for " + itemCapId.getCustomID());
 				return reportResult;
@@ -283,20 +286,22 @@ function myRunReportAttach(itemCapId,aaReportName)
 
 function getRecordModelByDocumentName(capId, documentName) {
   // Get a list of documents attached to this record
-  var vDocListArray = getDocumentListByCapId(parentCapId);
+  var vDocListArray = getDocumentListByCapId(capId);
   var vDocListString = "";
   for(iDoc in vDocListArray){
     var documentModel = vDocListArray[iDoc];
-    // logDebug("document name: " + documentModel.getDocName());
+    logDebug("document name: " + documentModel.getDocName());
     // logDebugObject(documentModel);
     // break;
     // vDocListString += vDocListString + documentModel.getDocName() + ": " + getACADocumentDownloadUrl(acaURL,documentModel) + br;
     // logDebug(documentName);
     // logDebug(documentModel.getDocName());
     if (documentModel.getDocName() == documentName) {
-      return documentModel;
+		logDebug("Found " + documentName);
+		return documentModel;
     }
   }
+	logDebug("Did not find " + documentName);
   return false;
 }  
 
