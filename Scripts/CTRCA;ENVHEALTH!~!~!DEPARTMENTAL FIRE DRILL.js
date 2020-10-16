@@ -150,7 +150,7 @@ try {
       addParameter(eParams, "$$acaUrl$$", acaURL);
       // addParameter(eParams, "$$recordTypeAlias$$", "Department");
       // myGetRecordParams4Notification(eParams,capId);
-      getRecordParams4Notification(eParams);
+      getRecordParams4Notification(eParams, parentCapId);
       // myGetACARecordParam4Notification(eParams,acaURL,capId);
       getACARecordParam4Notification(eParams,acaURL);
       // logDebug(capId);
