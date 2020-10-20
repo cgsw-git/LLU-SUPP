@@ -8,6 +8,15 @@
 | Notes   : createRefLicProf - override to default the state if one is not provided
 |
 |         : createRefContactsFromCapContactsAndLink - testing new ability to link public users to new ref contacts
+
+10/20/2020 - Mike Zachry - commented the following functions to instead Accel functions in INCLUDES_ACCLELA_FUNCTIONS
+  getContactParams4Notification
+  getRecordParams4Notification
+  getACADocDownloadParam4Notification
+  getPrimaryAddressLineParam4Notification
+  getPrimaryOwnerParams4Notification
+  getACADocumentDownloadUrl
+  addParameter
 /------------------------------------------------------------------------------------------------------*/
 
 
@@ -1242,6 +1251,7 @@ function generateReport(aaReportName,parameters,rModule) {
     }
 }
 */
+/*
 function getRecordParams4Notification(params) {
 	// pass in a hashtable and it will add the additional parameters to the table
 
@@ -1257,7 +1267,7 @@ function getRecordParams4Notification(params) {
 	}
 	return params;
 }
-
+*/
 /* function getACARecordParam4Notification(params,acaUrl) {
 	// pass in a hashtable and it will add the additional parameters to the table
 
@@ -1276,6 +1286,7 @@ function getACADeepLinkParam4Notification(params,acaUrl,pAppType,pAppTypeAlias,m
 	return params;
 }
 
+/*
 function getACADocDownloadParam4Notification(params,acaUrl,docModel) {
 	// pass in a hashtable and it will add the additional parameters to the table
 
@@ -1283,7 +1294,9 @@ function getACADocDownloadParam4Notification(params,acaUrl,docModel) {
 	
 	return params;	
 }
+*/
 
+/* 
 function getContactParams4Notification(params,pContact) {
 	// pass in a hashtable and it will add the additional parameters to the table
 	// pass in contact to retrieve informaiton from
@@ -1314,7 +1327,9 @@ function getContactParams4Notification(params,pContact) {
 
 	return params;	
 }
+*/
 
+/*
 function getPrimaryAddressLineParam4Notification(params) {
 	// pass in a hashtable and it will add the additional parameters to the table
 
@@ -1330,7 +1345,8 @@ function getPrimaryAddressLineParam4Notification(params) {
 
 	return params;
 }
-
+*/
+/*
 function getPrimaryOwnerParams4Notification(params) {
 	// pass in a hashtable and it will add the additional parameters to the table
 
@@ -1350,8 +1366,9 @@ function getPrimaryOwnerParams4Notification(params) {
 	}
 	return params;
 }
+*/
 
-
+/*
 function getACADocumentDownloadUrl(acaUrl,documentModel) {
    	
    	//returns the ACA URL for supplied document model
@@ -1368,7 +1385,7 @@ function getACADocumentDownloadUrl(acaUrl,documentModel) {
 		return false;
 	}
 }
-
+*/
 
 /* function getACARecordURL(acaUrl) {
 	
@@ -1399,7 +1416,7 @@ function getDeepLinkUrl(acaUrl, appType, module) {
 /*
  * add parameter to a hashtable, for use with notifications.
  */
-function addParameter(pamaremeters, key, value)
+/*function addParameter(pamaremeters, key, value)
 {
 	if(key != null)
 	{
@@ -1410,7 +1427,7 @@ function addParameter(pamaremeters, key, value)
 		pamaremeters.put(key, value);
 	}
 }
-
+*/
 /*
  * Send notification
  */
