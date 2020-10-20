@@ -6,6 +6,7 @@ This event script:
 1) sets the Department parent record to "CAP Required" when a deficiency is found
 2) adds a row to the Corrective Action Plan ASIT on the parent Department record for each deficiency on the Departmental Fire Drill record type amendment.
 
+10/16/2020 - Mike Zachry - Restored logging dficiencies to the CAP ASIT per Erik Navarette.
 9/3/2020 - Mike Zachry - Disable logging deficiencies to the CAP ASIT per Erik Navaette see Trello card https://trello.com/c/ff2sRp5d
 
 */
