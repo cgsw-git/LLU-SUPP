@@ -16,7 +16,7 @@ function mainProcess() {
 	
 	var aadba = aa.proxyInvoker.newInstance("com.accela.aa.datautil.AADBAccessor").getOutput();
 	var aadba = aadba.getInstance();
-	var rs = aadba.select("SELECT B1_ALT_ID FROM(SELECT ROW_NUMBER() OVER(PARTITION BY T.B1_ALT_ID ORDER BY T.REC_DATE DESC) RN, T.* FROM (SELECT B.B1_ALT_ID,G.G6_STATUS,G.REC_DATE FROM B1PERMIT B,G6ACTION G WHERE B.SERV_PROV_CODE = '"+serv_prov_code+"' AND B.B1_PER_ID1 = G.B1_PER_ID1 AND B.B1_PER_ID2 = g.B1_PER_ID2 AND B.B1_PER_ID3 = G.B1_PER_ID3 AND B1_PER_GROUP = 'Fire' AND B1_PER_TYPE = 'Inspection' AND B1_PER_SUB_TYPE = 'NA' AND B1_PER_CATEGORY= 'NA' AND G.G6_ACT_TYP = 'Annual Inspection' AND G.REC_DATE BETWEEN to_date('"+fromDate+"','yyyy-mm-dd hh24:mi:ss') AND to_date('"+toDate+"','yyyy-mm-dd hh24:mi:ss') AND G.REC_STATUS = 'A') T ) WHERE RN = 1 AND G6_STATUS = 'Passed'", null);	
+	var rs = aadba.select("SELECT B1_ALT_ID FROM (SELECT ROW_NUMBER() OVER(PARTITION BY T.B1_ALT_ID ORDER BY T.REC_DATE DESC) RN, T.* FROM (SELECT B.B1_ALT_ID, G.G6_STATUS, G.REC_DATE FROM dbo.B1PERMIT B, dbo.G6ACTION G WHERE B.SERV_PROV_CODE = '"+serv_prov_code+"' AND B.B1_PER_ID1 = G.B1_PER_ID1 AND B.B1_PER_ID2 = g.B1_PER_ID2 AND B.B1_PER_ID3 = G.B1_PER_ID3 AND B1_PER_GROUP = 'Fire' AND B1_PER_TYPE = 'Inspection' AND B1_PER_SUB_TYPE = 'NA' AND B1_PER_CATEGORY= 'NA' AND G.G6_ACT_TYP = 'Annual Inspection' AND G.REC_DATE BETWEEN convert(datetime,'"+fromDate+"',120) AND convert(datetime,'"+toDate+"',120) AND G.REC_STATUS = 'A') T ) Q WHERE RN = 1 AND G6_STATUS = 'Passed'", null);	
 	if (rs.size() > 0) {
 		for (i = 0; i < rs.size(); i++) {
 			var tempAltId = rs.get(i)[0];
