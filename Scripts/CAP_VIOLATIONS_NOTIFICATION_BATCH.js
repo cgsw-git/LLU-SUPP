@@ -4,6 +4,7 @@
 	| Client: LLU
 
 	| Version 1.0 - Base Version. 12/27/2018
+	| Version 1.1 02/16/2021 - Modified to correct record status if no CAP items have a status of Incomplete or Denied
 	|
 	/------------------------------------------------------------------------------------------------------*/
 	/*------------------------------------------------------------------------------------------------------/
@@ -82,10 +83,11 @@
   var currentUserID = "ADMIN";
   var startDate = new Date();
   var startTime = startDate.getTime();			// Start timer
-  var skippedDepartments = 0
-  var processedDepartments = 0
-  var emailedDepartments = 0
-  var emailsSent = 0
+  var skippedDepartments = 0;
+  var processedDepartments = 0;
+  var emailedDepartments = 0;
+  var emailsSent = 0;
+  var statusCorrected = 0;
   // showDebug = true;
   var wfComment; // to accomodate customization that was done to getRecordParams4Notification() in INCLUDES_CUSTOM
   logDebug("Start of Job");
@@ -98,15 +100,24 @@
     for (var i in list) {
       processedDepartments = list.length;
       if (list[i].getCapStatus() == "CAP Required" ) {
-        emailedDepartments = ++emailedDepartments;
-        cap = list[i];
-        capId = list[i].getCapID();
-        capIDString = capId.getCustomID();
-		sendOutstandingCAPItemsReport();
-		logDebug("sending report for " + capId.getCustomID());
-      } else {
-        skippedDepartments = ++skippedDepartments;
-      }
+		  // check CAP entries and update the record status appropriately
+		  capId = list[i].getCapID();
+		  if (findValueInASITable("Incomplete","CAP Status","CAP",capId) || findValueInASITable("Denied","CAP Status","CAP",capId) ) {
+			emailedDepartments = ++emailedDepartments;
+			cap = list[i];
+			capIDString = capId.getCustomID();
+			sendOutstandingCAPItemsReport();
+			logDebug("sending report for " + capId.getCustomID());
+		  }else{
+			// set record status to Active
+			logDebug("updating status for " + capId.getCustomID());
+			appStatus = "Active"
+			updateAppStatus(appStatus,"Updated by EMSE Script",capId);
+			statusCorrected = ++statusCorrected;
+		  }
+	  } else {
+		skippedDepartments = ++skippedDepartments;
+	  }
     }
   }
 
@@ -115,6 +126,7 @@
   logDebug("Departments skipped: " + skippedDepartments);
   logDebug("Notified departments: " + emailedDepartments);
   logDebug("Emails sent " + emailsSent);
+  logDebug("Department Status values corrected " + statusCorrected);
 
 	/*------------------------------------------------------------------------------------------------------/
 	| <===========END=Main=Loop================>
@@ -227,3 +239,19 @@ function sendOutstandingCAPItemsReport(){
 
   }
 
+function findValueInASITable(finding, inColumn, inTable, capId) {
+	if (matches(capId,null,undefined,"")) {
+		myTable = loadASITable(inTable);
+	}else{
+		myTable = loadASITable(inTable,capId);
+	}
+		
+	
+	for(r in myTable) {
+		currentRow = myTable[r];
+		if (currentRow[inColumn] == finding) {
+			return true;
+		}
+	}
+	return false;
+}
