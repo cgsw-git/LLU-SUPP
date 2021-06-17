@@ -13,16 +13,16 @@ the Department record and it is expected the parent and child CAP custom lists h
 because loadASIT does not consider the rowIndex and assumes the first row is 0 and the row indicies are sequential. 
 */ 
  
- // var myCapId = "CA0002557";
+// var myCapId = "CA0002725";
  // myCapId = "CA0002529"; // FA0000868 Fictitious Facility
  // myCapId = "CA0002504"; // FA0001031 Center for Dentistry
- // var myUserId = "ADMIN";
+// var myUserId = "ADMIN";
 
 /* ASA  */  //var eventName = "ApplicationSubmitAfter";
 /* WTUA */  //var eventName = "WorkflowTaskUpdateAfter";  wfTask = "Application Submittal";	  wfStatus = "Admin Approved";  wfDateMMDDYYYY = "01/27/2015";
 /* IRSA */  //var eventName = "InspectionResultSubmitAfter" ; inspResult = "Failed"; inspResultComment = "Comment";  inspType = "Roofing"
 /* ISA  */  //var eventName = "InspectionScheduleAfter" ; inspType = "Roofing"
-/* PRA  */  //var eventName = "PaymentReceiveAfter";  
+/* PRA  */  var eventName = "PaymentReceiveAfter";  
 
 // var useProductScript = false;  // set to true to use the "productized" master scripts (events->master scripts), false to use scripts from (events->scripts)
 // var runEvent = false; // set to true to simulate the event and run all std choices/scripts for the record type.  
@@ -133,7 +133,18 @@ try
 						// if a mapping for the row and values exists it will be replaced rather than creating another mapping 
 						// logDebug("update the CAP Status to Pending on row " + parentRowID);
 						setUpdateColumnValue(updateRowsMap, parentRowID, "CAP Status", "Pending");
-						setUpdateColumnValue(updateRowsMap, parentRowID, "First Response Date", aa.util.formatDate(aa.util.now(),"MM/dd/yyyy")
+
+						// loop through the columns to determine if the First Response Date column is empty and if it is, populate
+						// with the current date so that only the first time the CAP is updated the date is recorded
+						for (var j = 0; j < childTableFields.size() && childTableFields.get(j).getRowIndex() == parentRowID ; j++) {
+							tmpFieldObject = childTableFields.get(j);
+							myFieldValue = tmpFieldObject.getInputValue();
+							// logDebugObject(myFieldValue);
+							if (tmpFieldObject.getFieldLabel() == "First Response Date" && rowChanged && myFieldValue.isEmpty()) {
+								setUpdateColumnValue(updateRowsMap, parentRowID, "First Response Date", aa.util.formatDate(aa.util.now(),"MM/dd/yyyy"));
+								logDebug("Updated First Response Date");
+							}
+						}
 					}else{
 						// this is for debugging purposes
 						if (childColumnName == "Responsible Party" || childColumnName == "Actual/Planned Correction Date" ||
