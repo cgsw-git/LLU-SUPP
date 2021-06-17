@@ -133,6 +133,7 @@ try
 						// if a mapping for the row and values exists it will be replaced rather than creating another mapping 
 						// logDebug("update the CAP Status to Pending on row " + parentRowID);
 						setUpdateColumnValue(updateRowsMap, parentRowID, "CAP Status", "Pending");
+						setUpdateColumnValue(updateRowsMap, parentRowID, "First Response Date", aa.util.formatDate(aa.util.now(),"MM/dd/yyyy")
 					}else{
 						// this is for debugging purposes
 						if (childColumnName == "Responsible Party" || childColumnName == "Actual/Planned Correction Date" ||
