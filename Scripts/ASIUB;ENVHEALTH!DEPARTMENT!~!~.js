@@ -70,7 +70,7 @@ try
 				var parentColumnName = parentFieldObject.getFieldLabel();
 				if (parentColumnName == "CAP Status" ){
 						setUpdateColumnValue(updateRowsMap, parentRowID, "CAP Status Before", parentFieldObject.getInputValue());
-						logDebug("CAP Status Before set to " + parentFieldObject.getInputValue() + " on row " + i );
+						logDebug("CAP Status Before set to " + parentFieldObject.getInputValue() + " on row " + parentRowID );
 					}
 			}
 		}else{
