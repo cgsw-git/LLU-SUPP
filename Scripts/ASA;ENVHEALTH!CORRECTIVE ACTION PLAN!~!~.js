@@ -18,11 +18,11 @@ because loadASIT does not consider the rowIndex and assumes the first row is 0 a
  // myCapId = "CA0002504"; // FA0001031 Center for Dentistry
 // var myUserId = "ADMIN";
 
-/* ASA  */  //var eventName = "ApplicationSubmitAfter";
-/* WTUA */  //var eventName = "WorkflowTaskUpdateAfter";  wfTask = "Application Submittal";	  wfStatus = "Admin Approved";  wfDateMMDDYYYY = "01/27/2015";
-/* IRSA */  //var eventName = "InspectionResultSubmitAfter" ; inspResult = "Failed"; inspResultComment = "Comment";  inspType = "Roofing"
-/* ISA  */  //var eventName = "InspectionScheduleAfter" ; inspType = "Roofing"
-/* PRA  */  var eventName = "PaymentReceiveAfter";  
+// /* ASA  */  var eventName = "ApplicationSubmitAfter";
+// /* WTUA */  var eventName = "WorkflowTaskUpdateAfter";  wfTask = "Application Submittal";	  wfStatus = "Admin Approved";  wfDateMMDDYYYY = "01/27/2015";
+// /* IRSA */  var eventName = "InspectionResultSubmitAfter" ; inspResult = "Failed"; inspResultComment = "Comment";  inspType = "Roofing"
+// /* ISA  */  var eventName = "InspectionScheduleAfter" ; inspType = "Roofing"
+// /* PRA  */  var eventName = "PaymentReceiveAfter";  
 
 // var useProductScript = false;  // set to true to use the "productized" master scripts (events->master scripts), false to use scripts from (events->scripts)
 // var runEvent = false; // set to true to simulate the event and run all std choices/scripts for the record type.  

@@ -75,23 +75,20 @@ try
 					logDebug("row id " + parentRowID + " - " + parentColumnName + " is set to " + parentColumnValue);
 				}
 				// logDebugObject(parentColumnValue);
-				// if this is the CAP Status column
-				if (parentColumnName == "CAP Status" ){
-
-					// check that the CAP Status Before is not empty and update it
+				
+				// if we have the CAP Status column
+				if (parentColumnName == "CAP Status" && parentColumnValue == "Approved" ){
+					//Check if CAP Status changed 
 					for (var j = 0; j < parentTableFields.size() && parentTableFields.get(j).getRowIndex() == parentRowID ; j++) {
 						tmpFieldObject = parentTableFields.get(j);
 						myFieldValue = tmpFieldObject.getInputValue();
-
-						// if CAP Status Before is not empty and it is not equal to CAP Status, update date it 
-						if (tmpFieldObject.getFieldLabel() == "CAP Status Before" && myFieldValue && myFieldValue != parentColumnValue ) {
-							setUpdateColumnValue(updateRowsMap, parentRowID, "CAP Status Before", parentColumnValue);
-							logDebug("CAP Status Before" + " set to " + parentColumnValue + " on rowIndex " + parentRowID );
+						if (tmpFieldObject.getFieldLabel() == "Cap Status Before" && myFieldValue && myFieldValue != parentColumnValue ) {
+							setUpdateColumnValue(updateRowsMap, parentRowID, "Approved Date", aa.util.formatDate(aa.util.now(),"MM/dd/yyyy"));
+							logDebug("Updated First Response Date");
 						}
 					}
 				}
 			}
-
 		}else{
 			logDebug("parentTableFields is null or empty");
 		}

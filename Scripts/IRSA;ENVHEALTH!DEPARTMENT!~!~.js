@@ -160,6 +160,7 @@ function generateCAPViolationsASITRow(gsi) {
 	if (vAddress) {
 	  rowVals.push({colName: 'Address', colValue: vAddress});
 	}
+	rowVals.push({colName: 'CAP Status Before', colValue: "n/a"});
 
 	logDebug("Updating ASIT");
 	options = [
