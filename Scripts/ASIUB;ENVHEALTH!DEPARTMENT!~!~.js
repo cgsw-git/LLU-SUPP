@@ -79,14 +79,17 @@ try
 				if (parentColumnName == "CAP Status" ){
 
 					// check that the CAP Status Before is not empty and update it
-					for (var j = 0; j < parentTableFields.size() && parentTableFields.get(j).getRowIndex() == parentRowID ; j++) {
-						tmpFieldObject = parentTableFields.get(j);
-						myFieldValue = tmpFieldObject.getInputValue();
+					for (var j = 0; j < parentTableFields.size()  ; j++) {
+						if (parentTableFields.get(j).getRowIndex() == parentRowID) {
+							tmpFieldObject = parentTableFields.get(j);
+							myFieldValue = tmpFieldObject.getInputValue();
+							// logDebug(tmpFieldObject.getFieldLabel() + " - " + myFieldValue);
 
-						// if CAP Status Before is not empty and it is not equal to CAP Status, update date it 
-						if (tmpFieldObject.getFieldLabel() == "CAP Status Before" && myFieldValue && myFieldValue != parentColumnValue ) {
-							setUpdateColumnValue(updateRowsMap, parentRowID, "CAP Status Before", parentColumnValue);
-							logDebug("CAP Status Before" + " set to " + parentColumnValue + " on rowIndex " + parentRowID );
+							// if CAP Status Before is not empty and it is not equal to CAP Status, update date it 
+							if (tmpFieldObject.getFieldLabel() == "CAP Status Before" && myFieldValue && myFieldValue != parentColumnValue ) {
+								setUpdateColumnValue(updateRowsMap, parentRowID, "CAP Status Before", parentColumnValue);
+								logDebug("CAP Status Before" + " set to " + parentColumnValue + " on rowIndex " + parentRowID );
+							}
 						}
 					}
 				}
