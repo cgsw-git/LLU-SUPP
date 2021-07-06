@@ -136,15 +136,15 @@ try
 
 						// loop through the columns to determine if the First Response Date column is empty and if it is, populate
 						// with the current date so that only the first time the CAP is updated the date is recorded
-						// for (var j = 0; j < childTableFields.size() && childTableFields.get(j).getRowIndex() == parentRowID ; j++) {
-							// tmpFieldObject = childTableFields.get(j);
-							// myFieldValue = tmpFieldObject.getInputValue();
-							// logDebugObject(myFieldValue);
-							// if (tmpFieldObject.getFieldLabel() == "First Response Date" && rowChanged && myFieldValue.isEmpty()) {
+						for (var j = 0; j < childTableFields.size() && childTableFields.get(j).getRowIndex() == parentRowID ; j++) {
+							tmpFieldObject = childTableFields.get(j);
+							myFieldValue = tmpFieldObject.getInputValue();
+							logDebugObject(myFieldValue);
+							if (tmpFieldObject.getFieldLabel() == "First Response Date" && rowChanged && myFieldValue.isEmpty()) {
 								setUpdateColumnValue(updateRowsMap, parentRowID, "First Response Date", aa.util.formatDate(aa.util.now(),"MM/dd/yyyy"));
-								// logDebug("Updated First Response Date");
-							// }
-						// }
+								logDebug("Updated First Response Date");
+							}
+						}
 					}else{
 						// this is for debugging purposes
 						if (childColumnName == "Responsible Party" || childColumnName == "Actual/Planned Correction Date" ||
