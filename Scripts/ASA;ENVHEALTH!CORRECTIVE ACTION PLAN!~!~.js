@@ -141,7 +141,7 @@ try
 							// myFieldValue = tmpFieldObject.getInputValue();
 							logDebugObject(myFieldValue);
 							// if (tmpFieldObject.getFieldLabel() == "First Response Date" && rowChanged && myFieldValue.isEmpty()) {
-								setUpdateColumnValue(updateRowsMap, parentRowID, "First Response Date", aa.util.formatDate(aa.util.now(),"MM/dd/yyyy"));
+								// setUpdateColumnValue(updateRowsMap, parentRowID, "First Response Date", aa.util.formatDate(aa.util.now(),"MM/dd/yyyy"));
 								// logDebug("Updated First Response Date");
 							// }
 						// }
