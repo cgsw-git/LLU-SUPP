@@ -13,9 +13,9 @@ the Department record and it is expected the parent and child CAP custom lists h
 because loadASIT does not consider the rowIndex and assumes the first row is 0 and the row indicies are sequential. 
 */ 
  
-// var myCapId = "CA0002990";
- // myCapId = "CA0002529"; // FA0000868 Fictitious Facility
- // myCapId = "CA0002504"; // FA0001031 Center for Dentistry
+// var myCapId = "CA0002995";
+// myCapId = "CA0002529"; // FA0000868 Fictitious Facility
+// myCapId = "CA0002504"; // FA0001031 Center for Dentistry
 // var myUserId = "ADMIN";
 
 // /* ASA  */  var eventName = "ApplicationSubmitAfter";
@@ -136,13 +136,17 @@ try
 
 						// loop through the columns to determine if the First Response Date column is empty and if it is, populate
 						// with the current date so that only the first time the CAP is updated the date is recorded
-						for (var j = 0; j < childTableFields.size() && childTableFields.get(j).getRowIndex() == parentRowID ; j++) {
-							tmpFieldObject = childTableFields.get(j);
-							myFieldValue = tmpFieldObject.getInputValue();
-							logDebugObject(myFieldValue);
-							if (tmpFieldObject.getFieldLabel() == "First Response Date" && rowChanged && myFieldValue.isEmpty()) {
-								setUpdateColumnValue(updateRowsMap, parentRowID, "First Response Date", aa.util.formatDate(aa.util.now(),"MM/dd/yyyy"));
-								logDebug("Updated First Response Date");
+						for (var j = 0; j < childTableFields.size() ; j++) {
+							// logDebug("child row: " + childTableFields.get(j).getRowIndex() + " parent row: " + parentRowID);
+							if (childTableFields.get(j).getRowIndex() == parentRowID) {
+								tmpFieldObject = childTableFields.get(j);
+								myFieldValue = tmpFieldObject.getInputValue();
+								// logDebug("field: " + tmpFieldObject.getFieldLabel());
+								// logDebugObject(myFieldValue);
+								if (tmpFieldObject.getFieldLabel() == "First Response Date" && rowChanged && myFieldValue.isEmpty()) {
+									setUpdateColumnValue(updateRowsMap, parentRowID, "First Response Date", aa.util.formatDate(aa.util.now(),"MM/dd/yyyy"));
+									logDebug("Updated First Response Date");
+								}
 							}
 						}
 					}else{
