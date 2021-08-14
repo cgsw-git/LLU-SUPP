@@ -133,9 +133,11 @@ try
 						// if a mapping for the row and values exists it will be replaced rather than creating another mapping 
 						// logDebug("update the CAP Status to Pending on row " + parentRowID);
 						setUpdateColumnValue(updateRowsMap, parentRowID, "CAP Status", "Pending");
-
-						// loop through the columns to determine if the First Response Date column is empty and if it is, populate
-						// with the current date so that only the first time the CAP is updated the date is recorded
+						
+						
+						
+						// loop through the columns to determine if column "CAP Status Before" = "n/a"
+						// the "n/a" value is used to designate old CAP rows from new CAP rows for statistical purposes
 						for (var j = 0; j < childTableFields.size() ; j++) {
 							// logDebug("child row: " + childTableFields.get(j).getRowIndex() + " parent row: " + parentRowID);
 							if (childTableFields.get(j).getRowIndex() == parentRowID) {
@@ -143,12 +145,26 @@ try
 								myFieldValue = tmpFieldObject.getInputValue();
 								// logDebug("field: " + tmpFieldObject.getFieldLabel());
 								// logDebugObject(myFieldValue);
-								if (tmpFieldObject.getFieldLabel() == "First Response Date" && rowChanged && myFieldValue.isEmpty()) {
-									setUpdateColumnValue(updateRowsMap, parentRowID, "First Response Date", aa.util.formatDate(aa.util.now(),"MM/dd/yyyy"));
-									logDebug("Updated First Response Date");
+								if (tmpFieldObject.getFieldLabel() == "CAP Status Before" && myFieldValue = "n/a") {
+									// loop through the columns to determine if the First Response Date column is empty and if it is, populate
+									// with the current date so that only the first time the CAP is updated the date is recorded
+									for (var k = 0; k < childTableFields.size() ; k++) {
+										// logDebug("child row: " + childTableFields.get(j).getRowIndex() + " parent row: " + parentRowID);
+										if (childTableFields.get(j).getRowIndex() == parentRowID) {
+											tmpFieldObject = childTableFields.get(k);
+											myFieldValue = tmpFieldObject.getInputValue();
+											// logDebug("field: " + tmpFieldObject.getFieldLabel());
+											// logDebugObject(myFieldValue);
+											if (tmpFieldObject.getFieldLabel() == "First Response Date" && rowChanged && myFieldValue.isEmpty()) {
+												setUpdateColumnValue(updateRowsMap, parentRowID, "First Response Date", aa.util.formatDate(aa.util.now(),"MM/dd/yyyy"));
+												logDebug("Updated First Response Date");
+											}
+										}
+									}
 								}
 							}
 						}
+
 					}else{
 						// this is for debugging purposes
 						if (childColumnName == "Responsible Party" || childColumnName == "Actual/Planned Correction Date" ||
@@ -186,8 +202,8 @@ try
 		if (myResult.getSuccess()) {
 			logDebug("updateAppSpecificTableInfors Success");
 			// logDebug("set parent status to CAP Required");
-			appStatus = "CAP Required"
-			updateAppStatus(appStatus,"Updated by EMSE Script",parentCapId);
+			// appStatus = "CAP Required"
+			// updateAppStatus(appStatus,"Updated by EMSE Script",parentCapId);
 		}else{
 		  logDebug(myResult.getErrorMessage());
 		}
