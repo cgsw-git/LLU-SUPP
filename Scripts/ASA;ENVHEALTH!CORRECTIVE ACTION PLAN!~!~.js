@@ -145,7 +145,7 @@ try
 								myFieldValue = tmpFieldObject.getInputValue();
 								// logDebug("field: " + tmpFieldObject.getFieldLabel());
 								// logDebugObject(myFieldValue);
-								if (tmpFieldObject.getFieldLabel() == "CAP Status Before" && myFieldValue = "n/a") {
+								if (tmpFieldObject.getFieldLabel() == "CAP Status Before" && myFieldValue == "n/a") {
 									// loop through the columns to determine if the First Response Date column is empty and if it is, populate
 									// with the current date so that only the first time the CAP is updated the date is recorded
 									for (var k = 0; k < childTableFields.size() ; k++) {
