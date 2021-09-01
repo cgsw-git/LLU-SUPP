@@ -40,6 +40,7 @@ try {
   editAppName(aa.cap.getCap(parentCapId).getOutput().specialText, capId)
 
   // read through the ASI fields looking for value of "Out of Compliance" 
+  /*
   for (var x in AInfo) {
     
     // if out of compliance
@@ -122,6 +123,7 @@ try {
   if (outOfCompliance) {
     updateAppStatus("CAP Required","Updated by EMSE Script",parentCapId);
   }
+  */
   
   // send email notification to contacts
   // Provide the ACA URl - This should be set in INCLUDES_CUSTOM_GLOBALS
