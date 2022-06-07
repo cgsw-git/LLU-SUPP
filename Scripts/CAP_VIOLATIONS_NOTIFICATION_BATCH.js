@@ -88,7 +88,7 @@
   var emailedDepartments = 0;
   var emailsSent = 0;
   var statusCorrected = 0;
-  // showDebug = true;
+  showDebug = true;
   var wfComment; // to accomodate customization that was done to getRecordParams4Notification() in INCLUDES_CUSTOM
   logDebug("Start of Job");
   
