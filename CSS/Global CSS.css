@@ -1,0 +1,86 @@
+#ctl00_PlaceHolderMain_licenseeGeneralInfo_lblInsuranceCompany,
+#ctl00_PlaceHolderMain_licenseeGeneralInfo_lblInsuranceCompanyValue,
+#ctl00_PlaceHolderMain_licenseeGeneralInfo_lblInsurancePolicy,
+#ctl00_PlaceHolderMain_licenseeGeneralInfo_lblInsurancePolicyValue,
+#ctl00_PlaceHolderMain_licenseeGeneralInfo_lblBusinessExpirationDate,
+#ctl00_PlaceHolderMain_licenseeGeneralInfo_lblBusinessExpirationDateValue,
+#ctl00_PlaceHolderMain_licenseeGeneralInfo_lblBusinessNumber,
+#ctl00_PlaceHolderMain_licenseeGeneralInfo_lblBusinessNumberValue,
+#ctl00_PlaceHolderMain_licenseeGeneralInfo_lblLicenseeTitle,
+#ctl00_PlaceHolderMain_licenseeGeneralInfo_lblLicenseeTitleValue,
+#ctl00_PlaceHolderMain_licenseeGeneralInfo_lblContactType,
+#ctl00_PlaceHolderMain_licenseeGeneralInfo_lblContactTypeValue,
+#ctl00_PlaceHolderMain_licenseeGeneralInfo_lblLicenseeTelephone1,
+#ctl00_PlaceHolderMain_licenseeGeneralInfo_lblLicenseeTelephone1Value,
+#ctl00_PlaceHolderMain_licenseeGeneralInfo_lblLicenseeTelephone2,
+#ctl00_PlaceHolderMain_licenseeGeneralInfo_lblLicenseeTelephone2Value,
+#ctl00_PlaceHolderMain_licenseeGeneralInfo_lblLicenseeFAX,
+#ctl00_PlaceHolderMain_licenseeGeneralInfo_lblLicenseeFAXValue,
+#ctl00_PlaceHolderMain_licenseeGeneralInfo_lblLicenseeEmail,
+#ctl00_PlaceHolderMain_licenseeGeneralInfo_lblLicenseeEmailValue, 
+#ctl00_PlaceHolderMain_divTrustAccount,
+a[id$="lnkDelete"],
+td[id$="_paActionMenu_MenuItemContainer"] div:nth-child(2),
+#ctl00_PlaceHolderMain_divSocialMedia,
+#ctl00_PlaceHolderMain_SummaryInformation_btnRename,
+#ctl00_PlaceHolderMain_SummaryInformation_btnDelete,
+#ctl00_PlaceHolderMain_SummaryInformation_lblFeeSummary,
+#ctl00_PlaceHolderMain_SummaryInformation_lblFeeSummaryDetail,
+#ctl00_PlaceHolderMain_AppSpecTableC5D9F3ABEdit_rptASITableList_ctl00_btnAdd_container,
+#ctl00_PlaceHolderMain_AppSpecTableC5D9F3ABEdit_rptASITableList_ctl00_btnDelete_container,
+.ACA_Area_CapConfirm .ACA_RightItem div div .ACA_Title_Bar,
+.ACA_Area_CapEdit .ACA_RightItem > .ACA_TabRow:first-child,
+.ACA_Area_CapEdit .ACA_RightItem div .ACA_TabRow .ACA_Title_Bar,
+.ACA_Area_CapEdit .ACA_RightItem .ACA_TabRow .ACA_FRight,
+div[id$="_rptASITableList_ctl00_tablePanel"] > .ACA_TabRow:first-child,
+table[id$="_gdvASITable"] tbody tr th:nth-child(2) /* Removes the blank column */,
+table[id$="_gdvASITable"] tbody tr td:nth-child(2) /* Removes the blank column */,
+table.ACA_TabRow.ACA_GridView.ACA_Grid_Caption tbody tr th:nth-child(3) /* Removes the Department ID column */,
+table.ACA_TabRow.ACA_GridView.ACA_Grid_Caption tbody tr td:nth-child(3) /* Removes the Department ID column */,
+table[id$="_gdvASITable"] tbody tr th:nth-child(5) /* Removes the Department ID column */,
+table[id$="_gdvASITable"] tbody tr td:nth-child(5) /* Removes the Department ID column */,
+table.ACA_TabRow.ACA_GridView.ACA_Grid_Caption tbody tr th:nth-child(5) /* Removes the Deficiency column */,
+table.ACA_TabRow.ACA_GridView.ACA_Grid_Caption tbody tr td:nth-child(5) /* Removes the Deficiency column */,
+table[id$="_gdvASITable"] tbody tr th:nth-child(7) /* Removes the Deficiency column */,
+table[id$="_gdvASITable"] tbody tr td:nth-child(7) /* Removes the Deficiency column */,
+table.ACA_TabRow.ACA_GridView.ACA_Grid_Caption tbody tr th:nth-child(11) /* Removes the CAP Review Note column */,
+table.ACA_TabRow.ACA_GridView.ACA_Grid_Caption tbody tr td:nth-child(11) /* Removes the CAP Review Note column */,
+table[id$="_gdvASITable"] tbody tr th:nth-child(13) /* Removes the CAP Review Note column */,
+table[id$="_gdvASITable"] tbody tr td:nth-child(13) /* Removes the CAP Review Note column */,
+table[id$="_gdvPermitList"] tbody tr th:nth-child(8) /* Removes the Related Records column */,
+table[id$="_gdvPermitList"] tbody tr td:nth-child(8) /* Removes the Related Records column */,
+.footer,
+#ctl00_PlaceHolderMain_TabDataList_TabsDataList {
+	display: none;
+}
+
+span[id^="ctl00_PlaceHolderMain_acc_manage_label_"] {
+	color: #ffffff !important;
+}
+
+.aca_gridview_caption > table > tbody > tr > td a {
+	color: #007f48 !important;
+}
+
+#ctl00_PlaceHolderMain_SummaryInformation_lblTotalRecords font,
+#ctl00_PlaceHolderMain_SummaryInformation_lblInspectionSummary font {
+	color: #000000 !important;
+}
+
+#ctl00_HeaderNavigation_lblNavBanner {
+	color: #A30234 !important;
+}
+
+td[id^="ASIT_"] select.ACA_ReadOnly,
+td[id^="ASIT_"] textarea.ACA_ReadOnly,
+td[id^="ASIT_"] input.ACA_ReadOnly,
+input[id^="ASIT_"].ACA_ReadOnly {
+	background: #E6E6E6;
+	border: 1px solid #BBBBBB;
+}
+
+textarea[id^="ASIT_"][title="Required"],
+input[id^="ASIT_"][title="Required"] {
+	background: #FDDFDF;
+	border: 1px solid #F1A899;
+}
