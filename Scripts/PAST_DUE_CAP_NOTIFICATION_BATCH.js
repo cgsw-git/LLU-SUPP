@@ -95,7 +95,7 @@
   var emailsSent = 0;
   var statusCorrected = 0;
   showDebug = true;
-  daysDelinquent = 90;
+  daysDelinquent = "30";
   var wfComment; // to accomodate customization that was done to getRecordParams4Notification() in INCLUDES_CUSTOM
   logDebug("Start of Job");
   
@@ -109,32 +109,37 @@
       if (list[i].getCapStatus() == "CAP Required" ) {
 		  // check CAP entries and update the record status appropriately
 		capId = list[i].getCapID();
-		myTable = loadASITable("CAP",capId)
-		logDebug("capId = " + capId);
-		for(r in myTable) {
-			currentRow = myTable[r];
-			if (currentRow["First Response Date"] == "" && currentRow["Inspection date"] != "" && ((startDate - convertDate(aa.util.parseDate(currentRow["Inspection Date"])))/DAY) > daysDelinquent) {
-				emailedDepartments = ++emailedDepartments;
-				cap = list[i];
-				capIDString = capId.getCustomID();
-				sendOutstandingCAPItemsReport();
-				break;
-			// }else{
-				// set record status to Active
-				// logDebug("updating status for " + capId.getCustomID());
-				// appStatus = "Active"
-				// updateAppStatus(appStatus,"Updated by EMSE Script",capId);
-				// statusCorrected = ++statusCorrected;
+		if (capId.getCustomID() == "FA0000868") {
+			myTable = loadASITable("CAP",capId)
+			// logDebug("capId = " + capId);
+			for(r in myTable) {
+				currentRow = myTable[r];
+				if (currentRow["First Response Date"] == "" 
+					&& currentRow["Inspection date"] != "" 
+					&& ((startDate - convertDate(aa.util.parseDate(currentRow["Inspection Date"])))/DAY) > daysDelinquent) {
+					emailedDepartments = ++emailedDepartments;
+					cap = list[i];
+					capIDString = capId.getCustomID();
+					sendOutstandingCAPItemsReport();
+					break;
+				}else{
+					// set record status to Active
+					// logDebug("updating status for " + capId.getCustomID());
+					// appStatus = "Active"
+					// updateAppStatus(appStatus,"Updated by EMSE Script",capId);
+					// statusCorrected = ++statusCorrected;
+				}
 			}
+		}else{
+			skippedDepartments = ++skippedDepartments;
 		}
 	  } else {
 		skippedDepartments = ++skippedDepartments;
 	  }
-	  // if (i > 20){break};
-    }
+    } //for (var i in list)
   }else{
      logDebug("Error getting records");
-  }
+  } //if (getResult.getSuccess())
 
   logDebug("End of Job: Elapsed Time : " + elapsed() + " Seconds");
   logDebug("Departments processed:" + processedDepartments);
@@ -155,19 +160,19 @@ function sendOutstandingCAPItemsReport(){
   //var agencyReplyEmail = "noreply@accela.com"
   // Provide the contact types to send this notification
   var contactTypesArray = new Array("Primary");
-  contactTypesArray[1] = "Frontline Leadership";
-  contactTypesArray[2] = "Contact";
+  contactTypesArray[1] = "Executive Leadership";
+  // contactTypesArray[2] = "Contact";
   // Provide the Notification Template to use
   var notificationTemplate = "CAP ESCALATION NOTIFICATION";
   // Provide the name of the report from Report Manager
-  var reportName = "CAP Email";
+  var reportName = "Overdue CAP Report";
   // Get an array of Contact Objects using Master Scripts 3.0
   var contactObjArray = getContactObjs(capId,contactTypesArray);
   // Set the report parameters. For Ad Hoc use p1Value, p2Value etc.
   var rptParams = aa.util.newHashMap();
   //rptParams.put("serviceProviderCode",servProvCode);
-  rptParams.put("departmentID", capId.getCustomID());
-  rptParams.put("daysDelinquent", 90);
+  rptParams.put("department_name", capId.getCustomID());
+  rptParams.put("daysDelinquent", daysDelinquent);
 
   if(!matches(reportName,null,undefined,"")){
   // Call runReportAttach to attach the report to Documents Tab
