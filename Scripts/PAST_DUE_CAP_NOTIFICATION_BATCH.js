@@ -109,7 +109,7 @@
       if (list[i].getCapStatus() == "CAP Required" ) {
 		  // check CAP entries and update the record status appropriately
 		capId = list[i].getCapID();
-		if (capId.getCustomID() == "FA0000868") {
+		if (capId.getCustomID() == "FA0003083" || capId.getCustomID() == "FA0003064" || capId.getCustomID() == "FA0002891") {
 			myTable = loadASITable("CAP",capId)
 			// logDebug("capId = " + capId);
 			for(r in myTable) {
@@ -160,7 +160,7 @@ function sendOutstandingCAPItemsReport(){
   //var agencyReplyEmail = "noreply@accela.com"
   // Provide the contact types to send this notification
   var contactTypesArray = new Array("Primary");
-  contactTypesArray[1] = "Executive Leadership";
+  contactTypesArray[1] = "Frontline Leadership";
   // contactTypesArray[2] = "Contact";
   // Provide the Notification Template to use
   var notificationTemplate = "CAP ESCALATION NOTIFICATION";
