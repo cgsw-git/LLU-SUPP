@@ -27,7 +27,7 @@
 
 	eval(getScriptText("INCLUDES_ACCELA_FUNCTIONS"));
 	eval(getScriptText("INCLUDES_ACCELA_GLOBALS"));
-	eval(getScriptText("INCLUDES_BATCH"));
+	// eval(getScriptText("INCLUDES_BATCH"));
 	eval(getScriptText("INCLUDES_CUSTOM"));
 
 
@@ -94,7 +94,6 @@
   var emailedDepartments = 0;
   var emailsSent = 0;
   var statusCorrected = 0;
-  showDebug = true;
   daysDelinquent = "30";
   var wfComment; // to accomodate customization that was done to getRecordParams4Notification() in INCLUDES_CUSTOM
   logDebug("Start of Job");
@@ -109,20 +108,22 @@
       if (list[i].getCapStatus() == "CAP Required" ) {
 		  // check CAP entries and update the record status appropriately
 		capId = list[i].getCapID();
-		if (capId.getCustomID() == "FA0003083" || capId.getCustomID() == "FA0003064" || capId.getCustomID() == "FA0002891") {
+		if (capId.getCustomID() != "FA0000868") {
 			myTable = loadASITable("CAP",capId)
 			// logDebug("capId = " + capId);
 			for(r in myTable) {
 				currentRow = myTable[r];
 				if (currentRow["First Response Date"] == "" 
-					&& currentRow["Inspection date"] != "" 
-					&& ((startDate - convertDate(aa.util.parseDate(currentRow["Inspection Date"])))/DAY) > daysDelinquent) {
+				&& currentRow["CAP Status"] != "Approved"
+				&& currentRow["CAP Status"] != "Pending"
+				&& currentRow["Inspection date"] != "" 
+				&& ((startDate - convertDate(aa.util.parseDate(currentRow["Inspection Date"])))/DAY) > daysDelinquent) {
 					emailedDepartments = ++emailedDepartments;
 					cap = list[i];
 					capIDString = capId.getCustomID();
-					sendOutstandingCAPItemsReport();
+					// sendOutstandingCAPItemsReport();
 					break;
-				}else{
+				// }else{
 					// set record status to Active
 					// logDebug("updating status for " + capId.getCustomID());
 					// appStatus = "Active"
@@ -130,23 +131,32 @@
 					// statusCorrected = ++statusCorrected;
 				}
 			}
-		}else{
-			skippedDepartments = ++skippedDepartments;
+			logDebug('Processed facility: '+ capId.getCustomID())
+
 		}
 	  } else {
 		skippedDepartments = ++skippedDepartments;
+		capId = list[i].getCapID();
+		logDebug('Skipped facility: ' + capId.getCustomID());
 	  }
+	 // if(skippedDepartments > 5 && emailedDepartments > 5) {
+		 // break;
+	 // }
     } //for (var i in list)
   }else{
      logDebug("Error getting records");
   } //if (getResult.getSuccess())
 
-  logDebug("End of Job: Elapsed Time : " + elapsed() + " Seconds");
+  // logDebug("End of Job: Elapsed Time : " + elapsed() + " Seconds");
   logDebug("Departments processed:" + processedDepartments);
   logDebug("Departments skipped: " + skippedDepartments);
   logDebug("Notified departments: " + emailedDepartments);
   logDebug("Emails sent " + emailsSent);
   logDebug("Department Status values corrected " + statusCorrected);
+  
+  aa.env.setValue("ScriptReturnCode", "0");
+  aa.env.setValue("ScriptReturnMessage", debug);
+
 
 	/*------------------------------------------------------------------------------------------------------/
 	| <===========END=Main=Loop================>
