@@ -1480,6 +1480,8 @@ function setUpdateColumnValue(updateRowsMap/** Map<rowID, Map<columnName, column
 
 /**
 * update ASIT rows data. updateRowsMap format: Map<rowID, Map<columnName, columnValue>>
+07/10/2023 - added intValue() to rowModel.parseInt(setId(rowIdArray[i])) because updateRowsMap.keySet().toArray(); is pushing a double object as the key and
+			 updateAppSpecificTableInfors() expects an integer number.
 **/
 function updateAppSpecificTableInfors(tableName, capIDModel, updateRowsMap/** Map<rowID, Map<columnName, columnValue>> **/)
 {
@@ -1498,7 +1500,7 @@ function updateAppSpecificTableInfors(tableName, capIDModel, updateRowsMap/** Ma
 		var rowScriptModel = aa.appSpecificTableScript.createRowScriptModel();
 		var rowModel = rowScriptModel.getRow();
 		rowModel.setFields(updateRowsMap.get(rowIdArray[i]));
-		rowModel.setId(rowIdArray[i]);
+		rowModel.setId(rowIdArray[i].intValue());
 		rowList.add(rowModel);
 	}
 	return aa.appSpecificTableScript.updateAppSpecificTableInfors(capIDModel, asitTableModel);

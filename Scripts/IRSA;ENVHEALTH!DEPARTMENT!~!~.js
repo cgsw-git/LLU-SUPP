@@ -1,3 +1,9 @@
+/*
+Revision log
+6/30/2023	mz	updated record status to CAP Required when a deficiency is cited
+/*
+
+
 // var myCapId = "FA0000868";
 // var myUserId = "ADMIN";
 // var inspId = 17681228;
@@ -169,6 +175,10 @@ function generateCAPViolationsASITRow(gsi) {
 	addAsiTableRow("CAP", rowVals, options)
 	logDebug("Updating Item Was Processed checkbox");
 	myUpdateGuidesheetASIField(inspId, gsi.gsType,gsi.text,"CKLST_CMNT","ADDITIONAL VIOLATION INFO", "Item Was Processed","CHECKED",capId);
+
+	// set the record status to CAP Required
+	appStatus = "CAP Required"
+	updateAppStatus(appStatus,"Updated by EMSE Script",capId);					
 }
 
 function myUpdateGuidesheetASIField(inspId,gName,gItem,asiGroup,asiSubGroup, asiLabel,newValue,capId) {
