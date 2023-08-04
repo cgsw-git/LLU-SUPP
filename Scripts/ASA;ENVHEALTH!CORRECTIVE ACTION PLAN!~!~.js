@@ -20,9 +20,8 @@ Revision log
  
 */ 
 // var myCapId = "CA0004152" // FA0000868 Fictitious Facility
-var myCapId = "CA0003440"; //FA0002019
-// var myCapId = "CA0003439";
-// myCapId = "CA0002529"; // FA0000868 Fictitious Facility
+//var myCapId = "CA0003440"; //FA0002019 SUPP
+myCapId = "CA0003441"; // FA0000868 Fictitious Facility SUPP
 // myCapId = "CA0002504"; // FA0001031 Center for Dentistry
 var myUserId = "ADMIN";
 
@@ -52,161 +51,113 @@ try
 	var inspectorsWithTasks = new Array();
 	var appStatus = "Active";
 
+	(showDebug) && logDebug(capId);
+	(showDebug) && logDebug(parentCapId);
+
+	// load the Corrective Action Plan record CAP ASIT
 	childTable = loadASITable(tableName, capId);
+	// load the Department record CAP ASIT
 	parentTable = loadASITable(tableName,parentCapId);
 	(showDebug) &&  logDebug("loaded ASIT tables");
-	
-	// logDebugObject(capId);
-	// logDebugObject(parentCapId);
-	// logDebugObject(aa.cap.getCapID(myCapId).getOutput())
+	(showDebug) &&  logDebug("parentTable.length: " + parentTable.length);
+	(showDebug) &&  logDebug("childTable.length: " + childTable.length);
 
-	// get the ASIT table model
-	// var childAppSpecificTableModel = aa.appSpecificTableScript.getAppSpecificTableModel(capId,"CAP");
-	// var parentAppSpecificTableModel = aa.appSpecificTableScript.getAppSpecificTableModel(parentCapId,"CAP");
-	
-	// initialize the rows map used to update the table
-	// var updateRowsMap = aa.util.newHashMap(); // Map<rowID, Map<columnName, columnValue>>
-	
-	
-	// if (childAppSpecificTableModel.getSuccess() && parentAppSpecificTableModel.getSuccess()) {
-		// logDebug("get childAppSpecificTableModel success");
+	// since the Corrective Action is from an amendment/copy of the Department record, the CAP ASIT tables should be the same size
+	if (parentTable && childTable && parentTable.length == childTable.length){
 
-		// create the child and parent table models
-		// childAppSpecificTableModel = childAppSpecificTableModel.getOutput();
-		// parentAppSpecificTableModel = parentAppSpecificTableModel.getOutput();
-		// childAppSpecificTableModel = childAppSpecificTableModel.getAppSpecificTableModel()
-		// parentAppSpecificTableModel = parentAppSpecificTableModel.getAppSpecificTableModel()
-		
-		// get the child and parent table fields
-		// var childTableFields = childAppSpecificTableModel.getTableFields(); // List<BaseField>
-		// var parentTableFields = parentAppSpecificTableModel.getTableFields(); // List<BaseField>
-		// var rowChanged = false;
-		
-		// since this is from and amendment, the tables should be the same size
-		// if (childTableFields != null && childTableFields.size() > 0 && parentTableFields != null && childTableFields.size() == parentTableFields.size()){
-		if (parentTable && childTable && parentTable.length == childTable.length){
+		// initialize the rows map used to update the table
+		var updateRowsMap = aa.util.newHashMap(); // Map<rowID, Map<columnName, columnValue>>
 
-			// initialize the rows map used to update the table
-			var updateRowsMap = aa.util.newHashMap(); // Map<rowID, Map<columnName, columnValue>>
+		// itterate through the Department and Corrective Action CAP ASIT rows
+		for ( var i = 0; i < parentTable.length; i++) {
 
-			// loop through all the fields and rows
-			// logDebugObject(parentTableFields);
-			// logDebug("parent table size = " + parentTableFields.size());
-			// logDebug("child  table size = " + parentTableFields.size());
-			// logDebugObject(parentAppSpecificTableModel);
+			//ASIT load is zero based but column updates are one based
+			var rowNumber = i + 1; 
+			logDebug("rowNumber: " + rowNumber)
+			
+			// get the Department record row
+			var parentRowID = parentTable[i];
+			
+			// load the Department record fields
+			var pInspectionDate = parentRowID["Inspection Date"];
+			pInspectionDate = pInspectionDate.fieldValue;
+			var pInspectorID = parentRowID["Inspector ID"];
+			pInspectorID = pInspectorID.fieldValue;
+			var pResponsibleParty = parentRowID["Responsible Party"];
+			pResponsibleParty = (!pResponsibleParty.fieldValue || pResponsibleParty.fieldValue.isEmpty()) ? '' : pResponsibleParty.fieldValue;
+			var pCorrectionDate = parentRowID["Actual/Planned Correction Date"];
+			pCorrectionDate = (!pCorrectionDate.fieldValue) ? '' : pCorrectionDate.fieldValue ;
+			var pCorrectiveAction = parentRowID["Corrective Action"];
+			pCorrectiveAction = (!pCorrectiveAction.fieldValue) ? '' : pCorrectiveAction.fieldValue ;
+			var pCAPStatusBefore = parentRowID["CAP Status Before"]
+			pCAPStatusBefore = (!pCAPStatusBefore.fieldValue) ? '' : pCAPStatusBefore.fieldValue ;
+			var pFirstResponseDate = parentRowID["First Response Date"]
+			pFirstResponseDate = (!pFirstResponseDate.fieldValue) ? '' : pFirstResponseDate.fieldValue ;
+			var pCAPStatus = parentRowID["CAP Status"]
+			pCAPStatus = (!pCAPStatus.fieldValue) ? '' : pCAPStatus.fieldValue ;
 
-			// itterate through the parent and child, Department and Corrective Action, record CAP ASIT field by field
-			for ( var i = 0; i < parentTable.length; i++) {
-				var rowNumber = parseInt(i);
-				var parentRowID = parentTable[i];
-				var pInspectorID = parentRowID["Inspector ID"];
-				pInspectorID = pInspectorID.fieldValue;
-				var pResponsibleParty = parentRowID["Responsible Party"];
-				pResponsibleParty = (!pResponsibleParty.fieldValue || pResponsibleParty.fieldValue.isEmpty()) ? '' : pResponsibleParty.fieldValue;
-				var pCorrectionDate = parentRowID["Actual/Planned Correction Date"];
-				pCorrectionDate = (!pCorrectionDate.fieldValue) ? '' : pCorrectionDate.fieldValue ;
-				var pCorrectiveAction = parentRowID["Corrective Action"];
-				pCorrectiveAction = (!pCorrectiveAction.fieldValue) ? '' : pCorrectiveAction.fieldValue ;
-				var pCAPStatusBefore = parentRowID["CAP Status Before"]
-				pCAPStatusBefore = (!pCAPStatusBefore.fieldValue) ? '' : pCAPStatusBefore.fieldValue ;
-				var pFirstResponseDate = parentRowID["First Response Date"]
-				pFirstResponseDate = (!pFirstResponseDate.fieldValue) ? '' : pFirstResponseDate.fieldValue ;
-				var pCAPStatus = parentRowID["CAP Status"]
-				pCAPStatus = (!pCAPStatus.fieldValue) ? '' : pCAPStatus.fieldValue ;
+			// get the Corrective Action record row 
+			var cCurrentRow = childTable[i];
+			
+			// load the Corrective Action record fields 
+			var cInspectionDate = cCurrentRow["Inspection Date"];
+			cInspectionDate = cInspectionDate.fieldValue;
+			var cInspectorID = cCurrentRow["Inspector ID"];
+			cInspectorID = cInspectorID.fieldValue;
+			var cResponsibleParty = cCurrentRow["Responsible Party"];
+			cResponsibleParty = (!cResponsibleParty.fieldValue) ? '' : cResponsibleParty.fieldValue;
+			var cCorrectionDate = cCurrentRow["Actual/Planned Correction Date"];
+			cCorrectionDate = (!cCorrectionDate.fieldValue) ? '' : cCorrectionDate.fieldValue ;
+			var cCorrectiveAction = cCurrentRow["Corrective Action"];
+			cCorrectiveAction = (!cCorrectiveAction.fieldValue) ? '' : cCorrectiveAction.fieldValue ;
+			
+			// (showDebug) && logDebug(rowNumber + ": " 
+				// + pInspectorID + ":" + cInspectorID + "--" 
+				// + pInspectionDate + ":" + cInspectionDate + "--" 
+				// + pResponsibleParty +":"+ cResponsibleParty +"--"
+				// + pCorrectionDate +":"+ cCorrectionDate +"--"
+				// + pCorrectiveAction +":"+ cCorrectiveAction);
 
-				var cCurrentRow = childTable[i];
-				var cInspectorID = cCurrentRow["Inspector ID"];
-				cInspectorID = cInspectorID.fieldValue;
-				var cResponsibleParty = cCurrentRow["Responsible Party"];
-				cResponsibleParty = (!cResponsibleParty.fieldValue) ? '' : cResponsibleParty.fieldValue;
-				var cCorrectionDate = cCurrentRow["Actual/Planned Correction Date"];
-				cCorrectionDate = (!cCorrectionDate.fieldValue) ? '' : cCorrectionDate.fieldValue ;
-				var cCorrectiveAction = cCurrentRow["Corrective Action"];
-				cCorrectiveAction = (!cCorrectiveAction.fieldValue) ? '' : cCorrectiveAction.fieldValue ;
+			// update the row column if the following fields/columns has changed
+			if ((pResponsibleParty != cResponsibleParty || pCorrectionDate != cCorrectionDate || pCorrectiveAction != cCorrectiveAction)
+				&& (pInspectionDate == cInspectionDate && pInspectorID == cInspectorID )
+				&& pCAPStatus != 'Approved') {
 
-				if (pResponsibleParty != cResponsibleParty || pCorrectionDate != cCorrectionDate || pCorrectiveAction != cCorrectiveAction) {
-					// logDebug("Changed " + childColumnName + " " + childRowID + " " + parentRowID);
-					(pResponsibleParty != cResponsibleParty) && setUpdateColumnValue(updateRowsMap, rowNumber, "Responsible Party", cResponsibleParty );
-					(pCorrectionDate != cCorrectionDate) && setUpdateColumnValue(updateRowsMap, rowNumber, "Actual/Planned Correction Date", cCorrectionDate );
-					(pCorrectiveAction != cCorrectiveAction) && setUpdateColumnValue(updateRowsMap, rowNumber, "Corrective Action", cCorrectiveAction );
-					// rowChanged = true;
-					// if a child column value was updated, update the CAP Status column if has not been updated
-					// if a mapping for the row and values exists it will be replaced rather than creating another mapping 
-					// logDebug("update the CAP Status to Pending on row " + parentRowID);
-					setUpdateColumnValue(updateRowsMap, rowNumber, "CAP Status", "Pending");
-					
-					
-					
-					// loop through the columns to determine if column "CAP Status Before" = "n/a"
-					// the "n/a" value is used to designate old CAP rows from new CAP rows for statistical purposes
-					// for (var j = 0; j < childTableFields.size() ; j++) {
-						// logDebug("child row: " + childTableFields.get(j).getRowIndex() + " parent row: " + parentRowID);
-						// if (childTableFields.get(j).getRowIndex() == parentRowID) {
-							// tmpFieldObject = childTableFields.get(j);
-							// myFieldValue = tmpFieldObject.getInputValue();
-							// logDebug("field: " + tmpFieldObject.getFieldLabel());
-							// logDebugObject(myFieldValue);
-							// if (tmpFieldObject.getFieldLabel() == "CAP Status Before" && myFieldValue == "n/a") {
-							if (pCAPStatusBefore == "n/a" && pFirstResponseDate.isEmpty()) {
-								// loop through the columns to determine if the First Response Date column is empty and if it is, populate
-								// with the current date so that only the first time the CAP is updated the date is recorded
-								// for (var k = 0; k < childTableFields.size() ; k++) {
-									// logDebug("child row: " + childTableFields.get(j).getRowIndex() + " parent row: " + parentRowID);
-									// if (childTableFields.get(j).getRowIndex() == parentRowID) {
-										// tmpFieldObject = childTableFields.get(k);
-										// myFieldValue = tmpFieldObject.getInputValue();
-										// logDebug("field: " + tmpFieldObject.getFieldLabel());
-										// logDebugObject(myFieldValue);
-										// if (tmpFieldObject.getFieldLabel() == "First Response Date" && rowChanged && myFieldValue.isEmpty()) {
-										// if (pFirstResponseDate.isEmpty()) {
-											setUpdateColumnValue(updateRowsMap, rowNumber, "First Response Date", aa.util.formatDate(aa.util.now(),"MM/dd/yyyy"));
-											(showDebug) && logDebug("Updated First Response Date");
-										// }
-									// }
-								// }
-							}
-						// }
-					// }
-					// assign a task to the inspector for the parent department reecord if one had not already been assigned
-					// if (arraySearch(inspectorsWithTasks, inspectorID) < 0) {
-					if (pInspectorID && arraySearch(inspectorsWithTasks, pInspectorID) < 0) {
-						// logDebug(inspectorID + " not found in list");
-						// assign task to inspector and update list of inspectors who have been assigned a task
-						addAdHocTask("ADHOC_WORKFLOW", "Review CAP", null,pInspectorID,parentCapId);
-						(showDebug) &&  logDebug("add " + pInspectorID + " to list");
-						var newIndexLength = inspectorsWithTasks.push(pInspectorID);
-					}
-
-
-				}else{
-					// Set the record status to CAP Required if the CAP status is incomplete and is wasn't a CAP that was updated
-					// if (childRowID == parentRowID && childColumnName == parentColumnName && parentColumnValue == "Incomplete" && parentColumnName == "CAP Status") {
-					if (pCAPStatus == "Incomplete") {
-						appStatus = "CAP Required"
-						(showDebug) && logDebug("set appStatus to CAP Required due to Incomplete deficiency");
-					}
-				}
+				// update the Department record columns from the Corrective Action record columns
+				logDebug("Updating Row: " + rowNumber);
+				(pResponsibleParty != cResponsibleParty) && setUpdateColumnValue(updateRowsMap, rowNumber, "Responsible Party", cResponsibleParty );
+				(pCorrectionDate != cCorrectionDate) && setUpdateColumnValue(updateRowsMap, rowNumber, "Actual/Planned Correction Date", cCorrectionDate );
+				(pCorrectiveAction != cCorrectiveAction) && setUpdateColumnValue(updateRowsMap, rowNumber, "Corrective Action", cCorrectiveAction );
+				setUpdateColumnValue(updateRowsMap, rowNumber, "CAP Status", "Pending");
 				
+				// update the First Response Date
+				if (pCAPStatusBefore == "n/a" && matches(pFirstResponseDate,null,undefined,"")) {
+					setUpdateColumnValue(updateRowsMap, rowNumber, "First Response Date", aa.util.formatDate(aa.util.now(),"MM/dd/yyyy"));
+					(showDebug) && logDebug("Updated First Response Date");
+				}
+
 				// assign a task to the inspector for the parent department reecord if one had not already been assigned
-				/*if (rowChanged) {
-					// reset the rowChanged flag
-					rowChanged = false;
-					// check if a task was already assigned for this department record
-					if (arraySearch(inspectorsWithTasks, inspectorID) < 0) {
-						// logDebug(inspectorID + " not found in list");
-						// assign task to inspector and update list of inspectors who have been assigned a task
-						addAdHocTask("ADHOC_WORKFLOW", "Review CAP", null,inspectorID,parentCapId);
-						// logDebug("add " + inspectorID + " to list");
-						var newIndexLength = inspectorsWithTasks.push(inspectorID);
-					}
-				}*/
+				// if (arraySearch(inspectorsWithTasks, inspectorID) < 0) {
+				if (pInspectorID && arraySearch(inspectorsWithTasks, pInspectorID) < 0) {
+					// logDebug(inspectorID + " not found in list");
+					// assign task to inspector and update list of inspectors who have been assigned a task
+					addAdHocTask("ADHOC_WORKFLOW", "Review CAP", null,pInspectorID,parentCapId);
+					(showDebug) &&  logDebug("add " + pInspectorID + " to list");
+					var newIndexLength = inspectorsWithTasks.push(pInspectorID);
+				}
+
+
+			}else{
+				// Set the record status to CAP Required if the CAP status is incomplete and it wasn't a CAP that was updated
+				if (pCAPStatus == "Incomplete" || pCAPStatus == "Denied") {
+					appStatus = "CAP Required";
+					(showDebug) && logDebug("set appStatus to CAP Required due to Incomplete deficiency");
+				}
 			}
-		}else{
-			(showDebug) && logDebug("childTableFields is null or empty");
 		}
-	// }else{
-		// logDebug("get childAppSpecificTableModel failed");
-	// }
+	}else{
+		(showDebug) && logDebug("The Department and Corrective Action Plan CAP ASIT tables do not match. CAP submission was not completed");
+	}
 
 	// update record status
 	logDebug("set parent status to " + appStatus);
