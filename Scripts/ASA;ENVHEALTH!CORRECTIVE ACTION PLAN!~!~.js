@@ -17,12 +17,14 @@ Revision log
 				Enhanced the script to set the record status to CAP Required when an Incomplete deficiency exists for which a CAP was not submitted
 				Made multiple increases to code efficiency
 7/6/2023	mz	Replaced aa.appSpecificTableScript.getAppSpecificTableModel() with loadASITable() to reduce looping when iterating fields for values
+8/23/2023	mz	Changed from using RecordID to using i when calling setUpdateColumnValue() because Iterating through the table is 0 based, retrieving the field information is one based and updating the column is 0 based
  
 */ 
 // var myCapId = "CA0004152" // FA0000868 Fictitious Facility
 // var myCapId = "CA0003440"; //FA0002019 SUPP
 // myCapId = "CA0003442"; // FA0000868 Fictitious Facility SUPP
 // myCapId = "CA0002504"; // FA0001031 Center for Dentistry
+//var myCapId = "CA0004440"
 var myUserId = "ADMIN";
 
 // /* ASA  */  var eventName = "ApplicationSubmitAfter";
@@ -31,11 +33,11 @@ var myUserId = "ADMIN";
 // /* ISA  */  var eventName = "InspectionScheduleAfter" ; inspType = "Roofing"
 // /* PRA  */  var eventName = "PaymentReceiveAfter";  
 
-// var useProductScript = false;  // set to true to use the "productized" master scripts (events->master scripts), false to use scripts from (events->scripts)
-// var runEvent = false; // set to true to simulate the event and run all std choices/scripts for the record type.  
+ // var useProductScript = false;  // set to true to use the "productized" master scripts (events->master scripts), false to use scripts from (events->scripts)
+ // var runEvent = false; // set to true to simulate the event and run all std choices/scripts for the record type.  
 
 /* master script code don't touch */ 
-// aa.env.setValue("EventName",eventName); var vEventName = eventName;  var controlString = eventName;  var tmpID = aa.cap.getCapID(myCapId).getOutput(); if(tmpID != null){aa.env.setValue("PermitId1",tmpID.getID1()); 	aa.env.setValue("PermitId2",tmpID.getID2()); 	aa.env.setValue("PermitId3",tmpID.getID3());} aa.env.setValue("CurrentUserID",myUserId); var preExecute = "PreExecuteForAfterEvents";var documentOnly = false;var SCRIPT_VERSION = 3.0;var useSA = false;var SA = null;var SAScript = null;var bzr = aa.bizDomain.getBizDomainByValue("MULTI_SERVICE_SETTINGS","SUPER_AGENCY_FOR_EMSE"); if (bzr.getSuccess() && bzr.getOutput().getAuditStatus() != "I") { 	useSA = true; 		SA = bzr.getOutput().getDescription();	bzr = aa.bizDomain.getBizDomainByValue("MULTI_SERVICE_SETTINGS","SUPER_AGENCY_INCLUDE_SCRIPT"); 	if (bzr.getSuccess()) { SAScript = bzr.getOutput().getDescription(); }	}if (SA) {	eval(getScriptText("INCLUDES_ACCELA_FUNCTIONS",SA,useProductScript));	eval(getScriptText("INCLUDES_ACCELA_GLOBALS",SA,useProductScript));	/* force for script test*/ showDebug = true; eval(getScriptText(SAScript,SA,useProductScript));	}else {	eval(getScriptText("INCLUDES_ACCELA_FUNCTIONS",null,useProductScript));	eval(getScriptText("INCLUDES_ACCELA_GLOBALS",null,useProductScript));	}	eval(getScriptText("INCLUDES_CUSTOM",null,useProductScript));if (documentOnly) {	doStandardChoiceActions2(controlString,false,0);	aa.env.setValue("ScriptReturnCode", "0");	aa.env.setValue("ScriptReturnMessage", "Documentation Successful.  No actions executed.");	aa.abortScript();	}var prefix = lookup("EMSE_VARIABLE_BRANCH_PREFIX",vEventName);var controlFlagStdChoice = "EMSE_EXECUTE_OPTIONS";var doStdChoices = true;  var doScripts = false;var bzr = aa.bizDomain.getBizDomain(controlFlagStdChoice ).getOutput().size() > 0;if (bzr) {	var bvr1 = aa.bizDomain.getBizDomainByValue(controlFlagStdChoice ,"STD_CHOICE");	doStdChoices = bvr1.getSuccess() && bvr1.getOutput().getAuditStatus() != "I";	var bvr1 = aa.bizDomain.getBizDomainByValue(controlFlagStdChoice ,"SCRIPT");	doScripts = bvr1.getSuccess() && bvr1.getOutput().getAuditStatus() != "I";	}	function getScriptText(vScriptName, servProvCode, useProductScripts) {	if (!servProvCode)  servProvCode = aa.getServiceProviderCode();	vScriptName = vScriptName.toUpperCase();	var emseBiz = aa.proxyInvoker.newInstance("com.accela.aa.emse.emse.EMSEBusiness").getOutput();	try {		if (useProductScripts) {			var emseScript = emseBiz.getMasterScript(aa.getServiceProviderCode(), vScriptName);		} else {			var emseScript = emseBiz.getScriptByPK(aa.getServiceProviderCode(), vScriptName, "ADMIN");		}		return emseScript.getScriptText() + "";	} catch (err) {		return "";	}}logGlobals(AInfo); if (runEvent && typeof(doStandardChoiceActions) == "function" && doStdChoices) try {doStandardChoiceActions(controlString,true,0); } catch (err) { logDebug(err.message) } if (runEvent && typeof(doScriptActions) == "function" && doScripts) doScriptActions(); var z = debug.replace(/<BR>/g,"\r");  aa.print(z); 
+ // aa.env.setValue("EventName",eventName); var vEventName = eventName;  var controlString = eventName;  var tmpID = aa.cap.getCapID(myCapId).getOutput(); if(tmpID != null){aa.env.setValue("PermitId1",tmpID.getID1()); 	aa.env.setValue("PermitId2",tmpID.getID2()); 	aa.env.setValue("PermitId3",tmpID.getID3());} aa.env.setValue("CurrentUserID",myUserId); var preExecute = "PreExecuteForAfterEvents";var documentOnly = false;var SCRIPT_VERSION = 3.0;var useSA = false;var SA = null;var SAScript = null;var bzr = aa.bizDomain.getBizDomainByValue("MULTI_SERVICE_SETTINGS","SUPER_AGENCY_FOR_EMSE"); if (bzr.getSuccess() && bzr.getOutput().getAuditStatus() != "I") { 	useSA = true; 		SA = bzr.getOutput().getDescription();	bzr = aa.bizDomain.getBizDomainByValue("MULTI_SERVICE_SETTINGS","SUPER_AGENCY_INCLUDE_SCRIPT"); 	if (bzr.getSuccess()) { SAScript = bzr.getOutput().getDescription(); }	}if (SA) {	eval(getScriptText("INCLUDES_ACCELA_FUNCTIONS",SA,useProductScript));	eval(getScriptText("INCLUDES_ACCELA_GLOBALS",SA,useProductScript));	/* force for script test*/ showDebug = true; eval(getScriptText(SAScript,SA,useProductScript));	}else {	eval(getScriptText("INCLUDES_ACCELA_FUNCTIONS",null,useProductScript));	eval(getScriptText("INCLUDES_ACCELA_GLOBALS",null,useProductScript));	}	eval(getScriptText("INCLUDES_CUSTOM",null,useProductScript));if (documentOnly) {	doStandardChoiceActions2(controlString,false,0);	aa.env.setValue("ScriptReturnCode", "0");	aa.env.setValue("ScriptReturnMessage", "Documentation Successful.  No actions executed.");	aa.abortScript();	}var prefix = lookup("EMSE_VARIABLE_BRANCH_PREFIX",vEventName);var controlFlagStdChoice = "EMSE_EXECUTE_OPTIONS";var doStdChoices = true;  var doScripts = false;var bzr = aa.bizDomain.getBizDomain(controlFlagStdChoice ).getOutput().size() > 0;if (bzr) {	var bvr1 = aa.bizDomain.getBizDomainByValue(controlFlagStdChoice ,"STD_CHOICE");	doStdChoices = bvr1.getSuccess() && bvr1.getOutput().getAuditStatus() != "I";	var bvr1 = aa.bizDomain.getBizDomainByValue(controlFlagStdChoice ,"SCRIPT");	doScripts = bvr1.getSuccess() && bvr1.getOutput().getAuditStatus() != "I";	}	function getScriptText(vScriptName, servProvCode, useProductScripts) {	if (!servProvCode)  servProvCode = aa.getServiceProviderCode();	vScriptName = vScriptName.toUpperCase();	var emseBiz = aa.proxyInvoker.newInstance("com.accela.aa.emse.emse.EMSEBusiness").getOutput();	try {		if (useProductScripts) {			var emseScript = emseBiz.getMasterScript(aa.getServiceProviderCode(), vScriptName);		} else {			var emseScript = emseBiz.getScriptByPK(aa.getServiceProviderCode(), vScriptName, "ADMIN");		}		return emseScript.getScriptText() + "";	} catch (err) {		return "";	}}logGlobals(AInfo); if (runEvent && typeof(doStandardChoiceActions) == "function" && doStdChoices) try {doStandardChoiceActions(controlString,true,0); } catch (err) { logDebug(err.message) } if (runEvent && typeof(doScriptActions) == "function" && doScripts) doScriptActions(); var z = debug.replace(/<BR>/g,"\r");  aa.print(z); 
 
 //
 // User code goes here
@@ -44,6 +46,7 @@ var myUserId = "ADMIN";
 try 
 {
 	// showDebug = true;
+	br = "<br>";
 
 
 	var tableName = "CAP";
@@ -71,7 +74,7 @@ try
 		// itterate through the Department and Corrective Action CAP ASIT rows
 		for ( var i = 0; i < parentTable.length; i++) {
 
-			//ASIT load is zero based but column updates are one based
+			//Iterating through the table is 0 based, retrieving the field information is one based and updating the column is 0 based
 			var rowNumber = i + 1; 
 			logDebug("rowNumber: " + rowNumber)
 			
@@ -83,6 +86,10 @@ try
 			pInspectionDate = pInspectionDate.fieldValue;
 			var pInspectorID = parentRowID["Inspector ID"];
 			pInspectorID = pInspectorID.fieldValue;
+			var pDescription = parentRowID["Description"];
+			pDescription = pDescription.fieldValue;
+			var pInspectorComment = parentRowID["Inspector Comment"];
+			pInspectorComment = pInspectorComment.fieldValue;
 			var pResponsibleParty = parentRowID["Responsible Party"];
 			pResponsibleParty = (!pResponsibleParty.fieldValue || pResponsibleParty.fieldValue.isEmpty()) ? '' : pResponsibleParty.fieldValue;
 			var pCorrectionDate = parentRowID["Actual/Planned Correction Date"];
@@ -104,6 +111,10 @@ try
 			cInspectionDate = cInspectionDate.fieldValue;
 			var cInspectorID = cCurrentRow["Inspector ID"];
 			cInspectorID = cInspectorID.fieldValue;
+			var cDescription = cCurrentRow["Description"];
+			cDescription = cDescription.fieldValue;
+			var cInspectorComment = cCurrentRow["Inspector Comment"];
+			cInspectorComment = cInspectorComment.fieldValue;
 			var cResponsibleParty = cCurrentRow["Responsible Party"];
 			cResponsibleParty = (!cResponsibleParty.fieldValue) ? '' : cResponsibleParty.fieldValue;
 			var cCorrectionDate = cCurrentRow["Actual/Planned Correction Date"];
@@ -120,19 +131,24 @@ try
 
 			// update the row column if the following fields/columns has changed
 			if ((pResponsibleParty != cResponsibleParty || pCorrectionDate != cCorrectionDate || pCorrectiveAction != cCorrectiveAction)
-				&& (pInspectionDate == cInspectionDate && pInspectorID == cInspectorID )
+				&& (pInspectionDate == cInspectionDate && pInspectorID == cInspectorID && pInspectorComment == cInspectorComment) // && pDescription == cDescription )
 				&& pCAPStatus != 'Approved') {
 
 				// update the Department record columns from the Corrective Action record columns
-				logDebug("Updating Row: " + rowNumber);
-				(pResponsibleParty != cResponsibleParty) && setUpdateColumnValue(updateRowsMap, rowNumber, "Responsible Party", cResponsibleParty );
-				(pCorrectionDate != cCorrectionDate) && setUpdateColumnValue(updateRowsMap, rowNumber, "Actual/Planned Correction Date", cCorrectionDate );
-				(pCorrectiveAction != cCorrectiveAction) && setUpdateColumnValue(updateRowsMap, rowNumber, "Corrective Action", cCorrectiveAction );
-				setUpdateColumnValue(updateRowsMap, rowNumber, "CAP Status", "Pending");
+				(showDebug) && logDebug(br+"Updating Row: " + rowNumber);
+				(showDebug) && logDebug(i + " - " + rowNumber + " - " + pInspectionDate + " - " + cInspectionDate);
+				(showDebug) && logDebug(pInspectorComment);
+				(showDebug) && logDebug(cInspectorComment + br);
+				(showDebug) && logDebug(br+"PDescription: "+pDescription);
+				(showDebug) && logDebug("CDescription: "+cDescription + br);
+				(pResponsibleParty != cResponsibleParty) && setUpdateColumnValue(updateRowsMap, i, "Responsible Party", cResponsibleParty );
+				(pCorrectionDate != cCorrectionDate) && setUpdateColumnValue(updateRowsMap, i, "Actual/Planned Correction Date", cCorrectionDate );
+				(pCorrectiveAction != cCorrectiveAction) && setUpdateColumnValue(updateRowsMap, i, "Corrective Action", cCorrectiveAction );
+				setUpdateColumnValue(updateRowsMap, i, "CAP Status", "Pending");
 				
 				// update the First Response Date
 				if (pCAPStatusBefore == "n/a" && matches(pFirstResponseDate,null,undefined,"")) {
-					setUpdateColumnValue(updateRowsMap, rowNumber, "First Response Date", aa.util.formatDate(aa.util.now(),"MM/dd/yyyy"));
+					setUpdateColumnValue(updateRowsMap, i, "First Response Date", aa.util.formatDate(aa.util.now(),"MM/dd/yyyy"));
 					(showDebug) && logDebug("Updated First Response Date");
 				}
 
