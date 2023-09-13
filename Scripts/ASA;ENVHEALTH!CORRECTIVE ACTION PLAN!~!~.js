@@ -17,14 +17,18 @@ Revision log
 				Enhanced the script to set the record status to CAP Required when an Incomplete deficiency exists for which a CAP was not submitted
 				Made multiple increases to code efficiency
 7/6/2023	mz	Replaced aa.appSpecificTableScript.getAppSpecificTableModel() with loadASITable() to reduce looping when iterating fields for values
-8/23/2023	mz	Changed from using RecordID to using i when calling setUpdateColumnValue() because Iterating through the table is 0 based, retrieving the field information is one based and updating the column is 0 based
+8/23/2023	mz	Changed from using rowNumber to using i when calling setUpdateColumnValue() because Iterating through the table is 0 based, retrieving 
+				the field information is one based and updating the column is 0 based
+9/13/2023	mz	Went back to using rowNumber. Script was updating the prior row FA000366 from CA0004496, row 13 was being updated from CA row 14.
+				Still not sure of the cause. It appears the update is 1 based but reading the table is 0 based.
+				There is still the possibility that a deleted row exists in the FA table but is not copied to the CA table.
  
 */ 
 // var myCapId = "CA0004152" // FA0000868 Fictitious Facility
 // var myCapId = "CA0003440"; //FA0002019 SUPP
 // myCapId = "CA0003442"; // FA0000868 Fictitious Facility SUPP
 // myCapId = "CA0002504"; // FA0001031 Center for Dentistry
-//var myCapId = "CA0004440"
+// var myCapId = "CA0004496";
 var myUserId = "ADMIN";
 
 // /* ASA  */  var eventName = "ApplicationSubmitAfter";
@@ -76,6 +80,7 @@ try
 
 			//Iterating through the table is 0 based, retrieving the field information is one based and updating the column is 0 based
 			var rowNumber = i + 1; 
+			var rowToUpdate = rowNumber;
 			logDebug("rowNumber: " + rowNumber)
 			
 			// get the Department record row
@@ -135,20 +140,21 @@ try
 				&& pCAPStatus != 'Approved') {
 
 				// update the Department record columns from the Corrective Action record columns
-				(showDebug) && logDebug(br+"Updating Row: " + rowNumber);
-				(showDebug) && logDebug(i + " - " + rowNumber + " - " + pInspectionDate + " - " + cInspectionDate);
-				(showDebug) && logDebug(pInspectorComment);
-				(showDebug) && logDebug(cInspectorComment + br);
-				(showDebug) && logDebug(br+"PDescription: "+pDescription);
-				(showDebug) && logDebug("CDescription: "+cDescription + br);
-				(pResponsibleParty != cResponsibleParty) && setUpdateColumnValue(updateRowsMap, i, "Responsible Party", cResponsibleParty );
-				(pCorrectionDate != cCorrectionDate) && setUpdateColumnValue(updateRowsMap, i, "Actual/Planned Correction Date", cCorrectionDate );
-				(pCorrectiveAction != cCorrectiveAction) && setUpdateColumnValue(updateRowsMap, i, "Corrective Action", cCorrectiveAction );
-				setUpdateColumnValue(updateRowsMap, i, "CAP Status", "Pending");
+				(showDebug) && logDebug("Updating Row: " + rowNumber) + br;
+				(showDebug) && logDebug(rowToUpdate + " - " + pInspectionDate + " - " + cInspectionDate + br);
+				(showDebug) && logDebug("pInspectorComment: " + pInspectorComment);
+				(showDebug) && logDebug("cInspectorComment: " + cInspectorComment + br);
+				(showDebug) && logDebug("pDescription: "+pDescription);
+				(showDebug) && logDebug("cDescription: "+cDescription + br);
+				(showDebug) && logDebug("cCorrectiveAction: "+cCorrectiveAction + br);
+				(pResponsibleParty != cResponsibleParty) && setUpdateColumnValue(updateRowsMap, rowToUpdate, "Responsible Party", cResponsibleParty );
+				(pCorrectionDate != cCorrectionDate) && setUpdateColumnValue(updateRowsMap, rowToUpdate, "Actual/Planned Correction Date", cCorrectionDate );
+				(pCorrectiveAction != cCorrectiveAction) && setUpdateColumnValue(updateRowsMap, rowToUpdate, "Corrective Action", cCorrectiveAction );
+				setUpdateColumnValue(updateRowsMap, rowToUpdate, "CAP Status", "Pending");
 				
 				// update the First Response Date
 				if (pCAPStatusBefore == "n/a" && matches(pFirstResponseDate,null,undefined,"")) {
-					setUpdateColumnValue(updateRowsMap, i, "First Response Date", aa.util.formatDate(aa.util.now(),"MM/dd/yyyy"));
+					setUpdateColumnValue(updateRowsMap, rowToUpdate, "First Response Date", aa.util.formatDate(aa.util.now(),"MM/dd/yyyy"));
 					(showDebug) && logDebug("Updated First Response Date");
 				}
 
@@ -158,7 +164,7 @@ try
 					// logDebug(inspectorID + " not found in list");
 					// assign task to inspector and update list of inspectors who have been assigned a task
 					addAdHocTask("ADHOC_WORKFLOW", "Review CAP", null,pInspectorID,parentCapId);
-					(showDebug) &&  logDebug("add " + pInspectorID + " to list");
+					(showDebug) &&  logDebug("add " + pInspectorID + " to list" + br);
 					var newIndexLength = inspectorsWithTasks.push(pInspectorID);
 				}
 
