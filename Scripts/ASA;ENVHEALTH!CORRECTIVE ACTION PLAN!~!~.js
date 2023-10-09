@@ -1,36 +1,47 @@
 /*
 programmer: Mike Zachry - Civic Good Software - 559-905-0006
 
-Loma Linda uses an amendment copied from the parent record for employees to submit a corrective action plan through ACA 
+Loma Linda uses an amendment created by copying some components of the parent record for employees to submit a corrective action plan through ACA 
 in response to a deficiency on an inspection. When a deficiency is indicated on a resulted inspction, an entry is
 made in the CAP ASIT on the Department record.
 
-This script loops through the childASIT rows and updates the parent ASIT with any changed fields.
-It fires when submitting a Corrective Action Plan record through ACA as an amendment to
-the Department record and it is expected the parent and child CAP custom lists have the same number of rows
+When a Corrective Action record is submitted, this ASA event script loops through the child CAP ASIT rows and updates the parent CAP ASIT rows 
+with any changed fields. It fires when submitting a Corrective Action Plan record through ACA as an amendment to
+the Department record and it is expected the parent and child CAP custom lists have the same number of rows.
 
-2021.01.22 - Mike Zachry - updates were made to retire using loadASIT() and replacing it with getAppSpecificTableModel 
-because loadASIT does not consider the rowIndex and assumes the first row is 0 and the row indicies are sequential. 
-*/ 
+
+Revision log
+01/22/2021	mz	updates were made to retire using loadASIT() and replacing it with getAppSpecificTableModel because loadASIT does not consider the 
+				rowIndex and assumes the first row is 0 but the row indicies are sequential.
+6/30/2023	mz	Fixed a bug resulting in incomplete iteration of all the parent record CAP ASIT which resulted in CAP Required tasks not being assigned
+				Enhanced the script to set the record status to CAP Required when an Incomplete deficiency exists for which a CAP was not submitted
+				Made multiple increases to code efficiency
+7/6/2023	mz	Replaced aa.appSpecificTableScript.getAppSpecificTableModel() with loadASITable() to reduce looping when iterating fields for values
+8/23/2023	mz	Changed from using rowNumber to using i when calling setUpdateColumnValue() because Iterating through the table is 0 based, retrieving 
+				the field information is one based and updating the column is 0 based
+9/13/2023	mz	Went back to using rowNumber. Script was updating the prior row FA000366 from CA0004496, row 13 was being updated from CA row 14.
+				Still not sure of the cause. It appears the update is 1 based but reading the table is 0 based.
+				There is still the possibility that a deleted row exists in the FA table but is not copied to the CA table.
  
-// var myCapId = "CA0002995";
-// myCapId = "CA0002529"; // FA0000868 Fictitious Facility
+*/ 
+// var myCapId = "CA0004152" // FA0000868 Fictitious Facility
+// var myCapId = "CA0003440"; //FA0002019 SUPP
+// myCapId = "CA0003442"; // FA0000868 Fictitious Facility SUPP
 // myCapId = "CA0002504"; // FA0001031 Center for Dentistry
-// var myUserId = "ADMIN";
-var myCapId = "CA0004520";
-myCapId = "CA0003444"; // testing in SUPP with FA0001641
+// var myCapId = "CA0004496";
 var myUserId = "ADMIN";
+
 // /* ASA  */  var eventName = "ApplicationSubmitAfter";
 // /* WTUA */  var eventName = "WorkflowTaskUpdateAfter";  wfTask = "Application Submittal";	  wfStatus = "Admin Approved";  wfDateMMDDYYYY = "01/27/2015";
 // /* IRSA */  var eventName = "InspectionResultSubmitAfter" ; inspResult = "Failed"; inspResultComment = "Comment";  inspType = "Roofing"
 // /* ISA  */  var eventName = "InspectionScheduleAfter" ; inspType = "Roofing"
-/* PRA  */  var eventName = "PaymentReceiveAfter";  
+// /* PRA  */  var eventName = "PaymentReceiveAfter";  
 
-var useProductScript = false;  // set to true to use the "productized" master scripts (events->master scripts), false to use scripts from (events->scripts)
-var runEvent = false; // set to true to simulate the event and run all std choices/scripts for the record type.  
+ // var useProductScript = false;  // set to true to use the "productized" master scripts (events->master scripts), false to use scripts from (events->scripts)
+ // var runEvent = false; // set to true to simulate the event and run all std choices/scripts for the record type.  
 
 /* master script code don't touch */ 
-aa.env.setValue("EventName",eventName); var vEventName = eventName;  var controlString = eventName;  var tmpID = aa.cap.getCapID(myCapId).getOutput(); if(tmpID != null){aa.env.setValue("PermitId1",tmpID.getID1()); 	aa.env.setValue("PermitId2",tmpID.getID2()); 	aa.env.setValue("PermitId3",tmpID.getID3());} aa.env.setValue("CurrentUserID",myUserId); var preExecute = "PreExecuteForAfterEvents";var documentOnly = false;var SCRIPT_VERSION = 3.0;var useSA = false;var SA = null;var SAScript = null;var bzr = aa.bizDomain.getBizDomainByValue("MULTI_SERVICE_SETTINGS","SUPER_AGENCY_FOR_EMSE"); if (bzr.getSuccess() && bzr.getOutput().getAuditStatus() != "I") { 	useSA = true; 		SA = bzr.getOutput().getDescription();	bzr = aa.bizDomain.getBizDomainByValue("MULTI_SERVICE_SETTINGS","SUPER_AGENCY_INCLUDE_SCRIPT"); 	if (bzr.getSuccess()) { SAScript = bzr.getOutput().getDescription(); }	}if (SA) {	eval(getScriptText("INCLUDES_ACCELA_FUNCTIONS",SA,useProductScript));	eval(getScriptText("INCLUDES_ACCELA_GLOBALS",SA,useProductScript));	/* force for script test*/ showDebug = true; eval(getScriptText(SAScript,SA,useProductScript));	}else {	eval(getScriptText("INCLUDES_ACCELA_FUNCTIONS",null,useProductScript));	eval(getScriptText("INCLUDES_ACCELA_GLOBALS",null,useProductScript));	}	eval(getScriptText("INCLUDES_CUSTOM",null,useProductScript));if (documentOnly) {	doStandardChoiceActions2(controlString,false,0);	aa.env.setValue("ScriptReturnCode", "0");	aa.env.setValue("ScriptReturnMessage", "Documentation Successful.  No actions executed.");	aa.abortScript();	}var prefix = lookup("EMSE_VARIABLE_BRANCH_PREFIX",vEventName);var controlFlagStdChoice = "EMSE_EXECUTE_OPTIONS";var doStdChoices = true;  var doScripts = false;var bzr = aa.bizDomain.getBizDomain(controlFlagStdChoice ).getOutput().size() > 0;if (bzr) {	var bvr1 = aa.bizDomain.getBizDomainByValue(controlFlagStdChoice ,"STD_CHOICE");	doStdChoices = bvr1.getSuccess() && bvr1.getOutput().getAuditStatus() != "I";	var bvr1 = aa.bizDomain.getBizDomainByValue(controlFlagStdChoice ,"SCRIPT");	doScripts = bvr1.getSuccess() && bvr1.getOutput().getAuditStatus() != "I";	}	function getScriptText(vScriptName, servProvCode, useProductScripts) {	if (!servProvCode)  servProvCode = aa.getServiceProviderCode();	vScriptName = vScriptName.toUpperCase();	var emseBiz = aa.proxyInvoker.newInstance("com.accela.aa.emse.emse.EMSEBusiness").getOutput();	try {		if (useProductScripts) {			var emseScript = emseBiz.getMasterScript(aa.getServiceProviderCode(), vScriptName);		} else {			var emseScript = emseBiz.getScriptByPK(aa.getServiceProviderCode(), vScriptName, "ADMIN");		}		return emseScript.getScriptText() + "";	} catch (err) {		return "";	}}logGlobals(AInfo); if (runEvent && typeof(doStandardChoiceActions) == "function" && doStdChoices) try {doStandardChoiceActions(controlString,true,0); } catch (err) { logDebug(err.message) } if (runEvent && typeof(doScriptActions) == "function" && doScripts) doScriptActions(); var z = debug.replace(/<BR>/g,"\r");  aa.print(z); 
+ // aa.env.setValue("EventName",eventName); var vEventName = eventName;  var controlString = eventName;  var tmpID = aa.cap.getCapID(myCapId).getOutput(); if(tmpID != null){aa.env.setValue("PermitId1",tmpID.getID1()); 	aa.env.setValue("PermitId2",tmpID.getID2()); 	aa.env.setValue("PermitId3",tmpID.getID3());} aa.env.setValue("CurrentUserID",myUserId); var preExecute = "PreExecuteForAfterEvents";var documentOnly = false;var SCRIPT_VERSION = 3.0;var useSA = false;var SA = null;var SAScript = null;var bzr = aa.bizDomain.getBizDomainByValue("MULTI_SERVICE_SETTINGS","SUPER_AGENCY_FOR_EMSE"); if (bzr.getSuccess() && bzr.getOutput().getAuditStatus() != "I") { 	useSA = true; 		SA = bzr.getOutput().getDescription();	bzr = aa.bizDomain.getBizDomainByValue("MULTI_SERVICE_SETTINGS","SUPER_AGENCY_INCLUDE_SCRIPT"); 	if (bzr.getSuccess()) { SAScript = bzr.getOutput().getDescription(); }	}if (SA) {	eval(getScriptText("INCLUDES_ACCELA_FUNCTIONS",SA,useProductScript));	eval(getScriptText("INCLUDES_ACCELA_GLOBALS",SA,useProductScript));	/* force for script test*/ showDebug = true; eval(getScriptText(SAScript,SA,useProductScript));	}else {	eval(getScriptText("INCLUDES_ACCELA_FUNCTIONS",null,useProductScript));	eval(getScriptText("INCLUDES_ACCELA_GLOBALS",null,useProductScript));	}	eval(getScriptText("INCLUDES_CUSTOM",null,useProductScript));if (documentOnly) {	doStandardChoiceActions2(controlString,false,0);	aa.env.setValue("ScriptReturnCode", "0");	aa.env.setValue("ScriptReturnMessage", "Documentation Successful.  No actions executed.");	aa.abortScript();	}var prefix = lookup("EMSE_VARIABLE_BRANCH_PREFIX",vEventName);var controlFlagStdChoice = "EMSE_EXECUTE_OPTIONS";var doStdChoices = true;  var doScripts = false;var bzr = aa.bizDomain.getBizDomain(controlFlagStdChoice ).getOutput().size() > 0;if (bzr) {	var bvr1 = aa.bizDomain.getBizDomainByValue(controlFlagStdChoice ,"STD_CHOICE");	doStdChoices = bvr1.getSuccess() && bvr1.getOutput().getAuditStatus() != "I";	var bvr1 = aa.bizDomain.getBizDomainByValue(controlFlagStdChoice ,"SCRIPT");	doScripts = bvr1.getSuccess() && bvr1.getOutput().getAuditStatus() != "I";	}	function getScriptText(vScriptName, servProvCode, useProductScripts) {	if (!servProvCode)  servProvCode = aa.getServiceProviderCode();	vScriptName = vScriptName.toUpperCase();	var emseBiz = aa.proxyInvoker.newInstance("com.accela.aa.emse.emse.EMSEBusiness").getOutput();	try {		if (useProductScripts) {			var emseScript = emseBiz.getMasterScript(aa.getServiceProviderCode(), vScriptName);		} else {			var emseScript = emseBiz.getScriptByPK(aa.getServiceProviderCode(), vScriptName, "ADMIN");		}		return emseScript.getScriptText() + "";	} catch (err) {		return "";	}}logGlobals(AInfo); if (runEvent && typeof(doStandardChoiceActions) == "function" && doStdChoices) try {doStandardChoiceActions(controlString,true,0); } catch (err) { logDebug(err.message) } if (runEvent && typeof(doScriptActions) == "function" && doScripts) doScriptActions(); var z = debug.replace(/<BR>/g,"\r");  aa.print(z); 
 
 //
 // User code goes here
@@ -38,249 +49,151 @@ aa.env.setValue("EventName",eventName); var vEventName = eventName;  var control
 
 try 
 {
-	showDebug = true;
+	// showDebug = true;
+	br = "<br>";
 
 
 	var tableName = "CAP";
 	var updateRowsMap = aa.util.newHashMap(); // Map<rowID, Map<columnName, columnValue>>
 	var inspectorsWithTasks = new Array();
 	var appStatus = "Active";
-	var capStatusBefore = '';
-	var firstResponseDate = '';
-	var rowStatus = '';
-	var inspectorID = '';
 
+	(showDebug) && logDebug(capId);
+	(showDebug) && logDebug(parentCapId);
+
+	// load the Corrective Action Plan record CAP ASIT
 	childTable = loadASITable(tableName, capId);
+	// load the Department record CAP ASIT
 	parentTable = loadASITable(tableName,parentCapId);
-	
-	// logDebugObject(capId);
-	// logDebugObject(parentCapId);
-	// logDebugObject(aa.cap.getCapID(myCapId).getOutput())
+	(showDebug) &&  logDebug("loaded ASIT tables");
+	(showDebug) &&  logDebug("parentTable.length: " + parentTable.length);
+	(showDebug) &&  logDebug("childTable.length: " + childTable.length);
 
-	// get the ASIT table model
-	var childAppSpecificTableModel = aa.appSpecificTableScript.getAppSpecificTableModel(capId,"CAP");
-	var parentAppSpecificTableModel = aa.appSpecificTableScript.getAppSpecificTableModel(parentCapId,"CAP");
-	
-	// initialize the rows map used to update the table
-	var updateRowsMap = aa.util.newHashMap(); // Map<rowID, Map<columnName, columnValue>>
-	
-	
-	if (childAppSpecificTableModel.getSuccess() && parentAppSpecificTableModel.getSuccess()) {
-		logDebug("get childAppSpecificTableModel success");
+	// since the Corrective Action is from an amendment/copy of the Department record, the CAP ASIT tables should be the same size
+	if (parentTable && childTable && parentTable.length == childTable.length){
 
-		// create the child and parent table models
-		childAppSpecificTableModel = childAppSpecificTableModel.getOutput();
-		parentAppSpecificTableModel = parentAppSpecificTableModel.getOutput();
-		childAppSpecificTableModel = childAppSpecificTableModel.getAppSpecificTableModel()
-		parentAppSpecificTableModel = parentAppSpecificTableModel.getAppSpecificTableModel()
-		
-		// get the child and parent table fields
-		var childTableFields = childAppSpecificTableModel.getTableFields(); // List<BaseField>
-		var parentTableFields = parentAppSpecificTableModel.getTableFields(); // List<BaseField>
-		var rowChanged = false;
-		var aRowChanged = false;
-		
-		// since this is from and amendment, the tables should be the same size
-		if (childTableFields != null && childTableFields.size() > 0 && parentTableFields != null && childTableFields.size() == parentTableFields.size()){
+		// initialize the rows map used to update the table
+		var updateRowsMap = aa.util.newHashMap(); // Map<rowID, Map<columnName, columnValue>>
 
-			// loop through all the fields and rows
-			//logDebugObject(parentTableFields);
-			logDebug("parent table size = " + parentTableFields.size());
-			logDebug("child  table size = " + parentTableFields.size());
-			// logDebugObject(parentAppSpecificTableModel);
+		// itterate through the Department and Corrective Action CAP ASIT rows
+		for ( var i = 0; i < parentTable.length; i++) {
 
-			// this is the outer loop of the parent ASIT
-			// for (var i = 0; i < parentTableFields.size(); i++) {
-				// logDebug("loop counter i = " + i);
+			//Iterating through the table is 0 based, retrieving the field information is one based and updating the column is 0 based
+			var rowNumber = i + 1; 
+			var rowToUpdate = rowNumber;
+			logDebug("rowNumber: " + rowNumber)
+			
+			// get the Department record row
+			var parentRowID = parentTable[i];
+			
+			// load the Department record fields
+			var pInspectionDate = parentRowID["Inspection Date"];
+			pInspectionDate = pInspectionDate.fieldValue;
+			var pInspectorID = parentRowID["Inspector ID"];
+			pInspectorID = pInspectorID.fieldValue;
+			var pDescription = parentRowID["Description"];
+			pDescription = pDescription.fieldValue;
+			var pInspectorComment = parentRowID["Inspector Comment"];
+			pInspectorComment = pInspectorComment.fieldValue;
+			var pResponsibleParty = parentRowID["Responsible Party"];
+			pResponsibleParty = (!pResponsibleParty.fieldValue || pResponsibleParty.fieldValue.isEmpty()) ? '' : pResponsibleParty.fieldValue;
+			var pCorrectionDate = parentRowID["Actual/Planned Correction Date"];
+			pCorrectionDate = (!pCorrectionDate.fieldValue) ? '' : pCorrectionDate.fieldValue ;
+			var pCorrectiveAction = parentRowID["Corrective Action"];
+			pCorrectiveAction = (!pCorrectiveAction.fieldValue) ? '' : pCorrectiveAction.fieldValue ;
+			var pCAPStatusBefore = parentRowID["CAP Status Before"]
+			pCAPStatusBefore = (!pCAPStatusBefore.fieldValue) ? '' : pCAPStatusBefore.fieldValue ;
+			var pFirstResponseDate = parentRowID["First Response Date"]
+			pFirstResponseDate = (!pFirstResponseDate.fieldValue) ? '' : pFirstResponseDate.fieldValue ;
+			var pCAPStatus = parentRowID["CAP Status"]
+			pCAPStatus = (!pCAPStatus.fieldValue) ? '' : pCAPStatus.fieldValue ;
 
-				// var parentFieldObject = parentTableFields.get(0); // BaseField
-				// var parentRowID = parentFieldObject.getRowIndex();
-				// logDebug("parentRowID = " + parentRowID);
+			// get the Corrective Action record row 
+			var cCurrentRow = childTable[i];
+			
+			// load the Corrective Action record fields 
+			var cInspectionDate = cCurrentRow["Inspection Date"];
+			cInspectionDate = cInspectionDate.fieldValue;
+			var cInspectorID = cCurrentRow["Inspector ID"];
+			cInspectorID = cInspectorID.fieldValue;
+			var cDescription = cCurrentRow["Description"];
+			cDescription = cDescription.fieldValue;
+			var cInspectorComment = cCurrentRow["Inspector Comment"];
+			cInspectorComment = cInspectorComment.fieldValue;
+			var cResponsibleParty = cCurrentRow["Responsible Party"];
+			cResponsibleParty = (!cResponsibleParty.fieldValue) ? '' : cResponsibleParty.fieldValue;
+			var cCorrectionDate = cCurrentRow["Actual/Planned Correction Date"];
+			cCorrectionDate = (!cCorrectionDate.fieldValue) ? '' : cCorrectionDate.fieldValue ;
+			var cCorrectiveAction = cCurrentRow["Corrective Action"];
+			cCorrectiveAction = (!cCorrectiveAction.fieldValue) ? '' : cCorrectiveAction.fieldValue ;
+			
+			// (showDebug) && logDebug(rowNumber + ": " 
+				// + pInspectorID + ":" + cInspectorID + "--" 
+				// + pInspectionDate + ":" + cInspectionDate + "--" 
+				// + pResponsibleParty +":"+ cResponsibleParty +"--"
+				// + pCorrectionDate +":"+ cCorrectionDate +"--"
+				// + pCorrectiveAction +":"+ cCorrectiveAction);
 
+			// update the row column if the following fields/columns has changed
+			if ((pResponsibleParty != cResponsibleParty || pCorrectionDate != cCorrectionDate || pCorrectiveAction != cCorrectiveAction)
+				&& (pInspectionDate == cInspectionDate && pInspectorID == cInspectorID && pInspectorComment == cInspectorComment) // && pDescription == cDescription )
+				&& pCAPStatus != 'Approved') {
+
+				// update the Department record columns from the Corrective Action record columns
+				(showDebug) && logDebug("Updating Row: " + rowNumber) + br;
+				(showDebug) && logDebug(rowToUpdate + " - " + pInspectionDate + " - " + cInspectionDate + br);
+				(showDebug) && logDebug("pInspectorComment: " + pInspectorComment);
+				(showDebug) && logDebug("cInspectorComment: " + cInspectorComment + br);
+				(showDebug) && logDebug("pDescription: "+pDescription);
+				(showDebug) && logDebug("cDescription: "+cDescription + br);
+				(showDebug) && logDebug("cCorrectiveAction: "+cCorrectiveAction + br);
+				(pResponsibleParty != cResponsibleParty) && setUpdateColumnValue(updateRowsMap, rowToUpdate, "Responsible Party", cResponsibleParty );
+				(pCorrectionDate != cCorrectionDate) && setUpdateColumnValue(updateRowsMap, rowToUpdate, "Actual/Planned Correction Date", cCorrectionDate );
+				(pCorrectiveAction != cCorrectiveAction) && setUpdateColumnValue(updateRowsMap, rowToUpdate, "Corrective Action", cCorrectiveAction );
+				setUpdateColumnValue(updateRowsMap, rowToUpdate, "CAP Status", "Pending");
 				
-				// loop through the fields in the row checking if the child field was changed.
-				// this is the inner loop of the child ASIT
-				for (var i = 0; i < childTableFields.size()  ; i++) {  //&& childTableFields.get(i).getRowIndex() == parentRowID ; i++) {
-
-					var childFieldObject = childTableFields.get(i);
-					var childRowID = childFieldObject.getRowIndex();
-					if (childRowID != parentRowID) {
-						// logDebug("New Row");
-						if (!rowChanged && rowStatus == "Incomplete") {
-							appStatus = "CAP Required";
-						}
-						if (rowChanged) {
-							// assign a task to the inspector for the parent department reecord if one had not already been assigned
-							if (arraySearch(inspectorsWithTasks, inspectorID) < 0) {
-							// logDebug(inspectorID + " not found in list");
-							// assign task to inspector and update list of inspectors who have been assigned a task
-							addAdHocTask("ADHOC_WORKFLOW", "Review CAP", null,inspectorID,parentCapId);
-							logDebug("add " + inspectorID + " to list");
-							var newIndexLength = inspectorsWithTasks.push(inspectorID);
-							}
-							if (capStatusBefore == 'n/a' && firstResponseDate.isEmpty() ) {
-								setUpdateColumnValue(updateRowsMap, parentRowID, "First Response Date", aa.util.formatDate(aa.util.now(),"MM/dd/yyyy"));
-								logDebug("Updated First Response Date");
-							}
-							// if a child column value was updated, update the CAP Status column if has not been updated
-							// if a mapping for the row and values exists it will be replaced rather than creating another mapping 
-							logDebug("update the CAP Status to Pending on row " + parentRowID);
-							setUpdateColumnValue(updateRowsMap, parentRowID, "CAP Status", "Pending");
-						}
-						rowChanged = false;
-						capStatusBefore = '';
-						firstResponseDate = '';
-						rowStatus = '';
-						inspectorID = '';
-					}
-						
-					var parentFieldObject = parentTableFields.get(i); 
-					var parentRowID = parentFieldObject.getRowIndex();
-					logDebug("parentRowID = " + parentRowID);
-					logDebug("childRowID = " + childRowID);
-					logDebug("appStatus = " + appStatus);
-					
-					// get the column name.
-					var childColumnName = childFieldObject.getFieldLabel();
-					var parentColumnName = parentFieldObject.getFieldLabel();
-
-					// get the value of column
-					var childColumnValue = childFieldObject.getInputValue();
-					var parentColumnValue = parentFieldObject.getInputValue();
-					
-					// get the row ID 
-					var childRowID = childFieldObject.getRowIndex();
-					var parentRowID = parentFieldObject.getRowIndex();
-					
-					
-					// record the inspector's ID so a task can be assigned if the row was updated
-					if (childColumnName == "Inspector ID") {
-						inspectorID = childColumnValue;
-					}
-					
-					// get Status value
-					if (childColumnName == "Status") {
-						rowStatus = childColumnValue;
-					}
-					
-					//get CAP status Before
-					if (childColumnName == "CAP Status Before") {
-						capStatusBefore = childColumnValue;
-					}
-					
-					//get first response date
-					if (childColumnName == "First Response Date") {
-						firstResponseDate = childColumnValue;
-					}
-					
-					// add to the updateRowsMap if one of the department editable fields changed and
-					// set rowChanged to true so a task can be assigned to the inspector that recorded
-					// the deficiency
-					if (childRowID == parentRowID && childColumnName == parentColumnName && childColumnValue != parentColumnValue 
-					&& (childColumnName == "Responsible Party" || childColumnName == "Actual/Planned Correction Date" || childColumnName == "Corrective Action")
-					) {
-						logDebug("Changed " + childColumnName + " " + childRowID + " " + parentRowID);
-						setUpdateColumnValue(updateRowsMap, parentRowID, parentColumnName, childColumnValue );
-						aRowChanged = true;
-						rowChanged = true
-						// if a child column value was updated, update the CAP Status column if has not been updated
-						// if a mapping for the row and values exists it will be replaced rather than creating another mapping 
-						// logDebug("update the CAP Status to Pending on row " + parentRowID);
-						// setUpdateColumnValue(updateRowsMap, parentRowID, "CAP Status", "Pending");
-						
-						
-						
-						// loop through the columns to determine if column "CAP Status Before" = "n/a"
-						// the "n/a" value is used to designate old CAP rows from new CAP rows for statistical purposes
-						/* for (var j = 0; j < childTableFields.size() ; j++) {
-							// logDebug("child row: " + childTableFields.get(j).getRowIndex() + " parent row: " + parentRowID);
-							if (childTableFields.get(j).getRowIndex() == parentRowID) {
-								tmpFieldObject = childTableFields.get(j);
-								myFieldValue = tmpFieldObject.getInputValue();
-								// logDebug("field: " + tmpFieldObject.getFieldLabel());
-								// logDebugObject(myFieldValue);
-								if (tmpFieldObject.getFieldLabel() == "CAP Status Before" && myFieldValue == "n/a") {
-									// loop through the columns to determine if the First Response Date column is empty and if it is, populate
-									// with the current date so that only the first time the CAP is updated the date is recorded
-									for (var k = 0; k < childTableFields.size() ; k++) {
-										// logDebug("child row: " + childTableFields.get(j).getRowIndex() + " parent row: " + parentRowID);
-										if (childTableFields.get(k).getRowIndex() == parentRowID) {
-											tmpFieldObject = childTableFields.get(k);
-											myFieldValue = tmpFieldObject.getInputValue();
-											// logDebug("field: " + tmpFieldObject.getFieldLabel());
-											// logDebugObject(myFieldValue);
-											if (tmpFieldObject.getFieldLabel() == "First Response Date" && myFieldValue.isEmpty()) {
-												setUpdateColumnValue(updateRowsMap, parentRowID, "First Response Date", aa.util.formatDate(aa.util.now(),"MM/dd/yyyy"));
-												logDebug("Updated First Response Date");
-												break;
-											}
-										}
-									}
-									break;
-								}
-							} 
-						}
-						*/
-
-					}else{
-						// this is for debugging purposes
-						// if (childColumnName == "Responsible Party" || childColumnName == "Actual/Planned Correction Date" ||
-							// childColumnName == "Corrective Action" ) {
-							// logDebug("No Difference " + childColumnName + " " + childRowID + " " + parentRowID);
-							// logDebug("row id " + childRowID + " " + parentRowID);
-							// logDebug("column name " + childColumnName + " " + parentColumnName);
-							// logDebug("column value " + childColumnValue + " " + parentColumnValue);
-						// }
-
-					}
-					
+				// update the First Response Date
+				if (pCAPStatusBefore == "n/a" && matches(pFirstResponseDate,null,undefined,"")) {
+					setUpdateColumnValue(updateRowsMap, rowToUpdate, "First Response Date", aa.util.formatDate(aa.util.now(),"MM/dd/yyyy"));
+					(showDebug) && logDebug("Updated First Response Date");
 				}
-			// }
-				
-				logDebug("Last Row");
-				if (!rowChanged && rowStatus == "Incomplete") {
-					appStatus = "CAP Required";
-				}
-				if (rowChanged) {
-					// assign a task to the inspector for the parent department reecord if one had not already been assigned
-					if (arraySearch(inspectorsWithTasks, inspectorID) < 0) {
+
+				// assign a task to the inspector for the parent department reecord if one had not already been assigned
+				// if (arraySearch(inspectorsWithTasks, inspectorID) < 0) {
+				if (pInspectorID && arraySearch(inspectorsWithTasks, pInspectorID) < 0) {
 					// logDebug(inspectorID + " not found in list");
 					// assign task to inspector and update list of inspectors who have been assigned a task
-					addAdHocTask("ADHOC_WORKFLOW", "Review CAP", null,inspectorID,parentCapId);
-					logDebug("add " + inspectorID + " to list");
-					var newIndexLength = inspectorsWithTasks.push(inspectorID);
-					}
-					if (capStatusBefore == 'n/a' && firstResponseDate.isEmpty() ) {
-						setUpdateColumnValue(updateRowsMap, parentRowID, "First Response Date", aa.util.formatDate(aa.util.now(),"MM/dd/yyyy"));
-						logDebug("Updated First Response Date");
-					}
-					// if a child column value was updated, update the CAP Status column if has not been updated
-					// if a mapping for the row and values exists it will be replaced rather than creating another mapping 
-					logDebug("update the CAP Status to Pending on row " + parentRowID);
-					setUpdateColumnValue(updateRowsMap, parentRowID, "CAP Status", "Pending");
+					addAdHocTask("ADHOC_WORKFLOW", "Review CAP", null,pInspectorID,parentCapId);
+					(showDebug) &&  logDebug("add " + pInspectorID + " to list" + br);
+					var newIndexLength = inspectorsWithTasks.push(pInspectorID);
 				}
-				rowChanged = false;
-				capStatusBefore = '';
-				firstResponseDate = '';
-				rowStatus = '';
-				inspectorID = '';
-			// }
-		}else{
-			logDebug("childTableFields is null or empty");
+
+
+			}else{
+				// Set the record status to CAP Required if the CAP status is incomplete and it wasn't a CAP that was updated
+				if (pCAPStatus == "Incomplete" || pCAPStatus == "Denied") {
+					appStatus = "CAP Required";
+					(showDebug) && logDebug("set appStatus to CAP Required due to Incomplete deficiency");
+				}
+			}
 		}
 	}else{
-		logDebug("get childAppSpecificTableModel failed");
+		(showDebug) && logDebug("The Department and Corrective Action Plan CAP ASIT tables do not match. CAP submission was not completed");
 	}
 
+	// update record status
+	logDebug("set parent status to " + appStatus);
+	updateAppStatus(appStatus,"Updated by EMSE Script",parentCapId);
+
+
+	// update the ASIT rows
 	if (!updateRowsMap.empty) {
+		logDebug(updateRowsMap);
 		myResult = updateAppSpecificTableInfors(tableName, parentCapId, updateRowsMap);
 		if (myResult.getSuccess()) {
 			logDebug("updateAppSpecificTableInfors Success");
-			// logDebug("set parent status to CAP Required");
-			// appStatus = "CAP Required"
-			updateAppStatus(appStatus,"Updated by EMSE Script",parentCapId);
 		}else{
-		  logDebug(myResult.getErrorMessage());
+		  logDebug("Error : " + myResult.getErrorMessage());
 		}
 	}else{
 		logDebug("updateRowsMap was empty");
